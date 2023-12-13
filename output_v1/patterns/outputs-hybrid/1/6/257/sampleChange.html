@@ -1,0 +1,34 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3>fcca066e6d1ea878d1d5703524a67c3cdeb1d586,guava/src/com/google/common/cache/LocalCache.java,LoadingValueReference,loadFuture,#K#CacheLoader#,3528
+</h3><h3>Before Change</h3><pre><code class='java'>
+        }
+        // To avoid a race, make sure the refreshed value is set into loadingValueReference
+        // *before* returning newValue from the cache query.
+        <a id="change">return </a><a id="change">transform(
+            </a>newValue,
+            <a id="change">new com.google.common.base.Function&lt;V, V&gt;() </a>{
+              @Override
+              public V apply(V newValue) {
+                LoadingValueReference.this.set(newValue);
+                return newValue;
+              }
+            },
+            directExecutor()<a id="change">)</a>;
+      } catch (Throwable t) {
+        ListenableFuture&lt;V&gt; result = setException(t) ? futureValue : fullyFailedFuture(t);
+        if (t instanceof InterruptedException) {</code></pre><h3>After Change</h3><pre><code class='java'>
+        }
+        // To avoid a race, make sure the refreshed value is set into loadingValueReference
+        // *before* returning newValue from the cache query.
+        <a id="change">return </a><a id="change">transform(
+            </a>newValue,
+            <a id="change">newResult -&gt; {
+              LoadingValueReference.this.set(newResult);
+              return newResult;
+            }</a>,
+            directExecutor()<a id="change">)</a>;
+      } catch (Throwable t) {
+        ListenableFuture&lt;V&gt; result = setException(t) ? futureValue : fullyFailedFuture(t);
+        if (t instanceof InterruptedException) {</code></pre>

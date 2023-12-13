@@ -1,0 +1,25 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3>cf1478062f646ec0d7e1d96f8ab52e7194b50ce8,guava/src/com/google/common/util/concurrent/TrustedListenableFutureTask.java,TrustedFutureInterruptibleAsyncTask,runInterruptibly,#,144
+</h3><h3>Before Change</h3><pre><code class='java'>
+      if (!isDone()) {
+        try {
+          ListenableFuture&lt;V&gt; result = callable.call();
+          <a id="change">checkNotNull(
+              result</a>,
+              "AsyncCallable.call returned null instead of a Future. "
+                  + "Did you mean to return immediateFuture(null)?"<a id="change">)</a>;
+          setFuture(result);
+        } catch (Throwable t) {
+          setException(t);</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    @Override
+    ListenableFuture&lt;V&gt; runInterruptibly() throws Exception {
+      <a id="change">return </a><a id="change">checkNotNull(
+          </a>callable.call(),
+          "AsyncCallable.call returned null instead of a Future. "
+              + "Did you mean to return immediateFuture(null)?"<a id="change">)</a>;
+    }
+
+    @Override</code></pre>

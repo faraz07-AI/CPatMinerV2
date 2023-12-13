@@ -1,0 +1,32 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3>8ee7b136b57d4606a784382ccd16a707e3288a10,src/com/google/common/collect/ComputingConcurrentHashMap.java,ComputingSegment,compute,#K#number#,78
+</h3><h3>Before Change</h3><pre><code class='java'>
+              entry = entryFactory.newEntry(
+                  ComputingConcurrentHashMap.this, key, hash, first);
+              entry.setValueReference(computingValueReference);
+              table.<a id="change">set(</a>index, entry<a id="change">)</a>;
+              this.count = newCount; // write-volatile
+            }
+          } finally {</code></pre><h3>After Change</h3><pre><code class='java'>
+                break;
+              }
+            }
+            <a id="change">if (entry</a><a id="change"> == null</a> || isInvalid(entry)<a id="change">) </a>{
+              // Create a new entry.
+              computingValueReference = new ComputingValueReference();
+
+              if (evictEntries()) {
+                newCount = this.count + 1;
+                first = table.get(index);
+              }
+
+              ++modCount;
+              if (entry == null) {
+                entry = entryFactory.newEntry(
+                    ComputingConcurrentHashMap.this, key, hash, first);
+                table.<a id="change">set(</a>index, entry<a id="change">)</a>;
+              }
+              // recordWrite at computation start because count is incremented
+              recordWrite(entry);</code></pre>

@@ -1,0 +1,23 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3>ef80c224861e3a676e2b6545a68781053b549ed5,guava/test/com/google/common/base/EquivalencesTest.java,EquivalencesTest,testWrap,#,133
+</h3><h3>Before Change</h3><pre><code class='java'>
+        .addEqualityGroup(
+            Equivalences.wrap(LENGTH_EQUIVALENCE, null),
+            Equivalences.wrap(LENGTH_EQUIVALENCE, null))
+        .addEqualityGroup(Equivalences.wrap(Equivalences.<a id="change">equals()</a>, "hello"))
+        .addEqualityGroup(Equivalences.wrap(Equivalences.<a id="change">equals()</a>, null))
+        .<a id="change">testEquals()</a>;
+  }
+  
+  public void testComposition() {</code></pre><h3>After Change</h3><pre><code class='java'>
+  
+  public void testEquality() {
+    new EqualsTester()
+        .addEqualityGroup(Equivalences.<a id="change">equals()</a>, Equivalences.<a id="change">equals()</a>)
+        .addEqualityGroup(Equivalences.identity(), Equivalences.identity())
+        .<a id="change">testEquals()</a>;
+  }
+}
+</code></pre>

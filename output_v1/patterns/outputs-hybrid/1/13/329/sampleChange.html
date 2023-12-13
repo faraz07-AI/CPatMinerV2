@@ -1,0 +1,39 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3>9c6b9d956e86856ee5284c65a294971fc0cd1fd0,guava/src/com/google/common/graph/StandardMutableValueGraph.java,StandardMutableValueGraph,removeNode,#N#,123
+</h3><h3>Before Change</h3><pre><code class='java'>
+      }
+    }
+
+    for (N successor : connections.<a id="change">successors()</a>) {
+      // requireNonNull is safe because the node is a successor.
+      requireNonNull(nodeConnections.getWithoutCaching(successor)).removePredecessor(node);
+      --edgeCount;
+    }
+    if (isDirected()) { // In undirected graphs, the successor and predecessor sets are equal.
+      for (N predecessor : connections.<a id="change">predecessors()</a>) {
+        // requireNonNull is safe because the node is a predecessor.
+        checkState(
+            requireNonNull(nodeConnections.getWithoutCaching(predecessor)).removeSuccessor(node)</code></pre><h3>After Change</h3><pre><code class='java'>
+      }
+    }
+
+    for (N <a id="change">successor</a> : <a id="change">ImmutableList</a>.<a id="change">copyOf(</a>connections.<a id="change">successors())</a>) {
+      // requireNonNull is safe because the node is a successor.
+      requireNonNull(nodeConnections.getWithoutCaching(successor)).removePredecessor(node);
+      <a id="change">requireNonNull(connections</a>.<a id="change">removeSuccessor(successor</a><a id="change">))</a>;
+      --edgeCount;
+    }
+    if (isDirected()) { // In undirected graphs, the successor and predecessor sets are equal.
+      // Since views are returned, we need to copy the predecessors that will be removed.
+      // Thus we avoid modifying the underlying view while iterating over it.
+      for (N <a id="change">predecessor</a> : <a id="change">ImmutableList</a>.<a id="change">copyOf(</a>connections.<a id="change">predecessors())</a>) {
+        // requireNonNull is safe because the node is a predecessor.
+        checkState(
+            requireNonNull(nodeConnections.getWithoutCaching(predecessor)).removeSuccessor(node)
+                != null);
+        <a id="change">connections</a>.<a id="change">removePredecessor(predecessor</a><a id="change">)</a>;
+        --edgeCount;
+      }
+    }</code></pre>

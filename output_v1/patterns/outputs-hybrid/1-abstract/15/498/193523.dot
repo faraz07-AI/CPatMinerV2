@@ -1,0 +1,47 @@
+digraph G {
+subgraph cluster0 {
+1 [label="CastExpression" a="11" s="7766" l="26" shape="box"];
+2 [label="ClassInstanceCreation" a="14" s="7815,7840" l="15,1" shape="box"];
+4 [label="IfStatement" a="25" s="7648,7682" l="4,2" shape="diamond"];
+8 [label="ReturnStatement" a="41" s="7808" l="7" shape="box"];
+9 [label="ReturnStatement" a="41" s="7862" l="7" shape="box"];
+10 [label="SimpleName" a="42" s="7753" l="10" shape="ellipse"];
+12 [label="SimpleName" a="42" s="7830" l="10" shape="ellipse"];
+13 [label="SimpleName" a="42" s="7792" l="8" shape="ellipse"];
+15 [label="InstanceofExpression" a="62" s="7660" l="12" shape="box"];
+label = "Old";
+style="dotted";
+}
+subgraph cluster1 {
+3 [label="ClassInstanceCreation" a="14" s="7698,7740" l="15,1" shape="box"];
+5 [label="IfStatement" a="25" s="7687" l="11" shape="diamond"];
+6 [label="MethodInvocation" a="32" s="7726,7739" l="5,1" shape="box"];
+7 [label="ReturnStatement" a="41" s="7648" l="7" shape="box"];
+11 [label="SimpleName" a="42" s="7731" l="8" shape="ellipse"];
+14 [label="SimpleName" a="42" s="7713" l="12" shape="ellipse"];
+16 [label="InstanceofExpression" a="62" s="7664" l="12" shape="box"];
+label = "New";
+style="dotted";
+}
+1 -> 10 [label="_def_"];
+1 -> 8 [label="_para_"];
+2 -> 3 [label="_map_"];
+2 -> 8 [label="_para_"];
+3 -> 7 [label="_para_"];
+4 -> 8 [label="_control_"];
+4 -> 9 [label="_control_"];
+4 -> 2 [label="_control_"];
+4 -> 1 [label="_control_"];
+5 -> 6 [label="_control_"];
+5 -> 3 [label="_control_"];
+6 -> 3 [label="_para_"];
+10 -> 12 [label="_ref_"];
+11 -> 6 [label="_para_"];
+12 -> 14 [label="_map_"];
+12 -> 2 [label="_para_"];
+13 -> 1 [label="_para_"];
+14 -> 6 [label="_recv_"];
+15 -> 4 [label="_cond_"];
+15 -> 16 [label="_map_"];
+16 -> 5 [label="_cond_"];
+}

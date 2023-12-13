@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3>72a25f66b25db2c957bf8f287c2e54baf418d514,guava-tests/test/com/google/common/collect/HashBiMapTest.java,HashBiMapTest,testIdentityEntrySetIteratorRemove,#,101
+</h3><h3>Before Change</h3><pre><code class='java'>
+    bimap.put(2, "two");
+    bimap.put(3, "three");
+    Iterator&lt;Entry&lt;Integer, String&gt;&gt; iterator = bimap.entrySet().iterator();
+    iterator.<a id="change">next()</a>;
+    iterator.next();
+    iterator.remove();
+    iterator.next();</code></pre><h3>After Change</h3><pre><code class='java'>
+    map.put(1, "one");
+    Set&lt;Map.Entry&lt;Integer, String&gt;&gt; entries = map.entrySet();
+    Iterator&lt;Map.Entry&lt;Integer, String&gt;&gt; iterator = entries.iterator();
+    Map.Entry&lt;Integer, String&gt; entry = iterator.<a id="change">next()</a>;
+    entry.setValue("two"); // changes the iterator's current entry value
+    assertEquals("two", map.get(1));
+    assertEquals(Integer.valueOf(1), map.inverse().get("two"));</code></pre>

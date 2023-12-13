@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3>af44761113af50f1955feceac9dd7dfe2d127bbf,guava-tests/test/com/google/common/graph/IncidenceSetUndirectedMultigraphTest.java,IncidenceSetUndirectedMultigraphTest,addEdge_parallelEdge,#,54
+</h3><h3>Before Change</h3><pre><code class='java'>
+    assertTrue(addEdge(E12, N1, N2));
+    assertTrue(addEdge(E12_A, N1, N2));
+    assertTrue(addEdge(E21, N2, N1));
+    assertThat(undirectedGraph.edgesConnecting(N1, N2)).<a id="change">containsExactly(</a>E12, E12_A, E21<a id="change">)</a>.<a id="change">inOrder()</a>;
+  }
+
+  @Override</code></pre><h3>After Change</h3><pre><code class='java'>
+    assertTrue(addEdge(E12, N1, N2));
+    assertTrue(addEdge(E12_A, N1, N2));
+    assertTrue(addEdge(E21, N2, N1));
+    assertThat(undirectedGraph.edgesConnecting(N1, N2)).<a id="change">containsExactly(</a>E12, E12_A, E21<a id="change">)</a>;
+  }
+
+  @Override</code></pre>

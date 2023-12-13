@@ -1,0 +1,36 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3>bb91f4e888b438d2c6bb071bfb826b229dc09faf,guava/src/com/google/common/util/concurrent/Monitor.java,Monitor,enterWhen,#Guard#number#TimeUnit#,403
+</h3><h3>Before Change</h3><pre><code class='java'>
+    boolean reentrant = lock.isHeldByCurrentThread();
+    long remainingNanos;
+    if (!fair && lock.tryLock()) {
+      remainingNanos = unit.<a id="change">toNanos(</a>time<a id="change">)</a>;
+    } else {
+      long startNanos = System.nanoTime();
+      if (!lock.tryLock(time, unit)) {</code></pre><h3>After Change</h3><pre><code class='java'>
+   * @return whether the monitor was entered with the guard satisfied
+   */
+  public boolean enterWhen(Guard guard, long time, TimeUnit unit) throws InterruptedException {
+    long <a id="change">timeoutNanos</a> = unit.<a id="change">toNanos(</a>time<a id="change">)</a>;
+    if (guard.monitor != this) {
+      throw new IllegalMonitorStateException();
+    }
+    final ReentrantLock lock = this.lock;
+    boolean <a id="change">reentrant</a> = lock.isHeldByCurrentThread();
+    if (fair || !lock.tryLock()) {
+      long deadline = System.nanoTime() + timeoutNanos;
+      if (!lock.tryLock(time, unit)) {
+        return false;
+      }
+      timeoutNanos = deadline - System.nanoTime();
+    }
+
+    boolean satisfied = false;
+    boolean threw = true;
+    try {
+      satisfied = guard.isSatisfied() || <a id="change">awaitNanos(</a>guard, <a id="change">timeoutNanos</a>, <a id="change">reentrant</a><a id="change">)</a>;
+      threw = false;
+      return satisfied;
+    } finally {</code></pre>

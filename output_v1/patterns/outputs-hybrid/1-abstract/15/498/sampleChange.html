@@ -1,0 +1,26 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3>45c18d9b8a07b42fbb00e8b71fd33510345fbc52,gwt-super/com/google/common/collect/super/com/google/common/collect/Sets.java,Sets,newHashSet,#Iterable#,201
+</h3><h3>Before Change</h3><pre><code class='java'>
+   * @return a new {@code HashSet} containing those elements (minus duplicates)
+   */
+  public static &lt;E&gt; HashSet&lt;E&gt; newHashSet(Iterable&lt;? extends E&gt; elements) {
+    <a id="change">if (</a>elements<a id="change"> instanceof </a>Collection<a id="change">) </a>{
+      @SuppressWarnings("unchecked")
+      Collection&lt;? extends E&gt; <a id="change">collection</a> = <a id="change">(Collection&lt;? extends E&gt;) elements</a>;
+      <a id="change">return </a><a id="change">new HashSet&lt;E&gt;(collection</a><a id="change">)</a>;
+    } else {
+      <a id="change">return </a>newHashSet(elements.iterator());
+    }
+  }
+</code></pre><h3>After Change</h3><pre><code class='java'>
+   * @return a new {@code HashSet} containing those elements (minus duplicates)
+   */
+  public static &lt;E&gt; HashSet&lt;E&gt; newHashSet(Iterable&lt;? extends E&gt; elements) {
+    <a id="change">return </a>(elements<a id="change"> instanceof </a>Collection)<a id="change">
+        ? </a><a id="change">new HashSet&lt;E&gt;(Collections2</a>.<a id="change">cast(elements</a><a id="change">)</a><a id="change">)</a>
+        : newHashSet(elements.iterator());
+  }
+
+  /**</code></pre>

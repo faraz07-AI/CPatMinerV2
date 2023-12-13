@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3>62cdc3e0cda2d55432ac1969a3cf94f9c7c42655,src/com/google/common/collect/ImmutableList.java,ImmutableList,of,#E#E#E#E#E#E#E#E#E#,155
+</h3><h3>Before Change</h3><pre><code class='java'>
+   */
+  public static &lt;E&gt; ImmutableList&lt;E&gt; of(
+      E e1, E e2, E e3, E e4, E e5, E e6, E e7, E e8, E e9) {
+    return <a id="change">new RegularImmutableList&lt;E&gt;(
+        </a><a id="change">copyIntoArray(</a>e1, e2, e3, e4, e5, e6, e7, e8, e9<a id="change">))</a>;
+  }
+
+  /**</code></pre><h3>After Change</h3><pre><code class='java'>
+   */
+  public static &lt;E&gt; ImmutableList&lt;E&gt; of(
+      E e1, E e2, E e3, E e4, E e5, E e6, E e7, E e8, E e9) {
+    return <a id="change">construct(</a>e1, e2, e3, e4, e5, e6, e7, e8, e9<a id="change">)</a>;
+  }
+
+  /**</code></pre>

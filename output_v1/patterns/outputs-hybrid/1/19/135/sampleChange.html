@@ -1,0 +1,57 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3>c7d9fef73b9314581bf4acd0d97b12178935eb11,android/guava-testlib/src/com/google/common/collect/testing/MapTestSuiteBuilder.java,MapTestSuiteBuilder,createDerivedSuites,#FeatureSpecificTestSuiteBuilder#,90
+</h3><h3>Before Change</h3><pre><code class='java'>
+                new MapEntrySetGenerator&lt;K, V&gt;(parentBuilder.getSubjectGenerator()))
+            .withFeatures(computeEntrySetFeatures(parentBuilder.getFeatures()))
+            .named(parentBuilder.getName() + " entrySet")
+            .<a id="change">suppressing(</a>parentBuilder.getSuppressedTests()<a id="change">)</a>
+            .createTestSuite());
+
+    derivedSuites.add(
+        createDerivedKeySetSuite(keySetGenerator(parentBuilder.getSubjectGenerator()))
+            .withFeatures(computeKeySetFeatures(parentBuilder.getFeatures()))
+            .named(parentBuilder.getName() + " keys")
+            .<a id="change">suppressing(</a>parentBuilder.getSuppressedTests()<a id="change">)</a>
+            .createTestSuite());
+
+    derivedSuites.add(
+        createDerivedValueCollectionSuite(
+                new MapValueCollectionGenerator&lt;K, V&gt;(parentBuilder.getSubjectGenerator()))
+            .named(parentBuilder.getName() + " values")
+            .withFeatures(computeValuesCollectionFeatures(parentBuilder.getFeatures()))
+            .<a id="change">suppressing(</a>parentBuilder.getSuppressedTests()<a id="change">)</a>
+            .createTestSuite());
+
+    return derivedSuites;
+  }</code></pre><h3>After Change</h3><pre><code class='java'>
+                new MapEntrySetGenerator&lt;K, V&gt;(parentBuilder.getSubjectGenerator()))
+            .withFeatures(computeEntrySetFeatures(parentBuilder.getFeatures()))
+            .named(parentBuilder.getName() + " entrySet")
+            .<a id="change">suppressing(</a>parentBuilder.getSuppressedTests()<a id="change">)</a>
+            .<a id="change">withSetUp(parentBuilder</a>.<a id="change">getSetUp())</a>
+            .<a id="change">withTearDown(parentBuilder</a>.<a id="change">getTearDown()</a><a id="change">)</a>
+            .createTestSuite());
+
+    derivedSuites.add(
+        createDerivedKeySetSuite(keySetGenerator(parentBuilder.getSubjectGenerator()))
+            .withFeatures(computeKeySetFeatures(parentBuilder.getFeatures()))
+            .named(parentBuilder.getName() + " keys")
+            .<a id="change">suppressing(</a>parentBuilder.getSuppressedTests()<a id="change">)</a>
+            .<a id="change">withSetUp(parentBuilder</a>.<a id="change">getSetUp())</a>
+            .<a id="change">withTearDown(parentBuilder</a>.<a id="change">getTearDown()</a><a id="change">)</a>
+            .createTestSuite());
+
+    derivedSuites.add(
+        createDerivedValueCollectionSuite(
+                new MapValueCollectionGenerator&lt;K, V&gt;(parentBuilder.getSubjectGenerator()))
+            .named(parentBuilder.getName() + " values")
+            .withFeatures(computeValuesCollectionFeatures(parentBuilder.getFeatures()))
+            .<a id="change">suppressing(</a>parentBuilder.getSuppressedTests()<a id="change">)</a>
+            .<a id="change">withSetUp(parentBuilder</a>.<a id="change">getSetUp()</a><a id="change">)</a>
+            .<a id="change">withTearDown(parentBuilder</a>.<a id="change">getTearDown()</a><a id="change">)</a>
+            .createTestSuite());
+
+    return derivedSuites;
+  }</code></pre>

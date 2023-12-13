@@ -1,0 +1,31 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3>67445d6ea580dcef646a495f23efd8f1cda4abb7,src/com/google/common/collect/ComputingConcurrentHashMap.java,ComputingSegment,setComputedValue,#ReferenceEntry#V#,188
+</h3><h3>Before Change</h3><pre><code class='java'>
+      // computation completes with putIfAbsent to ensure linearizability
+      synchronized (entry) {
+        if (entry.getValueReference().get() == null) {
+          <a id="change">setValueReference(</a>entry, valueStrength.referenceValue(entry, value)<a id="change">)</a>;
+        }
+      }
+    }</code></pre><h3>After Change</h3><pre><code class='java'>
+        for (ReferenceEntry&lt;K, V&gt; e = segment.getFirst(hash); e != null;
+            e = e.getNext()) {
+          K entryKey = e.getKey();
+          <a id="change">if (</a>e.getHash() == hash && entryKey<a id="change"> != </a><a id="change">null</a>
+              && keyEquivalence.equivalent(key, entryKey)<a id="change">) </a>{
+            ValueReference&lt;K, V&gt; liveValueReference = e.getValueReference();
+            if (liveValueReference == this) {
+              if (evictsBySize() || expires()) {
+                // "entry" currently points to the original entry created when
+                // computation began, but by now that entry may have been
+                // replaced. Find the current entry, and pass it to
+                // recordWrite to ensure that the eviction lists are
+                // consistent with the current map entries.
+                segment.recordWrite(e);
+              }
+              <a id="change">setValueReference(</a>valueStrength.referenceValue(e, value)<a id="change">)</a>;
+            } else {
+              // avoid creating a new value reference pointing back to a
+              // disconnected entry</code></pre>

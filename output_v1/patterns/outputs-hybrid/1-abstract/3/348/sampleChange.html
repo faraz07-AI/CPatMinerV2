@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3>9e2592468378e55556e28d643a6437322d35c480,guava-tests/test/com/google/common/util/concurrent/ListenerCallQueueTest.java,ListenerCallQueueTest,testAddAndExecute,#,39
+</h3><h3>Before Change</h3><pre><code class='java'>
+  public void testAddAndExecute() {
+    Object listenerInstance = new Object();
+    ListenerCallQueue&lt;Object&gt; queue =
+        <a id="change">new ListenerCallQueue&lt;Object&gt;(</a>listenerInstance, <a id="change">directExecutor()</a><a id="change">)</a>;
+
+    AtomicInteger counter = new AtomicInteger();
+    queue.add(incrementingCallback(counter, 1));</code></pre><h3>After Change</h3><pre><code class='java'>
+  public void testEnqueueAndDispatch() {
+    Object listener = new Object();
+    ListenerCallQueue&lt;Object&gt; queue = new ListenerCallQueue&lt;&gt;();
+    queue.addListener(listener, <a id="change">directExecutor()</a>);
+
+    Multiset&lt;Object&gt; counters = ConcurrentHashMultiset.create();
+    queue.enqueue(incrementingEvent(counters, listener, 1));</code></pre>

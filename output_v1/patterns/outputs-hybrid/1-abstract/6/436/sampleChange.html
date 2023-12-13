@@ -1,0 +1,22 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3>20b13c66870e00b0bd52b21c20e514af301d1b7e,anhalytics-harvest/src/main/java/fr/inria/anhalytics/harvest/converters/HalTEIConverter.java,HalTEIConverter,moveOrgToAffiliation,#Element#Element#NodeList#,252
+</h3><h3>Before Change</h3><pre><code class='java'>
+                    Node rel = Utilities.findNode("xml:id",id, orgs);
+                    Node newRel = rel.cloneNode(true);
+                    moveOrgToAffiliation(aff, (Element) newRel, orgs);
+                    aff.<a id="change">appendChild(</a>newRel<a id="change">)</a>;
+                }
+            }
+        }</code></pre><h3>After Change</h3><pre><code class='java'>
+                    String id = relation.getAttribute("active");
+                    id = id.replace("#", "");
+                    Node rel = Utilities.findNode("xml:id", id, orgs);
+                    <a id="change">if (rel != </a><a id="change">null</a><a id="change">) </a>{
+                        Node newRel = rel.cloneNode(true);
+                        moveOrgToAffiliation(aff, (Element) newRel, orgs);
+                        aff.<a id="change">appendChild(</a>newRel<a id="change">)</a>;
+                    }
+                }
+            }</code></pre>

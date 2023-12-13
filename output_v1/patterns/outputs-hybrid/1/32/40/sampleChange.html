@@ -1,0 +1,28 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3>45b0489d4ae7f6e71e4359eae48cb15d112d9317,guava-tests/test/com/google/common/collect/HashBiMapTest.java,HashBiMapTest,testInsertionOrderAfterRemoveLast,#,195
+</h3><h3>Before Change</h3><pre><code class='java'>
+  }
+
+  public void testInsertionOrderAfterRemoveLast() {
+    <a id="change">for (</a>TestBiMapGenerator&lt;String, String&gt; <a id="change">generator</a> : <a id="change">GENERATORS</a><a id="change">) </a>{
+      BiMap&lt;String, String&gt; map =
+          <a id="change">generator</a>.<a id="change">create(mapEntry("foo"</a>, <a id="change">"1"</a><a id="change">)</a>, <a id="change">mapEntry("bar"</a>, <a id="change">"2"</a><a id="change">)</a>, <a id="change">mapEntry("quux"</a>, <a id="change">"3"</a><a id="change">)</a><a id="change">)</a>;
+      map.<a id="change">remove(</a>"quux"<a id="change">)</a>;
+      <a id="change">assertThat(</a>map<a id="change">)</a>.<a id="change">containsExactly(</a>"foo", "1", <a id="change">"bar"</a>, <a id="change">"2"</a><a id="change">)</a>.<a id="change">inOrder()</a>;
+    }
+  }
+</code></pre><h3>After Change</h3><pre><code class='java'>
+  }
+
+  public void testInsertionOrderAfterRemoveLast() {
+    BiMap&lt;String, Integer&gt; <a id="change">map</a> = <a id="change">HashBiMap</a>.<a id="change">create()</a>;
+    <a id="change">map</a>.<a id="change">put("foo"</a>, <a id="change">1</a><a id="change">)</a>;
+    <a id="change">map</a>.<a id="change">put("bar"</a>, <a id="change">2</a><a id="change">)</a>;
+    <a id="change">map</a>.<a id="change">put("quux"</a>, <a id="change">3</a><a id="change">)</a>;
+
+    map.<a id="change">remove(</a>"quux"<a id="change">)</a>;
+    assertThat(map.entrySet())
+        .containsExactly(Maps.immutableEntry("foo", 1), Maps.immutableEntry("bar", 2))
+        .inOrder();</code></pre>

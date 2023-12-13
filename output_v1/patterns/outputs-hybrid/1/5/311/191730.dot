@@ -1,0 +1,19 @@
+digraph G {
+subgraph cluster0 {
+1 [label="named" a="32" s="20027,20244" l="19,1" shape="box"];
+4 [label="assert" a="32" s="20000,20016" l="11,1" shape="box"];
+label = "Old";
+style="dotted";
+}
+subgraph cluster1 {
+2 [label="assert" a="32" s="20069,20298" l="31,1" shape="box"];
+3 [label="that" a="32" s="20309,20319" l="5,1" shape="box"];
+5 [label="SimpleName" a="42" s="20314" l="5" shape="ellipse"];
+label = "New";
+style="dotted";
+}
+1 -> 2 [label="_map_"];
+2 -> 3 [label="_recv_"];
+4 -> 1 [label="_recv_"];
+5 -> 3 [label="_para_"];
+}

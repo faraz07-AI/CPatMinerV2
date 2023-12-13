@@ -1,0 +1,24 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3>04cb0bd4acb8028fb66127a59ba9d0e93a5e6892,guava/src/com/google/common/util/concurrent/MoreExecutors.java,ScheduledListeningDecorator,scheduleWithFixedDelay,#Runnable#number#number#TimeUnit#,473
+</h3><h3>Before Change</h3><pre><code class='java'>
+    @Override
+    public ScheduledFuture&lt;?&gt; scheduleWithFixedDelay(
+        Runnable command, long initialDelay, long delay, TimeUnit unit) {
+      <a id="change">return </a>delegate.<a id="change">scheduleWithFixedDelay(
+          command</a>, initialDelay, delay, unit<a id="change">)</a>;
+    }
+  }
+}</code></pre><h3>After Change</h3><pre><code class='java'>
+    @Override
+    public ListenableScheduledFuture&lt;?&gt; scheduleWithFixedDelay(
+        Runnable command, long initialDelay, long delay, TimeUnit unit) {
+      ListenableFutureTask&lt;Object&gt; <a id="change">task</a> = 
+          <a id="change">ListenableFutureTask</a>.<a id="change">create(command</a>, <a id="change">null</a><a id="change">)</a>;
+      Delayed <a id="change">delayed</a> = 
+          delegate.<a id="change">scheduleWithFixedDelay(task</a>, initialDelay, delay, unit<a id="change">)</a>;
+      <a id="change">return </a><a id="change">new ListenableScheduledTask&lt;Object&gt;(task</a>, <a id="change">delayed</a><a id="change">)</a>;
+    }
+
+    private static final class ListenableScheduledTask&lt;V&gt; </code></pre>

@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3>807760488eaaab1ced435ec07dab6be7e991fc47,guava-tests/test/com/google/common/graph/GraphsTest.java,GraphsTest,createUndirected_expectedNodeCount,#,259
+</h3><h3>Before Change</h3><pre><code class='java'>
+  @Test
+  public void createUndirected_expectedNodeCount() {
+    UndirectedGraph&lt;Integer, String&gt; undirectedGraph =
+        Graphs.createUndirected(config().<a id="change">expectedNodeCount(</a>NODE_COUNT<a id="change">)</a>);
+    assertThat(undirectedGraph.addEdge(E12, N1, N2)).isTrue();
+    assertThat(undirectedGraph.edgesConnecting(N1, N2)).isEqualTo(ImmutableSet.of(E12));
+    assertThat(undirectedGraph.edgesConnecting(N2, N1)).isEqualTo(ImmutableSet.of(E12));</code></pre><h3>After Change</h3><pre><code class='java'>
+  @Test
+  public void createUndirected_expectedNodeCount() {
+    Graph&lt;Integer, String&gt; undirectedGraph = GraphBuilder.undirected()
+        .<a id="change">expectedNodeCount(</a>NODE_COUNT<a id="change">)</a>
+        .<a id="change">build()</a>;
+    assertThat(undirectedGraph.addEdge(E12, N1, N2)).isTrue();
+    assertThat(undirectedGraph.edgesConnecting(N1, N2)).isEqualTo(ImmutableSet.of(E12));
+    assertThat(undirectedGraph.edgesConnecting(N2, N1)).isEqualTo(ImmutableSet.of(E12));</code></pre>

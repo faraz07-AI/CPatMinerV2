@@ -1,0 +1,23 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3>d710bd82209651d6525fef7c917ae8534327e779,guava-tests/test/com/google/common/reflect/TypeTokenTest.java,TypeTokenTest,testWildcardCaptured_methodParameter_upperBound,#,1475
+</h3><h3>Before Change</h3><pre><code class='java'>
+  public void testWildcardCaptured_methodParameter_upperBound() throws Exception {
+    TypeToken&lt;Holder&lt;?&gt;&gt; type = new TypeToken&lt;Holder&lt;?&gt;&gt;() {};
+    TypeToken&lt;?&gt; parameterType =
+        type.<a id="change">resolveType(
+            Holder.class.getDeclaredMethod("setList", List.class).getGenericParameterTypes()[</a><a id="change">0]</a><a id="change">)</a>;
+    assertEquals(List.class, parameterType.getRawType());
+    assertFalse(
+        parameterType.getType().toString(),</code></pre><h3>After Change</h3><pre><code class='java'>
+
+  public void testWildcardCaptured_methodParameter_upperBound() throws Exception {
+    TypeToken&lt;Holder&lt;?&gt;&gt; type = new TypeToken&lt;Holder&lt;?&gt;&gt;() {};
+    ImmutableList&lt;Parameter&gt; <a id="change">parameters</a> =
+        type.<a id="change">method(</a>Holder.class.<a id="change">getDeclaredMethod(</a>"setList", List.class<a id="change">))</a>.<a id="change">getParameters()</a>;
+    assertThat(parameters).hasSize(1);
+    TypeToken&lt;?&gt; parameterType = <a id="change">parameters</a>.<a id="change">get(0</a><a id="change">)</a>.<a id="change">getType()</a>;
+    assertEquals(List.class, parameterType.getRawType());
+    assertFalse(
+        parameterType.getType().toString(),</code></pre>

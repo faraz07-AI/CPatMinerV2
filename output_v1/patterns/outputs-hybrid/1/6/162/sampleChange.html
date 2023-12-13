@@ -1,0 +1,31 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3>efa4d2b38592c8ab69b560733eac47d3914e78e7,guava/src/com/google/common/util/concurrent/AbstractService.java,AbstractService,terminated,#State#,439
+</h3><h3>Before Change</h3><pre><code class='java'>
+  @GuardedBy("lock")
+  private void terminated(final State from) {
+    for (final ListenerExecutorPair pair : listeners) {
+      queuedListeners.<a id="change">add(new Runnable() </a>{
+        @Override public void run() {
+          pair.execute(new Runnable() {
+            @Override public void run() {
+              pair.listener.terminated(from);
+            }
+          });
+        }
+      }<a id="change">)</a>;
+    }
+    // There are no more state transitions so we can clear this out.
+    listeners.clear();</code></pre><h3>After Change</h3><pre><code class='java'>
+  @GuardedBy("lock")
+  private void terminated(final State from) {
+    for (final ListenerExecutorPair pair : listeners) {
+      queuedListeners.<a id="change">add(new Runnable() </a>{
+        @Override public void run() {
+          pair.listener.terminated(from);
+        }
+      }, <a id="change">pair.executor</a><a id="change">)</a>;
+    }
+    // There are no more state transitions so we can clear this out.
+    listeners.clear();</code></pre>

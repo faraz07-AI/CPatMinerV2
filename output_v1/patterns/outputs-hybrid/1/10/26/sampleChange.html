@@ -1,0 +1,26 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3>aadd54a45faff761042e29821f39b0b797dec28e,guava/src/com/google/common/collect/BstRangeOps.java,BstRangeOps,countTooLow,#GeneralRange#N#,54
+</h3><h3>Before Change</h3><pre><code class='java'>
+  // Returns the number of nodes strictly below the specified range.
+  private static &lt;K, N extends BstNode&lt;K, N&gt;&gt; int countTooLow(
+      GeneralRange&lt;K&gt; range, @Nullable N root) {
+    <a id="change">if (</a>root<a id="change"> == </a>null<a id="change">) </a>{
+      return 0;
+    } else <a id="change">if (</a>range.tooLow(root.getKey())<a id="change">) </a>{
+      <a id="change">return </a>1 + countOrZero(root.childOrNull(LEFT)) + countTooLow(range, root.<a id="change">childOrNull(</a>RIGHT<a id="change">)</a>);
+    } else {
+      return countTooLow(range, root.childOrNull(LEFT));
+    }</code></pre><h3>After Change</h3><pre><code class='java'>
+  private static &lt;K, N extends BstNode&lt;K, N&gt;&gt; int totalTooLow(
+      BstAggregate&lt;? super N&gt; aggregate, GeneralRange&lt;K&gt; range, @Nullable N root) {
+    int accum = 0;
+    <a id="change">while (</a>root<a id="change"> != </a>null<a id="change">) </a>{
+      <a id="change">if (</a>range.tooLow(root.getKey())<a id="change">) </a>{
+        accum += aggregate.entryValue(root);
+        accum += aggregate.treeValue(root.childOrNull(LEFT));
+        root = root.<a id="change">childOrNull(</a>RIGHT<a id="change">)</a>;
+      } else {
+        root = root.childOrNull(LEFT);
+      }</code></pre>

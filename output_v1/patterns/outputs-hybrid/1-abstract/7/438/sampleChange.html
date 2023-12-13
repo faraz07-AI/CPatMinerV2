@@ -1,0 +1,22 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3>05ee9c9bb43cf0c509a94247d57dba128ebe1163,guava/src/com/google/common/collect/Maps.java,Maps,immutableEnumMap,#Map#,140
+</h3><h3>Before Change</h3><pre><code class='java'>
+      return ImmutableMap.of();
+    } else {
+      for (Map.Entry&lt;K, ? extends V&gt; entry : map.entrySet()) {
+        <a id="change">checkNotNull(</a>entry.<a id="change">getKey()</a><a id="change">)</a>;
+        <a id="change">checkNotNull(</a>entry.<a id="change">getValue())</a>;
+      }
+      return ImmutableEnumMap.asImmutable(new EnumMap&lt;K, V&gt;(map));
+    }</code></pre><h3>After Change</h3><pre><code class='java'>
+    EnumMap&lt;K, V&gt; enumMap = new EnumMap&lt;K, V&gt;(clazz);
+    enumMap.put(key1, value1);
+    while (entryItr.hasNext()) {
+      Entry&lt;K, ? extends V&gt; <a id="change">entry</a> = entryItr.next();
+      K key = entry.<a id="change">getKey()</a>;
+      V value = entry.<a id="change">getValue()</a>;
+      checkEntryNotNull(key, value);
+      enumMap.put(key, value);
+    }</code></pre>

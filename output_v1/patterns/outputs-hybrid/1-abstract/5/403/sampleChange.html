@@ -1,0 +1,21 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3>a2e6acc0098cd09e1f7578a01b25d16ce9413872,android/guava/src/com/google/common/util/concurrent/AbstractFuture.java,AbstractFuture,addPendingString,#StringBuilder#,1090
+</h3><h3>Before Change</h3><pre><code class='java'>
+      builder.append(", info=[").append(pendingDescription).append("]");
+    }
+    if (setFutureString != null) {
+      builder.<a id="change">append(</a>", setFuture=["<a id="change">)</a>.append(setFutureString).append("]");
+    }
+  }
+</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    Object localValue = value;
+    if (localValue instanceof SetFuture) {
+      builder.<a id="change">append(</a>", setFuture=["<a id="change">)</a>;
+      appendUserObject(builder, ((SetFuture) localValue).future);
+      <a id="change">builder</a>.<a id="change">append("]"</a><a id="change">)</a>;
+    } else {
+      String pendingDescription;
+      try {</code></pre>

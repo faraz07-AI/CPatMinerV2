@@ -1,0 +1,33 @@
+digraph G {
+subgraph cluster0 {
+1 [label="assert" a="32" s="8336,8452" l="19,1" shape="box"];
+label = "Old";
+style="dotted";
+}
+subgraph cluster1 {
+2 [label="comparingValuesUsing" a="32" s="9843,9887" l="21,1" shape="box"];
+3 [label="assert" a="32" s="9742,9832" l="11,1" shape="box"];
+4 [label="containsExactly" a="32" s="9898,10107" l="29,1" shape="box"];
+5 [label="NumberLiteral" a="34" s="9927" l="1" shape="ellipse"];
+6 [label="NumberLiteral" a="34" s="10039" l="1" shape="ellipse"];
+7 [label="SimpleName" a="42" s="10083" l="24" shape="ellipse"];
+8 [label="SimpleName" a="42" s="10042" l="24" shape="ellipse"];
+9 [label="SimpleName" a="42" s="9930" l="19" shape="ellipse"];
+10 [label="SimpleName" a="42" s="9967" l="19" shape="ellipse"];
+11 [label="SimpleName" a="42" s="9864" l="23" shape="ellipse"];
+12 [label="SimpleName" a="42" s="10003" l="22" shape="ellipse"];
+label = "New";
+style="dotted";
+}
+1 -> 2 [label="_map_"];
+2 -> 4 [label="_recv_"];
+3 -> 2 [label="_recv_"];
+5 -> 4 [label="_para_"];
+6 -> 4 [label="_para_"];
+7 -> 4 [label="_para_"];
+8 -> 4 [label="_para_"];
+9 -> 4 [label="_para_"];
+10 -> 4 [label="_para_"];
+11 -> 2 [label="_para_"];
+12 -> 4 [label="_para_"];
+}

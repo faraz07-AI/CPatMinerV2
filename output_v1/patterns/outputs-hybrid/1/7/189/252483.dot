@@ -1,0 +1,24 @@
+digraph G {
+subgraph cluster0 {
+1 [label="sort" a="32" s="8855,9134" l="18,1" shape="box"];
+4 [label="from" a="32" s="8903,8921" l="5,1" shape="box"];
+5 [label="onResultOf" a="32" s="8923,9133" l="11,1" shape="box"];
+7 [label="<new>" a="14" s="8934" l="43" shape="box"];
+label = "Old";
+style="dotted";
+}
+subgraph cluster1 {
+2 [label="sort" a="32" s="8815,8894" l="18,1" shape="box"];
+3 [label="from" a="32" s="8863,8881" l="5,1" shape="box"];
+6 [label="onKeys" a="32" s="8886" l="8" shape="box"];
+label = "New";
+style="dotted";
+}
+1 -> 2 [label="_map_"];
+3 -> 6 [label="_recv_"];
+4 -> 5 [label="_recv_"];
+4 -> 3 [label="_map_"];
+5 -> 1 [label="_para_"];
+6 -> 2 [label="_para_"];
+7 -> 5 [label="_para_"];
+}

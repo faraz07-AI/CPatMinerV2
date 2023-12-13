@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3>1d933d9e9d623eef8aedbcfe65f41a3a61e8cae8,anhalytics-index/src/main/java/fr/inria/anhalytics/index/IndexingPreprocess.java,IndexingPreprocess,getStandoffNerd,#ObjectMapper#String#,491
+</h3><h3>Before Change</h3><pre><code class='java'>
+     */
+    public JsonNode getStandoffNerd(ObjectMapper mapper, String anhalyticsId) throws Exception {
+        JsonNode standoffNode = null;
+        String annotation = mm.getNerdAnnotations(anhalyticsId).<a id="change">getJson()</a>;
+        if ((annotation != null) && (annotation.trim().length() &gt; 0)) {
+            JsonNode jsonAnnotation = mapper.readTree(annotation);
+            if ((jsonAnnotation != null) && (!jsonAnnotation.isMissingNode())) {</code></pre><h3>After Change</h3><pre><code class='java'>
+     */
+    public JsonNode getStandoffNerd(ObjectMapper mapper, String anhalyticsId) throws Exception {
+        JsonNode standoffNode = null;
+        String annotation = mm.getNerdAnnotations(anhalyticsId)<a id="change"> != null ? </a>mm.getNerdAnnotations(anhalyticsId).<a id="change">getJson()</a>:null;
+        if ((annotation != null) && (annotation.trim().length() &gt; 0)) {
+            JsonNode jsonAnnotation = mapper.readTree(annotation);
+            if ((jsonAnnotation != null) && (!jsonAnnotation.isMissingNode())) {</code></pre>

@@ -1,0 +1,22 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3>50a7e39a635b6e60332810eb286c4967c3849a4a,guava/src/com/google/common/util/concurrent/ServiceManager.java,ServiceListener,finishedStarting,#boolean#,676
+</h3><h3>Before Change</h3><pre><code class='java'>
+    void finishedStarting(boolean currentlyHealthy) {
+      synchronized (watch) {
+        watch.stop();
+        logger.<a id="change">log(</a>Level.FINE, "Started {0} in {1} ms.", 
+            new Object[] {service, startupTimeMillis()}<a id="change">)</a>;
+      }
+      state.serviceFinishedStarting(service, currentlyHealthy);
+    }</code></pre><h3>After Change</h3><pre><code class='java'>
+    void finishedStarting(boolean currentlyHealthy) {
+      synchronized (watch) {
+        watch.stop();
+        <a id="change">if (!</a>(<a id="change">service instanceof </a>NoOpService)<a id="change">) </a>{
+          logger.<a id="change">log(</a>Level.FINE, "Started {0} in {1} ms.", 
+              new Object[] {service, startupTimeMillis()}<a id="change">)</a>;
+        }
+      }
+      state.serviceFinishedStarting(service, currentlyHealthy);</code></pre>

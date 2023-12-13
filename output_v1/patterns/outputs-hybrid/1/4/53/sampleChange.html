@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3>f8a94b9999e42a2eb1431948ebb57ab8533eaaa5,guava/src/com/google/common/collect/HashBiMap.java,HashBiMap,get,#Object#,211
+</h3><h3>Before Change</h3><pre><code class='java'>
+  @Nullable
+  @Override
+  public V get(@Nullable Object key) {
+    BiEntry&lt;K, V&gt; entry = <a id="change">seekByKey(</a>key, hash(key)<a id="change">)</a>;
+    <a id="change">return </a>(entry == null) ? null : entry.value;
+  }
+
+  @Override</code></pre><h3>After Change</h3><pre><code class='java'>
+  @Nullable
+  @Override
+  public V get(@Nullable Object key) {
+    <a id="change">return </a>valueOrNull(<a id="change">seekByKey(</a>key, Hashing.smearedHash(key)<a id="change">)</a>);
+  }
+
+  @Override</code></pre>

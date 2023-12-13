@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3>4670beea5c84802d6d90440d1724a8cd6a9fe287,guava/src/com/google/common/collect/FluentIterable.java,FluentIterable,firstMatch,#Predicate#,475
+</h3><h3>Before Change</h3><pre><code class='java'>
+   */
+  @SuppressWarnings("nullness") // Unsafe, but we can't do much about it now.
+  public final Optional&lt;E&gt; firstMatch(Predicate&lt;? super E&gt; predicate) {
+    return Iterables.tryFind(<a id="change">getDelegate()</a>, predicate);
+  }
+
+  /**</code></pre><h3>After Change</h3><pre><code class='java'>
+   */
+  @SuppressWarnings("nullness") // Unsafe, but we can't do much about it now.
+  public final Optional&lt;@NonNull E&gt; firstMatch(Predicate&lt;? super E&gt; predicate) {
+    return Iterables.&lt;E&gt;tryFind(<a id="change">(Iterable&lt;@NonNull E&gt;) </a><a id="change">getDelegate()</a>, predicate);
+  }
+
+  /**</code></pre>

@@ -1,0 +1,21 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3>0ef619507ded5f35d9a974c817403586dee5af6f,guava/src/com/google/common/io/ByteSource.java,ByteSource,isEmpty,#,137
+</h3><h3>Before Change</h3><pre><code class='java'>
+   */
+  public boolean isEmpty() throws IOException {
+    Optional&lt;Long&gt; sizeIfKnown = sizeIfKnown();
+    if (sizeIfKnown.<a id="change">isPresent() && </a>sizeIfKnown.get()<a id="change"> == </a>0L) {
+      <a id="change">return </a><a id="change">true</a>;
+    }
+    Closer closer = Closer.create();
+    try {</code></pre><h3>After Change</h3><pre><code class='java'>
+   */
+  public boolean isEmpty() throws IOException {
+    Optional&lt;Long&gt; sizeIfKnown = sizeIfKnown();
+    if (sizeIfKnown.<a id="change">isPresent()</a>) {
+      <a id="change">return </a>sizeIfKnown.get()<a id="change"> == </a>0L;
+    }
+    Closer closer = Closer.create();
+    try {</code></pre>

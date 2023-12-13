@@ -1,0 +1,29 @@
+digraph G {
+subgraph cluster0 {
+1 [label="hasSize" a="32" s="10020,10049" l="8,1" shape="box"];
+5 [label="assert" a="32" s="9932,9963" l="11,1" shape="box"];
+11 [label="isNotEmpty" a="32" s="9965" l="12" shape="box"];
+label = "Old";
+style="dotted";
+}
+subgraph cluster1 {
+2 [label="hasSize" a="32" s="8463,8492" l="8,1" shape="box"];
+3 [label="isAtLeast" a="32" s="8380,8421" l="10,1" shape="box"];
+4 [label="assert" a="32" s="8196,8225" l="11,1" shape="box"];
+6 [label="size" a="32" s="8415" l="6" shape="box"];
+7 [label="EnhancedForStatement" a="70" s="8584,8622" l="5,2" shape="diamond"];
+8 [label="assert" a="32" s="9123,9149" l="11,1" shape="box"];
+9 [label="IfStatement" a="25" s="9067,9109" l="4,2" shape="diamond"];
+10 [label="PrefixExpression:!" a="38" s="9071" l="1" shape="box"];
+label = "New";
+style="dotted";
+}
+1 -> 2 [label="_map_"];
+5 -> 11 [label="_recv_"];
+5 -> 4 [label="_map_"];
+6 -> 3 [label="_para_"];
+7 -> 9 [label="_control_"];
+7 -> 10 [label="_control_"];
+9 -> 8 [label="_control_"];
+10 -> 9 [label="_cond_"];
+}

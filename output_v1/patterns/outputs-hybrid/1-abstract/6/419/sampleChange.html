@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3>40df21bf55c45ca190ac65ed58641b54ef454ef1,android/guava/src/com/google/common/net/InternetDomainName.java,InternetDomainName,findPublicSuffix,#,152
+</h3><h3>Before Change</h3><pre><code class='java'>
+    for (int i = 0; i &lt; partsSize; i++) {
+      String ancestorName = DOT_JOINER.join(parts.subList(i, partsSize));
+
+      if (PublicSuffixPatterns.EXACT.<a id="change">containsKey(</a>ancestorName<a id="change">)</a>) {
+        return i;
+      }
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    for (int i = 0; i &lt; partsSize; i++) {
+      String ancestorName = DOT_JOINER.join(parts.subList(i, partsSize));
+
+      if (<a id="change">matchesType(
+          desiredType</a>, <a id="change">Optional</a>.<a id="change">fromNullable(</a>PublicSuffixPatterns.EXACT.<a id="change">get(</a>ancestorName<a id="change">)</a><a id="change">))</a>) {
+        return i;
+      }
+</code></pre>

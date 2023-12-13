@@ -1,0 +1,55 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3>e50ce7e7ed79fbce1901081838c8e0f9269d4128,android/guava/src/com/google/common/io/ByteStreams.java,ByteStreams,toByteArray,#InputStream#number#,172
+</h3><h3>Before Change</h3><pre><code class='java'>
+    }
+
+    // the stream was longer, so read the rest normally
+    FastByteArrayOutputStream <a id="change">out</a> = <a id="change">new FastByteArrayOutputStream(BUFFER_SIZE</a><a id="change">)</a>;
+    <a id="change">copy(in</a>, <a id="change">out</a><a id="change">)</a>;
+
+    byte[] <a id="change">result</a> = <a id="change">Arrays</a>.<a id="change">copyOf(bytes</a>, <a id="change">bytes.length</a><a id="change"> + 1</a> + <a id="change">out</a>.<a id="change">size())</a>;
+    result[bytes.length] = <a id="change">(byte) </a>b;
+    <a id="change">out</a>.<a id="change">writeTo(result</a>, bytes.length + 1<a id="change">)</a>;
+    <a id="change">return result</a>;
+  }
+
+  /** BAOS that provides limited access to its internal byte array. */</code></pre><h3>After Change</h3><pre><code class='java'>
+   * create an initial byte array, but if the actual number of bytes read from the stream differs,
+   * the correct result will be returned anyway.
+   */
+  static byte[] toByteArray(InputStream <a id="change">in</a>, long expectedSize) throws IOException {
+    checkArgument(expectedSize &gt;= 0, "expectedSize (%s) must be non-negative", expectedSize);
+    if (expectedSize &gt; MAX_ARRAY_LEN) {
+      throw new OutOfMemoryError(expectedSize + " bytes is too large to fit in a byte array");
+    }
+
+    byte[] bytes = new byte[(int) expectedSize];
+    int remaining = (int) expectedSize;
+
+    while (remaining &gt; 0) {
+      int off = (int) expectedSize - remaining;
+      int read = in.read(bytes, off, remaining);
+      if (read == -1) {
+        // end of stream before reading expectedSize bytes
+        // just return the bytes read so far
+        return Arrays.copyOf(bytes, off);
+      }
+      remaining -= read;
+    }
+
+    // bytes is now full
+    int b = in.read();
+    if (b == -1) {
+      return bytes;
+    }
+
+    // the stream was longer, so read the rest normally
+    Deque&lt;byte[]&gt; <a id="change">bufs</a> = <a id="change">new ArrayDeque&lt;byte[]&gt;(</a>TO_BYTE_ARRAY_DEQUE_SIZE<a id="change">)</a>;
+    <a id="change">bufs</a>.<a id="change">add(bytes</a><a id="change">)</a>;
+    <a id="change">bufs</a>.<a id="change">add(</a>new byte[] <a id="change">{ (byte) </a>b<a id="change"> }</a><a id="change">)</a>;
+    <a id="change">return </a><a id="change">toByteArrayInternal(in</a>, <a id="change">bufs</a>, bytes.length + 1<a id="change">)</a>;
+  }
+
+  /**</code></pre>

@@ -1,0 +1,22 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3>3a86a13223b899b848a7f95556601d49d2faf426,guava/src/com/google/common/reflect/Parameter.java,Parameter,getDeclaredAnnotationsByType,#Class#,114
+</h3><h3>Before Change</h3><pre><code class='java'>
+  // @Override on JDK8
+  @Override
+  public &lt;A extends Annotation&gt; A[] getDeclaredAnnotationsByType(Class&lt;A&gt; annotationType) {
+    return FluentIterable.from(annotations).filter(annotationType).<a id="change">toArray(</a>annotationType<a id="change">)</a>;
+  }
+
+  /** @since 25.1 */</code></pre><h3>After Change</h3><pre><code class='java'>
+  @Override
+  public &lt;A extends Annotation&gt; A[] getDeclaredAnnotationsByType(Class&lt;A&gt; annotationType) {
+    @Nullable
+    A[] result = FluentIterable.from(annotations).filter(annotationType).<a id="change">toArray(</a>annotationType<a id="change">)</a>;
+    @SuppressWarnings("nullness") // safe because the input list contains no nulls
+    A[] cast = (A[]) result;
+    <a id="change">return </a>cast;
+  }
+
+  /** @since 25.1 */</code></pre>

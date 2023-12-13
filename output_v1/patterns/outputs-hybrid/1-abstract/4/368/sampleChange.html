@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3>dbf37a8b12159763f7721ea79644de9080d53e99,guava/src/com/google/common/collect/AbstractRangeSet.java,AbstractRangeSet,removeAll,#RangeSet#,75
+</h3><h3>Before Change</h3><pre><code class='java'>
+
+  @Override
+  public void removeAll(RangeSet&lt;C&gt; other) {
+    <a id="change">for (</a>Range&lt;C&gt; <a id="change">range</a> : other.<a id="change">asRanges()) </a>{
+      remove(range);
+    }
+  }</code></pre><h3>After Change</h3><pre><code class='java'>
+
+  @Override
+  public void removeAll(RangeSet&lt;C&gt; other) {
+    removeAll(other.<a id="change">asRanges()</a>);
+  }
+
+  @Override</code></pre>

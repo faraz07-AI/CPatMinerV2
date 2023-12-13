@@ -1,0 +1,15 @@
+digraph G {
+subgraph cluster0 {
+3 [label="MethodInvocation" a="32" s="6563,6571" l="3,1" shape="box"];
+label = "Old";
+style="dotted";
+}
+subgraph cluster1 {
+1 [label="ClassInstanceCreation" a="14" s="6578,6618" l="17,1" shape="box"];
+2 [label="MethodInvocation" a="32" s="6609,6617" l="3,1" shape="box"];
+label = "New";
+style="dotted";
+}
+2 -> 1 [label="_para_"];
+3 -> 2 [label="_map_"];
+}

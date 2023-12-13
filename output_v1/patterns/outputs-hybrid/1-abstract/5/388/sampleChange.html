@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3>51234d756e9ebd547f9978626ac01ef594381b7d,guava/src/com/google/common/util/concurrent/ForwardingService.java,ForwardingService,standardStopAndWait,#,84
+</h3><h3>Before Change</h3><pre><code class='java'>
+   */
+  protected State standardStopAndWait() {
+    try {
+      return <a id="change">Futures</a>.<a id="change">makeUninterruptible(</a>stop()<a id="change">)</a>.<a id="change">get()</a>;
+    } catch (ExecutionException e) {
+      throw Throwables.propagate(e.getCause());
+    }</code></pre><h3>After Change</h3><pre><code class='java'>
+   */
+  protected State standardStopAndWait() {
+    try {
+      return <a id="change">Uninterruptibles</a>.<a id="change">getUninterruptibly(</a>stop()<a id="change">)</a>;
+    } catch (ExecutionException e) {
+      throw Throwables.propagate(e.getCause());
+    }</code></pre>

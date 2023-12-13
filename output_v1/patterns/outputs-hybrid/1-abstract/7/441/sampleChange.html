@@ -1,0 +1,21 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3>8cddfe92af159a5cad1dcd96ddaf816e9e186365,guava-tests/test/com/google/common/collect/TablesTest.java,TablesTest,testToTableMerging,#,97
+</h3><h3>Before Change</h3><pre><code class='java'>
+                .put("two", "dos", 6)
+                .put("three", "tres", 3)
+                .build(),
+            Tables.<a id="change">immutableCell(</a>"one", "uno", 1<a id="change">)</a>,
+            Tables.immutableCell("two", "dos", 2),
+            <a id="change">Tables</a>.<a id="change">immutableCell("three"</a>, <a id="change">"tres"</a>, <a id="change">3</a><a id="change">)</a>,
+            Tables.immutableCell("two", "dos", 4));
+  }
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    CollectorTester.of(collector)
+        .expectCollects(HashBasedTable.create())
+        .expectCollects(
+            expected, Tables.<a id="change">immutableCell(</a>"one", "uno", 1<a id="change">)</a>, Tables.immutableCell("one", "uno", 2));
+  }
+
+  @GwtIncompatible // SerializableTester</code></pre>

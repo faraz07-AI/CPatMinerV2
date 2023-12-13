@@ -1,0 +1,24 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3>85ea2911e041fa53e3f81e36fd81dbc4cd4f2969,guava/src/com/google/common/cache/CustomConcurrentHashMap.java,Segment,reclaimKey,#ReferenceEntry#number#,3199
+</h3><h3>Before Change</h3><pre><code class='java'>
+        for (ReferenceEntry&lt;K, V&gt; e = first; e != null; e = e.getNext()) {
+          if (e == entry) {
+            ++modCount;
+            <a id="change">enqueueNotification(</a>e.getKey(), hash, e.getValueReference(), RemovalCause.COLLECTED<a id="change">)</a>;
+            ReferenceEntry&lt;K, V&gt; newFirst = <a id="change">removeFromChain(first</a>, <a id="change">e</a><a id="change">)</a>;
+            newCount = this.count - 1;
+            table.set(index, newFirst);
+            this.count = newCount; // write-volatile</code></pre><h3>After Change</h3><pre><code class='java'>
+        int index = hash & (table.length() - 1);
+        ReferenceEntry&lt;K, V&gt; first = table.get(index);
+
+        for (ReferenceEntry&lt;K, V&gt; <a id="change">e</a> = first; e != null; e = e.getNext()) {
+          if (e == entry) {
+            ++modCount;
+            ReferenceEntry&lt;K, V&gt; newFirst = <a id="change">removeValueFromChain(
+                first</a>, <a id="change">e</a>, e.getKey(), hash, e.getValueReference(), RemovalCause.COLLECTED<a id="change">)</a>;
+            newCount = this.count - 1;
+            table.set(index, newFirst);
+            this.count = newCount; // write-volatile</code></pre>

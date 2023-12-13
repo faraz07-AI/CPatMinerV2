@@ -1,0 +1,28 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3>86f50adc5e6a3b1b9c39a02a162c1570942f473f,guava-tests/test/com/google/common/io/ByteStreamsTest.java,ByteStreamsTest,testCopySuppliersExceptions,#,343
+</h3><h3>Before Change</h3><pre><code class='java'>
+      TestLogHandler logHandler = new TestLogHandler();
+      Closeables.logger.addHandler(logHandler);
+      try {
+        for (InputSupplier&lt;InputStream&gt; <a id="change">in</a> : BROKEN_INPUTS) {
+          runFailureTest(in, newByteArrayOutputStreamSupplier());
+          assertTrue(logHandler.getStoredLogRecords().isEmpty());
+
+          <a id="change">runFailureTest(</a>in, BROKEN_CLOSE_OUTPUT<a id="change">)</a>;
+          assertEquals((in == BROKEN_GET_INPUT) ? 0 : 1, getAndResetRecords(logHandler));
+        }
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    byte[] data = "qed".getBytes(Charsets.UTF_16BE);
+    ByteArrayDataInput in = ByteStreams.newDataInput(data);
+    assertEquals('q', in.readChar());
+    a<a id="change">ss</a>ertEquals('e', in.readChar());
+    assertEquals('d', in.readChar());
+  }
+  
+  public void testNewDataInput_readUnsignedShort() {
+    byte[] data = {0<a id="change">, 0, 0, 1, (byt</a>e) 0xFF, (byte) 0xFF,<a id="change"> </a>0x12, 0x34};
+    ByteArrayDataInput in = ByteStreams.newDataInput(data);
+    assertEquals(0, in.readUnsignedShort());
+    assertEquals(1, in.readUnsignedShort());</code></pre>

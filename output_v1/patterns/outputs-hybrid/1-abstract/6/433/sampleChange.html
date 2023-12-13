@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3>7fbd99f23566e293a6b89db4639b91e31b6053b8,guava/src/com/google/common/graph/Graphs.java,Graphs,copyOf,#Graph#Predicate#,134
+</h3><h3>Before Change</h3><pre><code class='java'>
+    checkNotNull(nodePredicate, "nodePredicate");
+    MutableGraph&lt;N&gt; copy = GraphBuilder.from(graph).expectedNodeCount(graph.nodes().size()).build();
+
+    for (N node : graph.<a id="change">nodes()</a>) {
+      if (nodePredicate.apply(node)) {
+        copy.addNode(node);
+        for (N successor : graph.successors(node)) {</code></pre><h3>After Change</h3><pre><code class='java'>
+    checkNotNull(nodePredicate, "nodePredicate");
+    MutableGraph&lt;N&gt; copy = GraphBuilder.from(graph).expectedNodeCount(graph.nodes().size()).build();
+
+    for (N node : <a id="change">Sets</a>.<a id="change">filter(</a>graph.<a id="change">nodes()</a>, <a id="change">nodePredicate</a><a id="change">)</a>) {
+      copy.addNode(node);
+      for (N successor : Sets.filter(graph.successors(node), nodePredicate)) {
+        copy.addEdge(node, successor);</code></pre>

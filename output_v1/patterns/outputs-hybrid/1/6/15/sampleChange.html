@@ -1,0 +1,22 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3>baf1735bd10e7e906be547888757c7dd1a135352,anhalytics-harvest/src/main/java/fr/inria/anhalytics/dao/Conference_EventDAO.java,Conference_EventDAO,create,#Conference_Event#,34
+</h3><h3>Before Change</h3><pre><code class='java'>
+            
+            statement = connect.prepareStatement(SQL_INSERT, Statement.RETURN_GENERATED_KEYS);
+            statement.setLong(1, obj.getConference().getConfID());
+            statement.<a id="change">setLong(</a>2, obj.getAddress().getAddressId()<a id="change">)</a>;
+            statement.setString(3, obj.getStart_date());
+            statement.setString(4, obj.getEnd_date());
+            statement.setLong(5, obj.getMonograph().getMonographID());</code></pre><h3>After Change</h3><pre><code class='java'>
+
+            statement.setLong(1, obj.getConference().getConfID());
+
+            <a id="change">if (</a>obj.getConference()<a id="change"> == null) </a>{
+                statement.setLong(2, java.sql.Types.INTEGER);
+            } else {
+                statement.<a id="change">setLong(</a>2, obj.getAddress().getAddressId()<a id="change">)</a>;
+            }
+            statement.setString(3, obj.getStart_date());
+            statement.setString(4, obj.getEnd_date());</code></pre>

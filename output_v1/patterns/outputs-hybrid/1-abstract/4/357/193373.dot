@@ -1,0 +1,17 @@
+digraph G {
+subgraph cluster0 {
+4 [label="MethodInvocation" a="32" s="24259" l="10" shape="box"];
+label = "Old";
+style="dotted";
+}
+subgraph cluster1 {
+1 [label="BooleanLiteral" a="9" s="23930" l="4" shape="ellipse"];
+2 [label="MethodInvocation" a="32" s="23903" l="10" shape="box"];
+3 [label="MethodInvocation" a="32" s="23914,23934" l="16,1" shape="box"];
+label = "New";
+style="dotted";
+}
+1 -> 3 [label="_para_"];
+2 -> 3 [label="_recv_"];
+4 -> 2 [label="_map_"];
+}

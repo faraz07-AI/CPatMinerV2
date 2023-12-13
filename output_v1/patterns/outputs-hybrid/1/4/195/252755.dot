@@ -1,0 +1,17 @@
+digraph G {
+subgraph cluster0 {
+1 [label="stream" a="32" s="14559,14608" l="7,1" shape="box"];
+label = "Old";
+style="dotted";
+}
+subgraph cluster1 {
+2 [label="stream" a="32" s="14696,14745" l="7,1" shape="box"];
+3 [label="onClose" a="32" s="14747,14768" l="8,1" shape="box"];
+4 [label="NullLiteral" a="33" s="14755" l="13" shape="ellipse"];
+label = "New";
+style="dotted";
+}
+1 -> 2 [label="_map_"];
+2 -> 3 [label="_recv_"];
+4 -> 3 [label="_para_"];
+}

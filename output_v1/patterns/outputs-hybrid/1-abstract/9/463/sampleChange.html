@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3>32003c2deafd98c272413c0de17c60d01a6672a8,android/guava/src/com/google/common/collect/CompactHashMap.java,CompactHashMap,init,#number#,195
+</h3><h3>Before Change</h3><pre><code class='java'>
+    Preconditions.checkArgument(expectedSize &gt;= 0, "Expected size must be &gt;= 0");
+
+    // Save expectedSize for use in allocArrays()
+    this.metadata = <a id="change">Math</a>.<a id="change">max(1</a>, <a id="change">Math</a>.<a id="change">min(</a>CompactHashing.MAX_SIZE, <a id="change">expectedSize</a><a id="change">)</a><a id="change">)</a>;
+  }
+
+  /** Returns whether arrays need to be allocated. */</code></pre><h3>After Change</h3><pre><code class='java'>
+    Preconditions.checkArgument(expectedSize &gt;= 0, "Expected size must be &gt;= 0");
+
+    // Save expectedSize for use in allocArrays()
+    this.metadata = <a id="change">Ints</a>.<a id="change">constrainToRange(expectedSize</a>, <a id="change">1</a>, CompactHashing.MAX_SIZE<a id="change">)</a>;
+  }
+
+  /** Returns whether arrays need to be allocated. */</code></pre>

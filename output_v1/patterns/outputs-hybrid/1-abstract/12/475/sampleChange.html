@@ -1,0 +1,29 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3>14ffeecb1e68e022829fd920b07bcbd0ee35e30c,guava-tests/test/com/google/common/reflect/SubtypeTester.java,SubtypeTester,isSubtype,#T#,83
+</h3><h3>Before Change</h3><pre><code class='java'>
+    Type returnType = method.getGenericReturnType();
+    Type paramType = getOnlyParameterType();
+    TestSubtype spec = method.getAnnotation(TestSubtype.class);
+    <a id="change">assertThat(</a>TypeToken.of(paramType).isSubtypeOf(returnType)<a id="change">)</a>
+        .<a id="change">named("%s is subtype of %s"</a>, <a id="change">paramType</a>, <a id="change">returnType</a><a id="change">)</a>
+        .isTrue();
+    <a id="change">assertThat(</a>TypeToken.of(returnType).isSupertypeOf(paramType)<a id="change">)</a>
+        .<a id="change">named("%s is supertype of %s"</a>, <a id="change">returnType</a>, <a id="change">paramType</a><a id="change">)</a>
+        .isTrue();
+    if (!spec.suppressGetSubtype()) {
+      assertThat(getSubtype(returnType, TypeToken.of(paramType).getRawType())).isEqualTo(paramType);
+    }</code></pre><h3>After Change</h3><pre><code class='java'>
+    Type returnType = method.getGenericReturnType();
+    Type paramType = getOnlyParameterType();
+    TestSubtype spec = method.getAnnotation(TestSubtype.class);
+    <a id="change">assertWithMessage(</a>"%s is subtype of %s", paramType, returnType<a id="change">)</a>
+        .<a id="change">that(</a>TypeToken.of(paramType).isSubtypeOf(returnType)<a id="change">)</a>
+        .isTrue();
+    <a id="change">assertWithMessage(</a>"%s is supertype of %s", returnType, paramType<a id="change">)</a>
+        .<a id="change">that(</a>TypeToken.of(returnType).isSupertypeOf(paramType)<a id="change">)</a>
+        .isTrue();
+    if (!spec.suppressGetSubtype()) {
+      assertThat(getSubtype(returnType, TypeToken.of(paramType).getRawType())).isEqualTo(paramType);
+    }</code></pre>

@@ -1,0 +1,31 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3>6739a534dfbc82ad6eaf8db9fcaf47bc1ea79bed,guava/src/com/google/common/collect/CustomConcurrentHashMap.java,Segment,put,#K#number#V#boolean#,2533
+</h3><h3>Before Change</h3><pre><code class='java'>
+            // else clobber, don't adjust count
+
+            ++modCount;
+            <a id="change">setValue(</a>e, value<a id="change">)</a>;
+            return entryValue;
+          }
+        }</code></pre><h3>After Change</h3><pre><code class='java'>
+              valueReference.notifyValueReclaimed();
+              evictEntries();
+              newCount = this.count + 1;
+              <a id="change">setValue(</a>e, value<a id="change">)</a>;
+              this.count = newCount; // write-volatile
+              return entryValue;
+            } else if (onlyIfAbsent) {
+              // Mimic
+              // "if (!map.containsKey(key)) ...
+              // else return map.get(key);
+              recordLockedRead(e);
+              return entryValue;
+            } else {
+              // clobber existing entry, count remains unchanged
+              ++modCount;
+              <a id="change">setValue(e</a>, <a id="change">value</a><a id="change">)</a>;
+              return entryValue;
+            }
+          }</code></pre>

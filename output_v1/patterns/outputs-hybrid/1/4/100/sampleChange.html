@@ -1,0 +1,27 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3>e5f4c665001e8801cce23aa2a5fb493b7219fc04,guava/src/com/google/common/math/PairedStatsAccumulator.java,PairedStatsAccumulator,addAll,#PairedStats#,75
+</h3><h3>Before Change</h3><pre><code class='java'>
+    if (count() == 0) {
+      sumOfProductsOfDeltas = values.sumOfProductsOfDeltas();
+    } else {
+      long nextCount = count() + <a id="change">values</a>.<a id="change">count()</a>;
+      double xMeanDelta = xStats.mean() - values.xStats().mean();
+      double yMeanDelta = yStats.mean() - values.yStats().mean();
+      // Note that non-finite inputs will have sumOfSquaresOfDeltas = NaN, so non-finite values will
+      // result in NaN naturally.
+      // TODO(b/26080783): Consider optimizations similar to those in StatsAccumulator.addAll().
+      sumOfProductsOfDeltas +=
+          values.sumOfProductsOfDeltas()
+              + xMeanDelta * yMeanDelta * count() * values.<a id="change">count()</a> / nextCount;
+    }
+
+    xStats.addAll(values.xStats());</code></pre><h3>After Change</h3><pre><code class='java'>
+          values.sumOfProductsOfDeltas()
+              + (values.xStats().mean() - xStats.mean())
+              * (values.yStats().mean() - yStats.mean())
+              * values.<a id="change">count()</a>;
+    }
+    yStats.addAll(values.yStats());
+  }</code></pre>

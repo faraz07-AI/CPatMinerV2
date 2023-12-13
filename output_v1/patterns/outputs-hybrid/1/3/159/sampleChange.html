@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3>8b0ec570c69b969b47262eff5935ddc7a80ced50,guava/src/com/google/common/graph/ImmutableDirectedGraph.java,ImmutableDirectedGraph,adjacentNodes,#Object#,150
+</h3><h3>Before Change</h3><pre><code class='java'>
+
+  @Override
+  public Set&lt;N&gt; adjacentNodes(Object node) {
+    return Sets.<a id="change">union(</a>predecessors(node), successors(node)<a id="change">)</a>.<a id="change">immutableCopy()</a>;
+  }
+
+  @Override</code></pre><h3>After Change</h3><pre><code class='java'>
+
+  @Override
+  public Set&lt;N&gt; adjacentNodes(Object node) {
+    return Sets.<a id="change">union(</a>predecessors(node), successors(node)<a id="change">)</a>;
+  }
+
+  @Override</code></pre>

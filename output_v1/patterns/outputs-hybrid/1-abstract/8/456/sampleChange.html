@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3>cb54c20bedf257f2eeec7e9f61105b2585ab0752,guava-gwt/src-super/com/google/common/collect/super/com/google/common/collect/Maps.java,ImprovedAbstractMap,entrySet,#,2334
+</h3><h3>Before Change</h3><pre><code class='java'>
+
+    @Override public Set&lt;Entry&lt;K, V&gt;&gt; entrySet() {
+      Set&lt;Entry&lt;K, V&gt;&gt; result = entrySet;
+      <a id="change">if (</a>result<a id="change"> == </a>null<a id="change">) </a>{
+        entrySet = result = <a id="change">createEntrySet()</a>;
+      }
+      return result;
+    }</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    @Override public Set&lt;Entry&lt;K, V&gt;&gt; entrySet() {
+      Set&lt;Entry&lt;K, V&gt;&gt; result = entrySet;
+      return (result<a id="change"> == </a>null)<a id="change"> ? </a>entrySet = <a id="change">createEntrySet()</a> : result;
+    }
+
+    private transient Set&lt;K&gt; keySet;</code></pre>

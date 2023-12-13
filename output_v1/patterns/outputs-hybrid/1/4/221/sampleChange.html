@@ -1,0 +1,26 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3>a0a77f482aa55187e601a87daf08e411a8102f48,guava/src/com/google/common/util/concurrent/Futures.java,Futures,inCompletionOrder,#Iterable#,914
+</h3><h3>Before Change</h3><pre><code class='java'>
+    final ImmutableList&lt;AbstractFuture&lt;T&gt;&gt; delegates = delegatesBuilder.build();
+    for (int i = 0; i &lt; copy.length; i++) {
+      final int localI = i;
+      copy[i].<a id="change">addListener(
+          new Runnable() </a>{
+            @Override
+            public void run() {
+              state.recordInputCompletion(delegates, localI);
+            }
+          },
+          directExecutor()<a id="change">)</a>;
+    }
+
+    @SuppressWarnings("unchecked")</code></pre><h3>After Change</h3><pre><code class='java'>
+    final ImmutableList&lt;AbstractFuture&lt;T&gt;&gt; delegates = delegatesBuilder.build();
+    for (int i = 0; i &lt; copy.length; i++) {
+      final int localI = i;
+      copy[i].<a id="change">addListener(() -&gt; state.recordInputCompletion(delegates, localI)</a>, directExecutor()<a id="change">)</a>;
+    }
+
+    @SuppressWarnings("unchecked")</code></pre>

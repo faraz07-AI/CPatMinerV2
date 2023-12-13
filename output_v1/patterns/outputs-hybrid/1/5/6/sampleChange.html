@@ -1,0 +1,21 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3>97963a74d9102aefc1613738cc7c218fee2e03f8,src/com/google/common/collect/CustomConcurrentHashMap.java,WeakEntry,finalizeReferent,#,961
+</h3><h3>Before Change</h3><pre><code class='java'>
+    }
+
+    public void finalizeReferent() {
+      map.<a id="change">removeEntry(</a>this<a id="change">)</a>;
+    }
+
+    // The code below is exactly the same for each entry type.</code></pre><h3>After Change</h3><pre><code class='java'>
+    }
+
+    public void finalizeReferent() {
+      <a id="change">if (</a>map.<a id="change">removeEntry(</a>this<a id="change">)) </a>{
+        // send removal notification if the entry is in the map
+        <a id="change">map</a>.pendingEvictionNotifications.<a id="change">offer(</a>this<a id="change">)</a>;
+      }
+    }
+</code></pre>

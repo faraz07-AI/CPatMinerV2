@@ -1,0 +1,22 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3>7fbd99f23566e293a6b89db4639b91e31b6053b8,guava-tests/test/com/google/common/graph/AbstractNetworkTest.java,AbstractNetworkTest,validateGraphState,#,149
+</h3><h3>Before Change</h3><pre><code class='java'>
+      assertThat(edgeString).contains(edge);
+
+      if (!(graph instanceof Hypergraph)) {
+        Iterator&lt;Integer&gt; <a id="change">incidentNodesIterator</a> = graph.<a id="change">incidentNodes(</a>edge<a id="change">)</a>.iterator();
+        Integer node1 = <a id="change">incidentNodesIterator</a>.<a id="change">next()</a>;
+        Integer node2 = incidentNodesIterator.hasNext() ? incidentNodesIterator.next() : node1;
+        assertFalse(incidentNodesIterator.hasNext());
+        assertThat(graph.edgesConnecting(node1, node2)).contains(edge);</code></pre><h3>After Change</h3><pre><code class='java'>
+      // TODO(b/27817069): Consider verifying the edge's incident nodes in the string.
+      assertThat(edgeString).contains(edge);
+
+      Endpoints&lt;Integer&gt; <a id="change">endpoints</a> = graph.<a id="change">incidentNodes(</a>edge<a id="change">)</a>;
+      Integer nodeA = <a id="change">endpoints</a>.<a id="change">nodeA()</a>;
+      Integer nodeB = <a id="change">endpoints</a>.<a id="change">nodeB()</a>;
+      assertThat(graph.edgesConnecting(nodeA, nodeB)).contains(edge);
+      assertThat(graph.successors(nodeA)).contains(nodeB);
+      assertThat(graph.adjacentNodes(nodeA)).contains(nodeB);</code></pre>

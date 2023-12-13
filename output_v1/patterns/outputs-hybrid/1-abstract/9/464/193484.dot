@@ -1,0 +1,29 @@
+digraph G {
+subgraph cluster0 {
+1 [label="ClassInstanceCreation" a="14" s="3593,3714" l="30,1" shape="box"];
+2 [label="MethodInvocation" a="32" s="3623,3637" l="8,1" shape="box"];
+5 [label="MethodInvocation" a="32" s="3648,3662" l="8,1" shape="box"];
+7 [label="MethodInvocation" a="32" s="3682,3696" l="8,1" shape="box"];
+label = "Old";
+style="dotted";
+}
+subgraph cluster1 {
+3 [label="MethodInvocation" a="32" s="3659,3673" l="8,1" shape="box"];
+4 [label="MethodInvocation" a="32" s="3647,3750" l="12,1" shape="box"];
+6 [label="MethodInvocation" a="32" s="3684,3698" l="8,1" shape="box"];
+8 [label="MethodInvocation" a="32" s="3718,3732" l="8,1" shape="box"];
+9 [label="SimpleName" a="42" s="3627" l="19" shape="ellipse"];
+label = "New";
+style="dotted";
+}
+2 -> 1 [label="_para_"];
+2 -> 3 [label="_map_"];
+3 -> 4 [label="_para_"];
+5 -> 1 [label="_para_"];
+5 -> 6 [label="_map_"];
+6 -> 4 [label="_para_"];
+7 -> 8 [label="_map_"];
+7 -> 1 [label="_para_"];
+8 -> 4 [label="_para_"];
+9 -> 4 [label="_recv_"];
+}

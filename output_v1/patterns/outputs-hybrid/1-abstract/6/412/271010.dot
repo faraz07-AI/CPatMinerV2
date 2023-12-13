@@ -1,0 +1,19 @@
+digraph G {
+subgraph cluster0 {
+2 [label="CastExpression" a="11" s="18960" l="14" shape="box"];
+3 [label="ReturnStatement" a="41" s="18953" l="7" shape="box"];
+label = "Old";
+style="dotted";
+}
+subgraph cluster1 {
+1 [label="CastExpression" a="11" s="13233" l="14" shape="box"];
+4 [label="ReturnStatement" a="41" s="13191" l="7" shape="box"];
+5 [label="SimpleName" a="42" s="13174" l="9" shape="ellipse"];
+label = "New";
+style="dotted";
+}
+1 -> 4 [label="_para_"];
+2 -> 1 [label="_map_"];
+2 -> 3 [label="_para_"];
+5 -> 1 [label="_para_"];
+}

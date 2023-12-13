@@ -1,0 +1,23 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3>cf1478062f646ec0d7e1d96f8ab52e7194b50ce8,guava-gwt/src-super/com/google/common/util/concurrent/super/com/google/common/util/concurrent/InterruptibleTask.java,InterruptibleTask,run,#,23
+</h3><h3>Before Change</h3><pre><code class='java'>
+ */
+abstract class InterruptibleTask implements Runnable {
+  @Override public void run() {
+    <a id="change">runInterruptibly()</a>;
+  }
+
+  abstract void runInterruptibly();</code></pre><h3>After Change</h3><pre><code class='java'>
+  public void run() {
+    V result = null;
+    Throwable error = null;
+    <a id="change">if (isDone()</a><a id="change">) </a>{
+      <a id="change">return;</a>
+    }
+    <a id="change">try </a>{
+      result = <a id="change">runInterruptibly()</a>;
+    } catch (Throwable t) {
+      error = t;
+    }</code></pre>

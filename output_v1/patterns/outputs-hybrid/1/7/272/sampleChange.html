@@ -1,0 +1,22 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3>6739a534dfbc82ad6eaf8db9fcaf47bc1ea79bed,guava/src/com/google/common/collect/CustomConcurrentHashMap.java,CustomConcurrentHashMap,reclaimValue,#ReferenceEntry#ValueReference#,1968
+</h3><h3>Before Change</h3><pre><code class='java'>
+
+  void reclaimValue(ReferenceEntry&lt;K, V&gt; entry, ValueReference&lt;K, V&gt; valueReference) {
+    int hash = entry.getHash();
+    Segment&lt;K, V&gt; <a id="change">segment</a> = <a id="change">segmentFor(</a>hash<a id="change">)</a>;
+    segment.unsetValue(entry.getKey(), hash, valueReference);
+    <a id="change">if (</a><a id="change">!segment</a>.<a id="change">isHeldByCurrentThread()</a><a id="change">) </a>{ // don't cleanup inside of put
+      <a id="change">segment</a>.<a id="change">postWriteCleanup()</a>;
+    }
+  }
+</code></pre><h3>After Change</h3><pre><code class='java'>
+
+  void reclaimValue(ReferenceEntry&lt;K, V&gt; entry, ValueReference&lt;K, V&gt; valueReference) {
+    int hash = entry.getHash();
+    <a id="change">segmentFor(</a>hash<a id="change">)</a>.reclaimValue(entry.getKey(), hash, valueReference);
+  }
+
+  void reclaimKey(ReferenceEntry&lt;K, V&gt; entry) {</code></pre>

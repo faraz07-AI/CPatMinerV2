@@ -154,7 +154,8 @@ public class RevisionAnalyzer {
 		}
 		HashSet<String> javaChangedPaths = new HashSet<>();
 		for (String path : changedPaths) {
-			if (path.endsWith(".java")) {
+			//if (path.endsWith(".java")) {
+			if (path.endsWith(".cs")) {
 				SVNLogEntryPath entryPath = (SVNLogEntryPath) logEntry
 						.getChangedPaths().get(path);
 				if (entryPath.getType() == SVNLogEntryPath.TYPE_MODIFIED/*
@@ -244,7 +245,8 @@ public class RevisionAnalyzer {
 			df.setRepository(repository);
 			df.setDiffComparator(RawTextComparator.DEFAULT);
 			df.setDetectRenames(true);
-			df.setPathFilter(PathSuffixFilter.create(".java"));
+			//df.setPathFilter(PathSuffixFilter.create(".java"));
+			df.setPathFilter(PathSuffixFilter.create(".cs"));
 			List<DiffEntry> diffs = null;
 			try {
 				diffs = df.scan(parent.getTree(), gitCommit.getTree());

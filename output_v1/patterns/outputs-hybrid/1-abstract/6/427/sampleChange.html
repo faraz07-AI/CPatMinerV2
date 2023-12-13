@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3>452cf9ded56866c529466cc52ccba839701f47ee,src/com/google/common/collect/CustomConcurrentHashMap.java,WeakEntry,setValueReference,#ValueReference#,1339
+</h3><h3>Before Change</h3><pre><code class='java'>
+    public void setValueReference(ValueReference&lt;K, V&gt; valueReference) {
+      ValueReference&lt;K, V&gt; previous = this.valueReference;
+      this.valueReference = valueReference;
+      <a id="change">if (previous != </a><a id="change">null</a><a id="change">) </a>{
+        previous.<a id="change">clear()</a>;
+      }
+    }
+    public void valueReclaimed(ValueReference&lt;K, V&gt; v) {</code></pre><h3>After Change</h3><pre><code class='java'>
+    public void setValueReference(ValueReference&lt;K, V&gt; valueReference) {
+      ValueReference&lt;K, V&gt; previous = this.valueReference;
+      this.valueReference = valueReference;
+      previous.<a id="change">clear()</a>;
+    }
+    public void valueReclaimed(ValueReference&lt;K, V&gt; v) {
+      map.reclaimValue(this, v);</code></pre>

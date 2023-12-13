@@ -1,0 +1,23 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3>348af42f11d7c042d7c5582696454d5cff9cf72c,guava-tests/test/com/google/common/base/SuppliersTest.java,SuppliersTest,testMemoizeNonSerializable,#,133
+</h3><h3>Before Change</h3><pre><code class='java'>
+        .isEqualTo("Suppliers.memoize(&lt;supplier that returned 10&gt;)");
+
+    // Should get an exception when we try to serialize.
+    <a id="change">try </a>{
+      reserialize(memoizedSupplier);
+      <a id="change">fail()</a>;
+    } <a id="change">catch (</a>RuntimeException ex<a id="change">) </a>{
+      assertThat(ex).hasCauseThat().<a id="change">isInstanceOf(</a>java.io.NotSerializableException.class<a id="change">)</a>;
+    }
+  }
+</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    // Should get an exception when we try to serialize.
+    RuntimeException ex = assertThrows(RuntimeException.class, () -&gt; reserialize(memoizedSupplier));
+    assertThat(ex).hasCauseThat().<a id="change">isInstanceOf(</a>java.io.NotSerializableException.class<a id="change">)</a>;
+  }
+
+  @J2ktIncompatible</code></pre>

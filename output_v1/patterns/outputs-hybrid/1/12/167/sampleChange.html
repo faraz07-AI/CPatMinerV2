@@ -1,0 +1,32 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3>1e4d01f8246b8465297c3cec8cdd1744f8382e4a,android/guava/src/com/google/common/io/MultiInputStream.java,MultiInputStream,read,#number[]#number#number#,96
+</h3><h3>Before Change</h3><pre><code class='java'>
+
+  @Override
+  public int read(@Nullable byte[] b, int off, int len) throws IOException {
+    <a id="change">if (</a>in<a id="change"> == </a>null<a id="change">) </a>{
+      return -1;
+    }
+    int result = in.read(b, off, len);
+    if (result<a id="change"> == </a>-1) {
+      <a id="change">advance()</a>;
+      <a id="change">return </a><a id="change">read(</a>b, off, len<a id="change">)</a>;
+    }
+    <a id="change">return </a>result;
+  }
+
+  @Override</code></pre><h3>After Change</h3><pre><code class='java'>
+
+  @Override
+  public int read(@Nullable byte[] b, int off, int len) throws IOException {
+    <a id="change">while (</a>in<a id="change"> != </a>null<a id="change">) </a>{
+      int result = in.read(b, off, len);
+      if (result<a id="change"> != </a>-1) {
+        <a id="change">return </a>result;
+      }
+      <a id="change">advance()</a>;
+    }
+    return -1;
+  }</code></pre>

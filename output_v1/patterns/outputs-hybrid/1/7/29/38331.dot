@@ -1,0 +1,24 @@
+digraph G {
+subgraph cluster0 {
+1 [label="spliterator" a="32" s="17650,17723" l="12,1" shape="box"];
+label = "Old";
+style="dotted";
+}
+subgraph cluster1 {
+2 [label="spliterator" a="32" s="20463,20536" l="12,1" shape="box"];
+3 [label="IfStatement" a="25" s="20406" l="11" shape="diamond"];
+4 [label="delegateOrNull" a="32" s="20359" l="16" shape="box"];
+5 [label="InfixExpression:r" a="27" s="20397" l="4" shape="box"];
+6 [label="NullLiteral" a="33" s="20401" l="4" shape="ellipse"];
+7 [label="spliterator" a="32" s="20426" l="13" shape="box"];
+label = "New";
+style="dotted";
+}
+1 -> 2 [label="_map_"];
+3 -> 7 [label="_control_"];
+3 -> 2 [label="_control_"];
+4 -> 7 [label="_recv_"];
+4 -> 5 [label="_para_"];
+5 -> 3 [label="_cond_"];
+6 -> 5 [label="_para_"];
+}

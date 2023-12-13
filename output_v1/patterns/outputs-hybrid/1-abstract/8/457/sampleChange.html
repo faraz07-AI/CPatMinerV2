@@ -1,0 +1,22 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3>78b54f8250067837828e9b7235d7db6f8d728a24,guava/src/com/google/common/collect/CompactHashMap.java,ValuesView,toArray,#T[]#,805
+</h3><h3>Before Change</h3><pre><code class='java'>
+        }
+        return a;
+      }
+      return ObjectArrays.<a id="change">toArrayImpl(</a>values, 0, size, a<a id="change">)</a>;
+    }
+  }
+</code></pre><h3>After Change</h3><pre><code class='java'>
+        }
+        return a;
+      }
+      @Nullable Map&lt;K, V&gt; delegate = <a id="change">delegateOrNull()</a>;
+      return (delegate<a id="change"> != </a><a id="change">null</a>)<a id="change">
+          ? </a>delegate.values().<a id="change">toArray(a</a><a id="change">)</a>
+          : ObjectArrays.<a id="change">toArrayImpl(</a>values, 0, size, a<a id="change">)</a>;
+    }
+  }
+</code></pre>

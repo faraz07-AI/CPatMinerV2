@@ -1,0 +1,24 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3>53bcea501aab53f77cf6f313f5794b8f3e9cbca8,guava/src/com/google/common/collect/CustomConcurrentHashMap.java,Segment,remove,#Object#number#Object#,2707
+</h3><h3>Before Change</h3><pre><code class='java'>
+          K entryKey = e.getKey();
+          if (e.getHash() == hash && entryKey != null
+              && map.keyEquivalence.equivalent(key, entryKey)) {
+            V entryValue = e.<a id="change">getValueReference()</a>.<a id="change">get()</a>;
+            if (entryValue == null) {
+              <a id="change">unsetLiveEntry(e</a>, <a id="change">hash</a><a id="change">)</a>;
+            } else if (map.valueEquivalence.equivalent(value, entryValue)) {
+              ++modCount;
+              ReferenceEntry&lt;K, V&gt; newFirst = removeFromChain(first, e); // could decrement count</code></pre><h3>After Change</h3><pre><code class='java'>
+          K entryKey = e.getKey();
+          if (e.getHash() == hash && entryKey != null
+              && map.keyEquivalence.equivalent(key, entryKey)) {
+            ValueReference&lt;K, V&gt; <a id="change">valueReference</a> = e.<a id="change">getValueReference()</a>;
+            V entryValue = <a id="change">valueReference</a>.<a id="change">get()</a>;
+            if (entryValue == null) {
+              <a id="change">removeLiveEntry(table</a>, <a id="change">index</a>, <a id="change">first</a>, <a id="change">e</a>, <a id="change">hash</a>, <a id="change">valueReference</a><a id="change">)</a>;
+            } else if (map.valueEquivalence.equivalent(value, entryValue)) {
+              ++modCount;
+              ReferenceEntry&lt;K, V&gt; newFirst = removeFromChain(first, e); // decrements count</code></pre>

@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3>582bce8560ea41d8adbbfc5d6ce7fbed5b9fdf66,guava-tests/test/com/google/common/cache/PopulatedCachesTest.java,PopulatedCachesTest,testEntrySet_populated,#,244
+</h3><h3>Before Change</h3><pre><code class='java'>
+
+      Set&lt;?&gt; expected = Maps.newHashMap(cache.asMap()).entrySet();
+      assertThat(entries).has().exactlyAs((Collection&lt;Entry&lt;Object, Object&gt;&gt;) expected);
+      assertThat(entries.toArray()).<a id="change">asList()</a>.<a id="change">has()</a>.exactlyAs((Collection&lt;Object&gt;) expected);
+      assertThat(entries.toArray(new Entry[0])).asList()
+          .has().exactlyAs((Collection&lt;Entry&gt;) expected);
+</code></pre><h3>After Change</h3><pre><code class='java'>
+      Set&lt;?&gt; expected = Maps.newHashMap(cache.asMap()).entrySet();
+      assertThat(entries).containsExactlyElementsIn((Collection&lt;Entry&lt;Object, Object&gt;&gt;) expected);
+      assertThat(entries.toArray())
+          .<a id="change">asList()</a>
+          .containsExactlyElementsIn((Collection&lt;Object&gt;) expected);
+      assertThat(entries.toArray(new Entry[0]))
+          .asList()
+          .containsExactlyElementsIn((Collection&lt;Entry&gt;) expected);</code></pre>

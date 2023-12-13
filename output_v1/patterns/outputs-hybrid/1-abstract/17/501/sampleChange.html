@@ -1,0 +1,27 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3>31e08d06683a65c85dd9f1b743599494e2c2be5c,android/guava/src/com/google/common/graph/AbstractGraph.java,AbstractGraph,toString,#,57
+</h3><h3>Before Change</h3><pre><code class='java'>
+  /** Returns a string representation of this graph. */
+  @Override
+  public String toString() {
+    String <a id="change">propertiesString</a> =
+        <a id="change">String</a>.<a id="change">format("isDirected: %s, allowsSelfLoops: %s"</a>, <a id="change">isDirected()</a>, <a id="change">allowsSelfLoops()</a><a id="change">)</a>;
+    <a id="change">return String</a>.<a id="change">format(GRAPH_STRING_FORMAT</a>, <a id="change">propertiesString</a>, <a id="change">nodes()</a>, edges()<a id="change">)</a>;
+  }
+}
+</code></pre><h3>After Change</h3><pre><code class='java'>
+  /** Returns a string representation of this graph. */
+  @Override
+  public String toString() {
+    <a id="change">return "isDirected: "
+        + </a><a id="change">isDirected()</a>
+        + <a id="change">", allowsSelfLoops: "</a>
+        + <a id="change">allowsSelfLoops()</a>
+        + ", nodes: "
+        + <a id="change">nodes()</a>
+        + ", edges: "
+        + edges();
+  }
+}</code></pre>

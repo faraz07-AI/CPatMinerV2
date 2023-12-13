@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3>0479dcdc4a7a904016727caae0439c240835451e,guava-testlib/src/com/google/common/collect/testing/google/SortedMultisetTestSuiteBuilder.java,SortedMultisetTestSuiteBuilder,createReserializedSuite,#SortedMultisetTestSuiteBuilder#,265
+</h3><h3>Before Change</h3><pre><code class='java'>
+        (TestMultisetGenerator&lt;E&gt;) parentBuilder.getSubjectGenerator();
+
+    Set&lt;Feature&lt;?&gt;&gt; features = new HashSet&lt;&gt;();
+    <a id="change">features</a>.<a id="change">addAll(</a>parentBuilder.<a id="change">getFeatures()</a><a id="change">)</a>;
+    features.remove(SERIALIZABLE);
+    features.remove(SERIALIZABLE_INCLUDING_VIEWS);
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    final TestMultisetGenerator&lt;E&gt; delegate =
+        (TestMultisetGenerator&lt;E&gt;) parentBuilder.getSubjectGenerator();
+
+    Set&lt;Feature&lt;?&gt;&gt; features = new HashSet&lt;&gt;(parentBuilder.<a id="change">getFeatures()</a>);
+    features.remove(SERIALIZABLE);
+    features.remove(SERIALIZABLE_INCLUDING_VIEWS);
+</code></pre>

@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3>b9358ae952477b4b8ba9bd97428bc6ed46acc61e,guava/src/com/google/common/collect/RegularContiguousSet.java,RegularContiguousSet,tailSetImpl,#C#boolean#,63
+</h3><h3>Before Change</h3><pre><code class='java'>
+
+  // Abstract method doesn't exist in GWT emulation
+  /* @Override */ ContiguousSet&lt;C&gt; tailSetImpl(C fromElement, boolean inclusive) {
+    return <a id="change">range</a>.<a id="change">intersection(</a>Ranges.downTo(fromElement, BoundType.forBoolean(inclusive))<a id="change">)</a>
+        .<a id="change">asSet(domain</a><a id="change">)</a>;
+  }
+
+  @Override public UnmodifiableIterator&lt;C&gt; iterator() {</code></pre><h3>After Change</h3><pre><code class='java'>
+  }
+
+  @Override ContiguousSet&lt;C&gt; tailSetImpl(C fromElement, boolean inclusive) {
+    return <a id="change">intersectionInCurrentDomain(</a>Ranges.downTo(fromElement, BoundType.forBoolean(inclusive))<a id="change">)</a>;
+  }
+
+  @GwtIncompatible("not used by GWT emulation")</code></pre>

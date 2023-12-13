@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3>b16c7513906c7d859d5c5c8c262d054809203351,src/com/google/common/collect/ImmutableMultiset.java,ImmutableMultiset,copyOf,#Iterable#,185
+</h3><h3>Before Change</h3><pre><code class='java'>
+    if (elements instanceof ImmutableMultiset) {
+      @SuppressWarnings("unchecked") // all supported methods are covariant
+      ImmutableMultiset&lt;E&gt; result = (ImmutableMultiset&lt;E&gt;) elements;
+      <a id="change">return </a>result;
+    }
+
+    Multiset&lt;? extends E&gt; multiset = (elements instanceof Multiset)</code></pre><h3>After Change</h3><pre><code class='java'>
+    if (elements instanceof ImmutableMultiset) {
+      @SuppressWarnings("unchecked") // all supported methods are covariant
+      ImmutableMultiset&lt;E&gt; result = (ImmutableMultiset&lt;E&gt;) elements;
+      <a id="change">if (!result</a>.<a id="change">isPartialView()</a><a id="change">) </a>{
+        <a id="change">return </a>result;
+      }
+    }
+</code></pre>

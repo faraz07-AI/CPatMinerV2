@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3>dbeed4ae4cd45409ef6ad9fa66f203a45250c2f0,guava-tests/test/com/google/common/util/concurrent/SimpleTimeLimiterTest.java,SimpleTimeLimiterTest,testGoodCallableWithNotEnoughTime,#,70
+</h3><h3>Before Change</h3><pre><code class='java'>
+      fail("no exception thrown");
+    } catch (UncheckedTimeoutException expected) {
+    }
+    <a id="change">assertTheCallTookBetween(</a>start, NOT_ENOUGH_MS, DELAY_MS * 2<a id="change">)</a>;
+  }
+
+  public void testBadCallableWithEnoughTime() throws Exception {</code></pre><h3>After Change</h3><pre><code class='java'>
+    } catch (UncheckedTimeoutException expected) {
+    }
+
+    <a id="change">assertThat(</a>stopwatch.elapsed(MILLISECONDS)<a id="change">)</a>.<a id="change">isIn(Range</a>.<a id="change">closed(</a>NOT_ENOUGH_MS, DELAY_MS * 2<a id="change">))</a>;
+  }
+
+  public void testOldCallWithTimeout_badCallableWithEnoughTime() throws Exception {</code></pre>

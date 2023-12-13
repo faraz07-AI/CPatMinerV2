@@ -96,5 +96,59 @@
 		    <artifactId>org.eclipse.jgit</artifactId>
 		    <version>4.6.0.201612231935-r</version>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.github.gumtreediff/core -->
+		<dependency>
+			<groupId>com.github.gumtreediff</groupId>
+			<artifactId>core</artifactId>
+			<version>3.0.0</version>
+			<scope>compile</scope>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.google.code.gson/gson -->
+		<dependency>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
+			<version>2.10.1</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/net.sf.trove4j/trove4j -->
+		<dependency>
+			<groupId>net.sf.trove4j</groupId>
+			<artifactId>trove4j</artifactId>
+			<version>3.0.3</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.atteo.classindex/classindex -->
+		<dependency>
+			<groupId>org.atteo.classindex</groupId>
+			<artifactId>classindex</artifactId>
+			<version>3.13</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.github.gumtreediff/client -->
+		<dependency>
+			<groupId>com.github.gumtreediff</groupId>
+			<artifactId>client</artifactId>
+			<version>3.0.0</version>
+			<scope>compile</scope>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.github.gumtreediff/gen.srcml -->
+		<dependency>
+			<groupId>com.github.gumtreediff</groupId>
+			<artifactId>gen.srcml</artifactId>
+			<version>3.0.0</version>
+			<scope>compile</scope>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.yaml/snakeyaml -->
+		<dependency>
+			<groupId>org.yaml</groupId>
+			<artifactId>snakeyaml</artifactId>
+			<version>2.2</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.github.gumtreediff/gen.jdt -->
+		<dependency>
+			<groupId>com.github.gumtreediff</groupId>
+			<artifactId>gen.jdt</artifactId>
+			<version>3.0.0</version>
+		</dependency>
+
+
+
 	</dependencies>
 </project>

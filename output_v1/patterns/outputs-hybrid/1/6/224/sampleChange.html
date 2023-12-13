@@ -1,0 +1,63 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3>8320c63d9cc1fa5b982888dd98ab08035aec6239,src/com/google/common/collect/ComputingConcurrentHashMap.java,ComputingSegment,compute,#K#number#,78
+</h3><h3>Before Change</h3><pre><code class='java'>
+              }
+              // recordWrite at computation start because count is incremented
+              recordWrite(entry);
+              entry.<a id="change">setValueReference(</a>computingValueReference<a id="change">)</a>;
+              this.count = newCount; // write-volatile
+            } else {
+              <a id="change">recordRead(</a>entry<a id="change">)</a>;
+            }
+          } finally {
+            unlock();</code></pre><h3>After Change</h3><pre><code class='java'>
+                  ComputingConcurrentHashMap.this, key, hash, first);
+              table.set(index, entry);
+            }
+            entry.<a id="change">setValueReference(</a>computingValueReference<a id="change">)</a>;
+          }
+        } finally {
+          unlock();
+          scheduleCleanup();
+        }
+
+        if (computingValueReference != null) {
+          // This thread solely created the entry.
+          boolean success = false;
+          try {
+            V value = null;
+            // Synchronizes on the entry to allow failing fast when a
+            // recursive computation is detected. This is not fool-proof
+            // since the entry may be copied when the segment is written to.
+            synchronized (entry) {
+              value = computingValueReference.compute(key, hash);
+            }
+            checkNotNull(value, "compute() returned null unexpectedly");
+            success = true;
+            return value;
+          } finally {
+            if (!success) {
+              clearValue(key, hash, computingValueReference);
+              scheduleCleanup();
+            }
+          }
+        }
+
+        // The entry already exists. Wait for the computation.
+        boolean interrupted = false;
+        try {
+          while (true) {
+            try {
+              checkState(!Thread.holdsLock(entry), "Recursive computation");
+              ValueReference&lt;K, V&gt; valueReference = entry.getValueReference();
+              V value = valueReference.waitForValue();
+              if (value == null) {
+                // this entry could be partially-collected, don't clearValue
+                continue outer;
+              }
+              <a id="change">recordRead(</a>entry<a id="change">)</a>;
+              return value;
+            } catch (InterruptedException e) {
+              interrupted = true;</code></pre>

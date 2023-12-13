@@ -1,0 +1,21 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3>78dab8037a51b63e0e0a92ac0c4a427591d97219,guava/src/com/google/common/collect/Collections2.java,OrderedPermutationCollection,calculateSize,#List#Comparator#,488
+</h3><h3>Before Change</h3><pre><code class='java'>
+        int comparison = comparator.compare(sortedInputList.get(n - 1), sortedInputList.get(n));
+        if (comparison &lt; 0) {
+          // We move to the next non-repeated element.
+          <a id="change">permutations</a> *= <a id="change">binomial(</a>n, r<a id="change">)</a>;
+          r = 0;
+          if (!<a id="change">isPositiveInt(permutations</a><a id="change">)</a>) {
+            return Integer.MAX_VALUE;
+          }
+        }</code></pre><h3>After Change</h3><pre><code class='java'>
+        n++;
+        r++;
+      }
+      return <a id="change">IntMath</a>.<a id="change">saturatedMultiply(permutations</a>, <a id="change">IntMath</a>.<a id="change">binomial(</a>n, r<a id="change">))</a>;
+    }
+
+    @Override</code></pre>

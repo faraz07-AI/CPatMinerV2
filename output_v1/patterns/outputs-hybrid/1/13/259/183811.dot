@@ -1,0 +1,39 @@
+digraph G {
+subgraph cluster0 {
+1 [label="natural" a="32" s="7241" l="9" shape="box"];
+4 [label="copyOf" a="32" s="7225,7285" l="7,1" shape="box"];
+7 [label="asList" a="32" s="7259,7284" l="7,1" shape="box"];
+10 [label="SimpleName" a="42" s="7252" l="6" shape="ellipse"];
+11 [label="SimpleName" a="42" s="7266" l="2" shape="ellipse"];
+14 [label="SimpleName" a="42" s="7270" l="2" shape="ellipse"];
+15 [label="SimpleName" a="42" s="7278" l="2" shape="ellipse"];
+label = "Old";
+style="dotted";
+}
+subgraph cluster1 {
+2 [label="natural" a="32" s="7241" l="9" shape="box"];
+3 [label="construct" a="32" s="7222,7273" l="10,1" shape="box"];
+5 [label="NumberLiteral" a="34" s="7252" l="1" shape="ellipse"];
+6 [label="SimpleName" a="42" s="7199" l="2" shape="ellipse"];
+8 [label="SimpleName" a="42" s="7187" l="2" shape="ellipse"];
+9 [label="SimpleName" a="42" s="7259" l="2" shape="ellipse"];
+12 [label="SimpleName" a="42" s="7255" l="2" shape="ellipse"];
+13 [label="SimpleName" a="42" s="7267" l="2" shape="ellipse"];
+label = "New";
+style="dotted";
+}
+1 -> 2 [label="_map_"];
+1 -> 4 [label="_para_"];
+2 -> 3 [label="_para_"];
+5 -> 3 [label="_para_"];
+6 -> 13 [label="_ref_"];
+7 -> 4 [label="_para_"];
+8 -> 9 [label="_ref_"];
+9 -> 3 [label="_para_"];
+10 -> 7 [label="_recv_"];
+11 -> 7 [label="_para_"];
+12 -> 3 [label="_para_"];
+13 -> 3 [label="_para_"];
+14 -> 7 [label="_para_"];
+15 -> 7 [label="_para_"];
+}
