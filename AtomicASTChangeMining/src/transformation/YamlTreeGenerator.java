@@ -8,6 +8,7 @@ import com.github.gumtreediff.tree.TreeContext;
 import org.yaml.snakeyaml.LoaderOptions;
 import org.yaml.snakeyaml.error.YAMLException;
 import org.yaml.snakeyaml.events.*;
+import org.yaml.snakeyaml.events.Event;
 import org.yaml.snakeyaml.parser.Parser;
 import org.yaml.snakeyaml.parser.ParserImpl;
 import org.yaml.snakeyaml.reader.StreamReader;

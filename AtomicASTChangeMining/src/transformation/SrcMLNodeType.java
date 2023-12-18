@@ -1,6 +1,11 @@
 package transformation;
 
-public class SrcMLNodeType {
+import com.github.gumtreediff.tree.DefaultTree;
+import com.github.gumtreediff.tree.Tree;
+import com.github.gumtreediff.tree.Type;
+
+public class SrcMLNodeType extends DefaultTree{
+
     public static final String COMMENT = "comment";
     public static final String NAMESPACE = "namespace";
     public static final String ARGUMENT_LIST = "argument_list";
@@ -85,4 +90,1165 @@ public class SrcMLNodeType {
     public static final String SELECT = "select";
     public static final String WHERE = "where";
 
+
+    public SrcMLNodeType(Type type) {
+        super(type);
+    }
+
+    public SrcMLNodeType(Type type, String label) {
+        super(type, label);
+    }
+
+    protected SrcMLNodeType(Tree other) {
+        super(other);
+    }
+}
+class CommentNode extends SrcMLNodeType {
+    public static final String TYPE = "comment";
+
+    public CommentNode(Type type) {
+        super(type);
+    }
+
+    public CommentNode(Type type, String label) {
+        super(type, label);
+    }
+
+    protected CommentNode(Tree other) {
+        super(other);
+    }
+}
+class NamespaceNode extends SrcMLNodeType {
+    public static final String TYPE = "namespace";
+    public NamespaceNode(Type type) {
+        super(type);
+    }
+
+    public NamespaceNode(Type type, String label) {
+        super(type, label);
+    }
+
+    protected NamespaceNode(Tree other) {
+        super(other);
+    }
+}
+class ArgumentListNode extends SrcMLNodeType {
+    public static final String TYPE = "argument_list";
+    public ArgumentListNode(Type type) {
+        super(type);
+    }
+
+    public ArgumentListNode(Type type, String label) {
+        super(type, label);
+    }
+
+    protected ArgumentListNode(Tree other) {
+        super(other);
+    }
+}
+class ArgumentNode extends SrcMLNodeType {
+    public static final String TYPE = "argument";
+    public ArgumentNode(Type type) {
+        super(type);
+    }
+
+    public ArgumentNode(Type type, String label) {
+        super(type, label);
+    }
+
+    protected ArgumentNode(Tree other) {
+        super(other);
+    }
+}
+class NameNode extends SrcMLNodeType {
+    public static final String TYPE = "name";
+    public NameNode(Type type) {
+        super(type);
+    }
+
+    public NameNode(Type type, String label) {
+        super(type, label);
+    }
+
+    protected NameNode(Tree other) {
+        super(other);
+    }
+}
+class CallNode extends SrcMLNodeType {
+    public static final String TYPE = "call";
+    public CallNode(Type type) {
+        super(type);
+    }
+
+    public CallNode(Type type, String label) {
+        super(type, label);
+    }
+
+    protected CallNode(Tree other) {
+        super(other);
+    }
+}
+class ExprNode extends SrcMLNodeType {
+    public static final String TYPE = "expr";
+    public ExprNode(Type type) {
+        super(type);
+    }
+
+    public ExprNode(Type type, String label) {
+        super(type, label);
+    }
+
+    protected ExprNode(Tree other) {
+        super(other);
+    }
+}
+class ExprStmtNode extends SrcMLNodeType {
+    public static final String TYPE = "expr_stmt";
+    public ExprStmtNode(Type type) {
+        super(type);
+    }
+
+    public ExprStmtNode(Type type, String label) {
+        super(type, label);
+    }
+
+    protected ExprStmtNode(Tree other) {
+        super(other);
+    }
+}
+class LiteralNode extends SrcMLNodeType {
+    public static final String TYPE = "literal";
+    public LiteralNode(Type type) {
+        super(type);
+    }
+
+    public LiteralNode(Type type, String label) {
+        super(type, label);
+    }
+
+    protected LiteralNode(Tree other) {
+        super(other);
+    }
+}
+class UnitNode extends SrcMLNodeType {
+    public static final String TYPE = "unit";
+    public UnitNode(Type type) {
+        super(type);
+    }
+
+    public UnitNode(Type type, String label) {
+        super(type, label);
+    }
+
+    protected UnitNode(Tree other) {
+        super(other);
+    }
+}
+class UsingNode extends SrcMLNodeType {
+    public static final String TYPE = "using";
+    public UsingNode(Type type) {
+        super(type);
+    }
+
+    public UsingNode(Type type, String label) {
+        super(type, label);
+    }
+
+    protected UsingNode(Tree other) {
+        super(other);
+    }
+}
+class ClassNode extends SrcMLNodeType {
+    public static final String TYPE = "class";
+    public ClassNode(Type type) {
+        super(type);
+    }
+
+    public ClassNode(Type type, String label) {
+        super(type, label);
+    }
+
+    protected ClassNode(Tree other) {
+        super(other);
+    }
+}
+class BlockNode extends SrcMLNodeType {
+    public static final String TYPE = "block";
+    public BlockNode(Type type) {
+        super(type);
+    }
+
+    public BlockNode(Type type, String label) {
+        super(type, label);
+    }
+
+    protected BlockNode(Tree other) {
+        super(other);
+    }
+}
+class FunctionNode extends SrcMLNodeType {
+    public static final String TYPE = "function";
+    public FunctionNode(Type type) {
+        super(type);
+    }
+
+    public FunctionNode(Type type, String label) {
+        super(type, label);
+    }
+
+    protected FunctionNode(Tree other) {
+        super(other);
+    }
+}
+class TypeNode extends SrcMLNodeType {
+    public static final String TYPE = "type";
+    public TypeNode(Type type) {
+        super(type);
+    }
+
+    public TypeNode(Type type, String label) {
+        super(type, label);
+    }
+
+    protected TypeNode(Tree other) {
+        super(other);
+    }
+}
+class SpecifierNode extends SrcMLNodeType {
+    public static final String TYPE = "specifier";
+    public SpecifierNode(Type type) {
+        super(type);
+    }
+
+    public SpecifierNode(Type type, String label) {
+        super(type, label);
+    }
+
+    protected SpecifierNode(Tree other) {
+        super(other);
+    }
+}
+class ParameterListNode extends SrcMLNodeType {
+    public static final String TYPE = "parameter_list";
+    public ParameterListNode(Type type) {
+        super(type);
+    }
+
+    public ParameterListNode(Type type, String label) {
+        super(type, label);
+    }
+
+    protected ParameterListNode(Tree other) {
+        super(other);
+    }
+}
+class ParameterNode extends SrcMLNodeType {
+    public static final String TYPE = "parameter";
+    public ParameterNode(Type type) {
+        super(type);
+    }
+
+    public ParameterNode(Type type, String label) {
+        super(type, label);
+    }
+
+    protected ParameterNode(Tree other) {
+        super(other);
+    }
+}
+class BlockContentNode extends SrcMLNodeType {
+    public static final String TYPE = "block_content";
+    public BlockContentNode(Type type) {
+        super(type);
+    }
+
+    public BlockContentNode(Type type, String label) {
+        super(type, label);
+    }
+
+    protected BlockContentNode(Tree other) {
+        super(other);
+    }
+}
+class EscapeNode extends SrcMLNodeType {
+    public static final String TYPE = "escape";
+    public EscapeNode(Type type) {
+        super(type);
+    }
+
+    public EscapeNode(Type type, String label) {
+        super(type, label);
+    }
+
+    protected EscapeNode(Tree other) {
+        super(other);
+    }
+}
+class BreakNode extends SrcMLNodeType {
+    public static final String TYPE = "break";
+    public BreakNode(Type type) {
+        super(type);
+    }
+
+    public BreakNode(Type type, String label) {
+        super(type, label);
+    }
+
+    protected BreakNode(Tree other) {
+        super(other);
+    }
+}
+class CaseNode extends SrcMLNodeType {
+    public static final String TYPE = "case";
+    public CaseNode(Type type) {
+        super(type);
+    }
+
+    public CaseNode(Type type, String label) {
+        super(type, label);
+    }
+
+    protected CaseNode(Tree other) {
+        super(other);
+    }
+}
+class ContinueNode extends SrcMLNodeType {
+    public static final String TYPE = "continue";
+    public ContinueNode(Type type) {
+        super(type);
+    }
+
+    public ContinueNode(Type type, String label) {
+        super(type, label);
+    }
+
+    protected ContinueNode(Tree other) {
+        super(other);
+    }
+}
+class DefaultNode extends SrcMLNodeType {
+    public static final String TYPE = "default";
+    public DefaultNode(Type type) {
+        super(type);
+    }
+
+    public DefaultNode(Type type, String label) {
+        super(type, label);
+    }
+
+    protected DefaultNode(Tree other) {
+        super(other);
+    }
+}
+class DoNode extends SrcMLNodeType {
+    public static final String TYPE = "do";
+    public DoNode(Type type) {
+        super(type);
+    }
+
+    public DoNode(Type type, String label) {
+        super(type, label);
+    }
+
+    protected DoNode(Tree other) {
+        super(other);
+    }
+}
+class EmptyStmtNode extends SrcMLNodeType {
+    public static final String TYPE = "empty_stmt";
+    public EmptyStmtNode(Type type) {
+        super(type);
+    }
+
+    public EmptyStmtNode(Type type, String label) {
+        super(type, label);
+    }
+
+    protected EmptyStmtNode(Tree other) {
+        super(other);
+    }
+}
+class FixedNode extends SrcMLNodeType {
+    public static final String TYPE = "fixed";
+    public FixedNode(Type type) {
+        super(type);
+    }
+
+    public FixedNode(Type type, String label) {
+        super(type, label);
+    }
+
+    protected FixedNode(Tree other) {
+        super(other);
+    }
+}
+class ForNode extends SrcMLNodeType {
+    public static final String TYPE = "for";
+    public ForNode(Type type) {
+        super(type);
+    }
+
+    public ForNode(Type type, String label) {
+        super(type, label);
+    }
+
+    protected ForNode(Tree other) {
+        super(other);
+    }
+}
+class ForeachNode extends SrcMLNodeType {
+    public static final String TYPE = "foreach";
+    public ForeachNode(Type type) {
+        super(type);
+    }
+
+    public ForeachNode(Type type, String label) {
+        super(type, label);
+    }
+
+    protected ForeachNode(Tree other) {
+        super(other);
+    }
+}
+class GotoNode extends SrcMLNodeType {
+    public static final String TYPE = "goto";
+    public GotoNode(Type type) {
+        super(type);
+    }
+
+    public GotoNode(Type type, String label) {
+        super(type, label);
+    }
+
+    protected GotoNode(Tree other) {
+        super(other);
+    }
+}
+class IfStmtNode extends SrcMLNodeType {
+    public static final String TYPE = "if_stmt";
+    public IfStmtNode(Type type) {
+        super(type);
+    }
+
+    public IfStmtNode(Type type, String label) {
+        super(type, label);
+    }
+
+    protected IfStmtNode(Tree other) {
+        super(other);
+    }
+}
+class LabelNode extends SrcMLNodeType {
+    public static final String TYPE = "label";
+    public LabelNode(Type type) {
+        super(type);
+    }
+
+    public LabelNode(Type type, String label) {
+        super(type, label);
+    }
+
+    protected LabelNode(Tree other) {
+        super(other);
+    }
+}
+class LockNode extends SrcMLNodeType {
+    public static final String TYPE = "lock";
+    public LockNode(Type type) {
+        super(type);
+    }
+
+    public LockNode(Type type, String label) {
+        super(type, label);
+    }
+
+    protected LockNode(Tree other) {
+        super(other);
+    }
+}
+class ReturnNode extends SrcMLNodeType {
+    public static final String TYPE = "return";
+    public ReturnNode(Type type) {
+        super(type);
+    }
+
+    public ReturnNode(Type type, String label) {
+        super(type, label);
+    }
+
+    protected ReturnNode(Tree other) {
+        super(other);
+    }
+}
+class SwitchNode extends SrcMLNodeType {
+    public static final String TYPE = "switch";
+    public SwitchNode(Type type) {
+        super(type);
+    }
+
+    public SwitchNode(Type type, String label) {
+        super(type, label);
+    }
+
+    protected SwitchNode(Tree other) {
+        super(other);
+    }
+}
+class UnsafeNode extends SrcMLNodeType {
+    public static final String TYPE = "unsafe";
+    public UnsafeNode(Type type) {
+        super(type);
+    }
+
+    public UnsafeNode(Type type, String label) {
+        super(type, label);
+    }
+
+    protected UnsafeNode(Tree other) {
+        super(other);
+    }
+}
+class UsingStmtNode extends SrcMLNodeType {
+    public static final String TYPE = "using_stmt";
+    public UsingStmtNode(Type type) {
+        super(type);
+    }
+
+    public UsingStmtNode(Type type, String label) {
+        super(type, label);
+    }
+
+    protected UsingStmtNode(Tree other) {
+        super(other);
+    }
+}
+class WhileNode extends SrcMLNodeType {
+    public static final String TYPE = "while";
+    public WhileNode(Type type) {
+        super(type);
+    }
+
+    public WhileNode(Type type, String label) {
+        super(type, label);
+    }
+
+    protected WhileNode(Tree other) {
+        super(other);
+    }
+}
+class ConditionNode extends SrcMLNodeType {
+    public static final String TYPE = "condition";
+    public ConditionNode(Type type) {
+        super(type);
+    }
+
+    public ConditionNode(Type type, String label) {
+        super(type, label);
+    }
+
+    protected ConditionNode(Tree other) {
+        super(other);
+    }
+}
+class ControlNode extends SrcMLNodeType {
+    public static final String TYPE = "control";
+    public ControlNode(Type type) {
+        super(type);
+    }
+
+    public ControlNode(Type type, String label) {
+        super(type, label);
+    }
+
+    protected ControlNode(Tree other) {
+        super(other);
+    }
+}
+class ElseNode extends SrcMLNodeType {
+    public static final String TYPE = "else";
+    public ElseNode(Type type) {
+        super(type);
+    }
+
+    public ElseNode(Type type, String label) {
+        super(type, label);
+    }
+
+    protected ElseNode(Tree other) {
+        super(other);
+    }
+}
+class IncrNode extends SrcMLNodeType {
+    public static final String TYPE = "incr";
+    public IncrNode(Type type) {
+        super(type);
+    }
+
+    public IncrNode(Type type, String label) {
+        super(type, label);
+    }
+
+    protected IncrNode(Tree other) {
+        super(other);
+    }
+}
+class ThenNode extends SrcMLNodeType {
+    public static final String TYPE = "then";
+    public ThenNode(Type type) {
+        super(type);
+    }
+
+    public ThenNode(Type type, String label) {
+        super(type, label);
+    }
+
+    protected ThenNode(Tree other) {
+        super(other);
+    }
+}
+class InitNode extends SrcMLNodeType {
+    public static final String TYPE = "init";
+    public InitNode(Type type) {
+        super(type);
+    }
+
+    public InitNode(Type type, String label) {
+        super(type, label);
+    }
+
+    protected InitNode(Tree other) {
+        super(other);
+    }
+}
+class DelegateNode extends SrcMLNodeType {
+    public static final String TYPE = "delegate";
+    public DelegateNode(Type type) {
+        super(type);
+    }
+
+    public DelegateNode(Type type, String label) {
+        super(type, label);
+    }
+
+    protected DelegateNode(Tree other) {
+        super(other);
+    }
+}
+class FunctionDeclNode extends SrcMLNodeType {
+    public static final String TYPE = "function_decl";
+    public FunctionDeclNode(Type type) {
+        super(type);
+    }
+
+    public FunctionDeclNode(Type type, String label) {
+        super(type, label);
+    }
+
+    protected FunctionDeclNode(Tree other) {
+        super(other);
+    }
+}
+class LambdaNode extends SrcMLNodeType {
+    public static final String TYPE = "lambda";
+    public LambdaNode(Type type) {
+        super(type);
+    }
+
+    public LambdaNode(Type type, String label) {
+        super(type, label);
+    }
+
+    protected LambdaNode(Tree other) {
+        super(other);
+    }
+}
+class ModifierNode extends SrcMLNodeType {
+    public static final String TYPE = "modifier";
+    public ModifierNode(Type type) {
+        super(type);
+    }
+
+    public ModifierNode(Type type, String label) {
+        super(type, label);
+    }
+
+    protected ModifierNode(Tree other) {
+        super(other);
+    }
+}
+class DeclNode extends SrcMLNodeType {
+    public static final String TYPE = "decl";
+    public DeclNode(Type type) {
+        super(type);
+    }
+
+    public DeclNode(Type type, String label) {
+        super(type, label);
+    }
+
+    protected DeclNode(Tree other) {
+        super(other);
+    }
+}
+class DeclStmtNode extends SrcMLNodeType {
+    public static final String TYPE = "decl_stmt";
+    public DeclStmtNode(Type type) {
+        super(type);
+    }
+
+    public DeclStmtNode(Type type, String label) {
+        super(type, label);
+    }
+
+    protected DeclStmtNode(Tree other) {
+        super(other);
+    }
+}
+class ConstructorNode extends SrcMLNodeType {
+    public static final String TYPE = "constructor";
+    public ConstructorNode(Type type) {
+        super(type);
+    }
+
+    public ConstructorNode(Type type, String label) {
+        super(type, label);
+    }
+
+    protected ConstructorNode(Tree other) {
+        super(other);
+    }
+}
+class DestrctorNode extends SrcMLNodeType {
+    public static final String TYPE = "destructor";
+    public DestrctorNode(Type type) {
+        super(type);
+    }
+
+    public DestrctorNode(Type type, String label) {
+        super(type, label);
+    }
+
+    protected DestrctorNode(Tree other) {
+        super(other);
+    }
+}
+class EnumNode extends SrcMLNodeType {
+    public static final String TYPE = "enum";
+    public EnumNode(Type type) {
+        super(type);
+    }
+
+    public EnumNode(Type type, String label) {
+        super(type, label);
+    }
+
+    protected EnumNode(Tree other) {
+        super(other);
+    }
+}
+class EventNode extends SrcMLNodeType {
+    public static final String TYPE = "event";
+    public EventNode(Type type) {
+        super(type);
+    }
+
+    public EventNode(Type type, String label) {
+        super(type, label);
+    }
+
+    protected EventNode(Tree other) {
+        super(other);
+    }
+}
+class SuperListNode extends SrcMLNodeType {
+    public static final String TYPE = "super_list";
+    public SuperListNode(Type type) {
+        super(type);
+    }
+
+    public SuperListNode(Type type, String label) {
+        super(type, label);
+    }
+
+    protected SuperListNode(Tree other) {
+        super(other);
+    }
+}
+class InterfaceNode extends SrcMLNodeType {
+    public static final String TYPE = "interface";
+    public InterfaceNode(Type type) {
+        super(type);
+    }
+
+    public InterfaceNode(Type type, String label) {
+        super(type, label);
+    }
+
+    protected InterfaceNode(Tree other) {
+        super(other);
+    }
+}
+class PropertyNode extends SrcMLNodeType {
+    public static final String TYPE = "property";
+    public PropertyNode(Type type) {
+        super(type);
+    }
+
+    public PropertyNode(Type type, String label) {
+        super(type, label);
+    }
+
+    protected PropertyNode(Tree other) {
+        super(other);
+    }
+}
+class StructNode extends SrcMLNodeType {
+    public static final String TYPE = "struct";
+    public StructNode(Type type) {
+        super(type);
+    }
+
+    public StructNode(Type type, String label) {
+        super(type, label);
+    }
+
+    protected StructNode(Tree other) {
+        super(other);
+    }
+}
+class TernaryNode extends SrcMLNodeType {
+    public static final String TYPE = "ternary";
+    public TernaryNode(Type type) {
+        super(type);
+    }
+
+    public TernaryNode(Type type, String label) {
+        super(type, label);
+    }
+
+    protected TernaryNode(Tree other) {
+        super(other);
+    }
+}
+class AttributeNode extends SrcMLNodeType {
+    public static final String TYPE = "attribute";
+    public AttributeNode(Type type) {
+        super(type);
+    }
+
+    public AttributeNode(Type type, String label) {
+        super(type, label);
+    }
+
+    protected AttributeNode(Tree other) {
+        super(other);
+    }
+}
+class CheckedNode extends SrcMLNodeType {
+    public static final String TYPE = "checked";
+    public CheckedNode(Type type) {
+        super(type);
+    }
+
+    public CheckedNode(Type type, String label) {
+        super(type, label);
+    }
+
+    protected CheckedNode(Tree other) {
+        super(other);
+    }
+}
+class TypeOfNode extends SrcMLNodeType {
+    public static final String TYPE = "typeof";
+    public TypeOfNode(Type type) {
+        super(type);
+    }
+
+    public TypeOfNode(Type type, String label) {
+        super(type, label);
+    }
+
+    protected TypeOfNode(Tree other) {
+        super(other);
+    }
+}
+class SizeOfNode extends SrcMLNodeType {
+    public static final String TYPE = "sizeof";
+    public SizeOfNode(Type type) {
+        super(type);
+    }
+
+    public SizeOfNode(Type type, String label) {
+        super(type, label);
+    }
+
+    protected SizeOfNode(Tree other) {
+        super(other);
+    }
+}
+class UncheckedNode extends SrcMLNodeType {
+    public static final String TYPE = "unchecked";
+    public UncheckedNode(Type type) {
+        super(type);
+    }
+
+    public UncheckedNode(Type type, String label) {
+        super(type, label);
+    }
+
+    protected UncheckedNode(Tree other) {
+        super(other);
+    }
+}
+class ConstraintNode extends SrcMLNodeType {
+    public static final String TYPE = "constraint";
+    public ConstraintNode(Type type) {
+        super(type);
+    }
+
+    public ConstraintNode(Type type, String label) {
+        super(type, label);
+    }
+
+    protected ConstraintNode(Tree other) {
+        super(other);
+    }
+}
+class CatchNode extends SrcMLNodeType {
+    public static final String TYPE = "catch";
+    public CatchNode(Type type) {
+        super(type);
+    }
+
+    public CatchNode(Type type, String label) {
+        super(type, label);
+    }
+
+    protected CatchNode(Tree other) {
+        super(other);
+    }
+}
+class FinallyNode extends SrcMLNodeType {
+    public static final String TYPE = "finally";
+    public FinallyNode(Type type) {
+        super(type);
+    }
+
+    public FinallyNode(Type type, String label) {
+        super(type, label);
+    }
+
+    protected FinallyNode(Tree other) {
+        super(other);
+    }
+}
+class ThrowNode extends SrcMLNodeType {
+    public static final String TYPE = "throw";
+    public ThrowNode(Type type) {
+        super(type);
+    }
+
+    public ThrowNode(Type type, String label) {
+        super(type, label);
+    }
+
+    protected ThrowNode(Tree other) {
+        super(other);
+    }
+}
+class TryNode extends SrcMLNodeType {
+    public static final String TYPE = "try";
+    public TryNode(Type type) {
+        super(type);
+    }
+
+    public TryNode(Type type, String label) {
+        super(type, label);
+    }
+
+    protected TryNode(Tree other) {
+        super(other);
+    }
+}
+class ByNode extends SrcMLNodeType {
+    public static final String TYPE = "by";
+    public ByNode(Type type) {
+        super(type);
+    }
+
+    public ByNode(Type type, String label) {
+        super(type, label);
+    }
+
+    protected ByNode(Tree other) {
+        super(other);
+    }
+}
+class EqualsNode extends SrcMLNodeType {
+    public static final String TYPE = "equals";
+    public EqualsNode(Type type) {
+        super(type);
+    }
+
+    public EqualsNode(Type type, String label) {
+        super(type, label);
+    }
+
+    protected EqualsNode(Tree other) {
+        super(other);
+    }
+}
+class FromNode extends SrcMLNodeType {
+    public static final String TYPE = "from";
+    public FromNode(Type type) {
+        super(type);
+    }
+
+    public FromNode(Type type, String label) {
+        super(type, label);
+    }
+
+    protected FromNode(Tree other) {
+        super(other);
+    }
+}
+class GroupNode extends SrcMLNodeType {
+    public static final String TYPE = "group";
+    public GroupNode(Type type) {
+        super(type);
+    }
+
+    public GroupNode(Type type, String label) {
+        super(type, label);
+    }
+
+    protected GroupNode(Tree other) {
+        super(other);
+    }
+}
+class InNode extends SrcMLNodeType {
+    public static final String TYPE = "in";
+    public InNode(Type type) {
+        super(type);
+    }
+
+    public InNode(Type type, String label) {
+        super(type, label);
+    }
+
+    protected InNode(Tree other) {
+        super(other);
+    }
+}
+class IntoNode extends SrcMLNodeType {
+    public static final String TYPE = "into";
+    public IntoNode(Type type) {
+        super(type);
+    }
+
+    public IntoNode(Type type, String label) {
+        super(type, label);
+    }
+
+    protected IntoNode(Tree other) {
+        super(other);
+    }
+}
+class JoinNode extends SrcMLNodeType {
+    public static final String TYPE = "join";
+    public JoinNode(Type type) {
+        super(type);
+    }
+
+    public JoinNode(Type type, String label) {
+        super(type, label);
+    }
+
+    protected JoinNode(Tree other) {
+        super(other);
+    }
+}
+class LetNode extends SrcMLNodeType {
+    public static final String TYPE = "let";
+    public LetNode(Type type) {
+        super(type);
+    }
+
+    public LetNode(Type type, String label) {
+        super(type, label);
+    }
+
+    protected LetNode(Tree other) {
+        super(other);
+    }
+}
+class LinqNode extends SrcMLNodeType {
+    public static final String TYPE = "linq";
+    public LinqNode(Type type) {
+        super(type);
+    }
+
+    public LinqNode(Type type, String label) {
+        super(type, label);
+    }
+
+    protected LinqNode(Tree other) {
+        super(other);
+    }
+}
+class OnNode extends SrcMLNodeType {
+    public static final String TYPE = "on";
+    public OnNode(Type type) {
+        super(type);
+    }
+
+    public OnNode(Type type, String label) {
+        super(type, label);
+    }
+
+    protected OnNode(Tree other) {
+        super(other);
+    }
+}
+class OrderByNode extends SrcMLNodeType {
+    public static final String TYPE = "orderby";
+    public OrderByNode(Type type) {
+        super(type);
+    }
+
+    public OrderByNode(Type type, String label) {
+        super(type, label);
+    }
+
+    protected OrderByNode(Tree other) {
+        super(other);
+    }
+}
+class SelectNode extends SrcMLNodeType {
+    public static final String TYPE = "select";
+    public SelectNode(Type type) {
+        super(type);
+    }
+
+    public SelectNode(Type type, String label) {
+        super(type, label);
+    }
+
+    protected SelectNode(Tree other) {
+        super(other);
+    }
+}
+class WhereNode extends SrcMLNodeType {
+    public static final String TYPE = "where";
+    public WhereNode(Type type) {
+        super(type);
+    }
+
+    public WhereNode(Type type, String label) {
+        super(type, label);
+    }
+
+    protected WhereNode(Tree other) {
+        super(other);
+    }
 }
