@@ -19,6 +19,13 @@ public class SrcMLTreeVisitor {
 
     void visit(CommentNode node){
     }
+    void visit(OperatorNode node){
+    }
+    void visit(OnNode node){
+    }
+    void visit(IfNode node){
+
+    }
     void visit(NamespaceNode node){
     }
     void visit(ArgumentListNode node){
