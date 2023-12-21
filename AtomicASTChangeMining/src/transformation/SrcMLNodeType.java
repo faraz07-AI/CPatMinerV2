@@ -10,6 +10,7 @@ public class SrcMLNodeType extends DefaultTree{
     public static final String NAMESPACE = "namespace";
     public static final String ARGUMENT_LIST = "argument_list";
     public static final String ARGUMENT = "argument";
+    public static final String IF = "if";
     public static final String NAME = "name";
     public static final String CALL = "call";
     public static final String EXPR = "expr";
@@ -118,6 +119,22 @@ class CommentNode extends SrcMLNodeType {
         super(other);
     }
 }
+class OperatorNode extends SrcMLNodeType {
+    public static final String TYPE = "operator";
+
+    public OperatorNode(Type type) {
+        super(type);
+    }
+
+    public OperatorNode(Type type, String label) {
+        super(type, label);
+    }
+
+    protected OperatorNode(Tree other) {
+        super(other);
+    }
+}
+
 class NamespaceNode extends SrcMLNodeType {
     public static final String TYPE = "namespace";
     public NamespaceNode(Type type) {
@@ -535,6 +552,20 @@ class IfStmtNode extends SrcMLNodeType {
     }
 
     protected IfStmtNode(Tree other) {
+        super(other);
+    }
+}
+class IfNode extends SrcMLNodeType {
+    public static final String TYPE = "if";
+    public IfNode(Type type) {
+        super(type);
+    }
+
+    public IfNode(Type type, String label) {
+        super(type, label);
+    }
+
+    protected IfNode(Tree other) {
         super(other);
     }
 }

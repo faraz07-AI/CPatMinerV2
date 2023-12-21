@@ -6,6 +6,7 @@ import org.eclipse.jdt.core.dom.Block;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.locks.Lock;
 
 import com.github.gumtreediff.tree.Tree;
 

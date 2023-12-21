@@ -13,13 +13,6 @@ import java.util.ArrayList;
 
 public class Transformation {
 
-    private static void transformNode(Tree node){
-        System.out.println("********************");
-        //System.out.println("position  " + node.getPos());
-        //System.out.println("label  " + node.getLabel());
-        //System.out.println("type  " + node.getType());
-    }
-
     private static void iterate_children(AST asn, Tree root){
         if (root == null) {
             return;
@@ -48,8 +41,10 @@ public class Transformation {
 
             System.out.println(tree_csharp.toTreeString());
             AST asn = new AST();
+            Tree transformedTree = TransformationUtils.transformTree(tree_csharp);
+            transformedTree.toString();
 
-            iterate_children(asn, tree_csharp);
+            //iterate_children(asn, tree_csharp);
 
         } catch (Exception e) {
             throw new RuntimeException(e);
