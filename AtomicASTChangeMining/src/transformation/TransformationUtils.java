@@ -2,6 +2,7 @@ package transformation;
 
 import com.github.gumtreediff.tree.Tree;
 import org.eclipse.jdt.core.dom.AST;
+import org.eclipse.jdt.core.dom.InfixExpression;
 import org.eclipse.jdt.core.dom.StringLiteral;
 import org.eclipse.jdt.core.dom.Expression;
 
@@ -15,6 +16,69 @@ public class TransformationUtils {
         if (input == null || input.isEmpty())
             return input;
         return input.substring(0, 1).toUpperCase() + input.substring(1);
+    }
+
+    static InfixExpression.Operator identifyOperator(OperatorNode node) {
+        if (Objects.equals(node.getLabel(), "*")) {
+            return InfixExpression.Operator.TIMES;
+        } else if (Objects.equals(node.getLabel(), "+")) {
+            return InfixExpression.Operator.PLUS;
+        } else if (Objects.equals(node.getLabel(), "-")) {
+            return InfixExpression.Operator.MINUS;
+        } else if (Objects.equals(node.getLabel(), "/")) {
+            return InfixExpression.Operator.DIVIDE;
+        } else if (Objects.equals(node.getLabel(), "%")) {
+            return InfixExpression.Operator.REMAINDER;
+        } else if (Objects.equals(node.getLabel(), "=")) {
+            return null; // TODO
+        } else if (Objects.equals(node.getLabel(), ".")) {
+            return null; // TODO
+        } else if (Objects.equals(node.getLabel(), "new")) {
+            return null; // TODO
+        } else if (Objects.equals(node.getLabel(), "==")) {
+            return InfixExpression.Operator.EQUALS;
+        } else if (Objects.equals(node.getLabel(), "!=")) {
+            return InfixExpression.Operator.NOT_EQUALS;
+        } else if (Objects.equals(node.getLabel(), "*=")) {
+            return null; // TODO
+        } else if (Objects.equals(node.getLabel(), "-=")) {
+            return null; // TODO
+        } else if (Objects.equals(node.getLabel(), "/=")) {
+            return null; // TODO
+        } else if (Objects.equals(node.getLabel(), "--")) {
+            return null; // TODO
+        } else if (Objects.equals(node.getLabel(), "++")) {
+            return null; // TODO
+        } else if (Objects.equals(node.getLabel(), "(")) {
+            return null; // TODO
+        } else if (Objects.equals(node.getLabel(), ")")) {
+            return null; // TODO
+        } else if (Objects.equals(node.getLabel(), ">")) {
+            return InfixExpression.Operator.GREATER;
+        } else if (Objects.equals(node.getLabel(), "<")) {
+            return InfixExpression.Operator.LESS;
+        } else if (Objects.equals(node.getLabel(), ">=")) {
+            return InfixExpression.Operator.GREATER_EQUALS;
+        } else if (Objects.equals(node.getLabel(), "<=")) {
+            return InfixExpression.Operator.LESS_EQUALS;
+        } else if (Objects.equals(node.getLabel(), "&")) {
+            return InfixExpression.Operator.AND;
+        } else if (Objects.equals(node.getLabel(), "<<")) {
+            return InfixExpression.Operator.LEFT_SHIFT;
+        } else if (Objects.equals(node.getLabel(), ">>")) {
+            return InfixExpression.Operator.RIGHT_SHIFT_SIGNED;
+        } else if (Objects.equals(node.getLabel(), "|")) {
+            return InfixExpression.Operator.OR;
+        } else if (Objects.equals(node.getLabel(), ">>>")) {
+            return InfixExpression.Operator.RIGHT_SHIFT_UNSIGNED;
+        } else if (Objects.equals(node.getLabel(), "^")) {
+            return InfixExpression.Operator.XOR;
+        } else if (Objects.equals(node.getLabel(), "&&")) {
+            return InfixExpression.Operator.CONDITIONAL_AND;
+        } else if (Objects.equals(node.getLabel(), "||")) {
+            return InfixExpression.Operator.CONDITIONAL_OR;
+        } else
+            return null;
     }
 
     public static boolean isBoolean(String input) {
@@ -41,7 +105,6 @@ public class TransformationUtils {
             return stringLiteral;
         }
     }
-
 
     public static Tree transformTree(Tree inputTree) {
         String nodeType = inputTree.getType().toString();

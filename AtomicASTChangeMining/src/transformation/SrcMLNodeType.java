@@ -4,6 +4,9 @@ import com.github.gumtreediff.tree.DefaultTree;
 import com.github.gumtreediff.tree.Tree;
 import com.github.gumtreediff.tree.Type;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class SrcMLNodeType extends DefaultTree{
 
     public static final String COMMENT = "comment";
@@ -90,7 +93,6 @@ public class SrcMLNodeType extends DefaultTree{
     public static final String ORDERBY = "orderby";
     public static final String SELECT = "select";
     public static final String WHERE = "where";
-
 
     public SrcMLNodeType(Type type) {
         super(type);
