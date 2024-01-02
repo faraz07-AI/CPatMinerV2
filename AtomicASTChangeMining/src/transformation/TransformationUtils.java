@@ -2,7 +2,6 @@ package transformation;
 
 import com.github.gumtreediff.tree.Tree;
 import org.eclipse.jdt.core.dom.AST;
-import org.eclipse.jdt.core.dom.InfixExpression;
 import org.eclipse.jdt.core.dom.StringLiteral;
 import org.eclipse.jdt.core.dom.Expression;
 
@@ -12,73 +11,52 @@ import java.util.Objects;
 
 public class TransformationUtils {
 
+    public static class ReturnPair<T, U> {
+        private T first;
+        private U second;
+
+        public ReturnPair(T first, U second) {
+            this.first = first;
+            this.second = second;
+        }
+
+        public T getFirst() {
+            return first;
+        }
+
+        public U getSecond() {
+            return second;
+        }
+    }
+
     static String capitalizeFirstLetter(String input) {
         if (input == null || input.isEmpty())
             return input;
         return input.substring(0, 1).toUpperCase() + input.substring(1);
     }
 
-    static InfixExpression.Operator identifyOperator(OperatorNode node) {
-        if (Objects.equals(node.getLabel(), "*")) {
-            return InfixExpression.Operator.TIMES;
-        } else if (Objects.equals(node.getLabel(), "+")) {
-            return InfixExpression.Operator.PLUS;
-        } else if (Objects.equals(node.getLabel(), "-")) {
-            return InfixExpression.Operator.MINUS;
-        } else if (Objects.equals(node.getLabel(), "/")) {
-            return InfixExpression.Operator.DIVIDE;
-        } else if (Objects.equals(node.getLabel(), "%")) {
-            return InfixExpression.Operator.REMAINDER;
-        } else if (Objects.equals(node.getLabel(), "=")) {
-            return null; // TODO
-        } else if (Objects.equals(node.getLabel(), ".")) {
-            return null; // TODO
-        } else if (Objects.equals(node.getLabel(), "new")) {
-            return null; // TODO
-        } else if (Objects.equals(node.getLabel(), "==")) {
-            return InfixExpression.Operator.EQUALS;
-        } else if (Objects.equals(node.getLabel(), "!=")) {
-            return InfixExpression.Operator.NOT_EQUALS;
-        } else if (Objects.equals(node.getLabel(), "*=")) {
-            return null; // TODO
-        } else if (Objects.equals(node.getLabel(), "-=")) {
-            return null; // TODO
-        } else if (Objects.equals(node.getLabel(), "/=")) {
-            return null; // TODO
-        } else if (Objects.equals(node.getLabel(), "--")) {
-            return null; // TODO
-        } else if (Objects.equals(node.getLabel(), "++")) {
-            return null; // TODO
-        } else if (Objects.equals(node.getLabel(), "(")) {
-            return null; // TODO
-        } else if (Objects.equals(node.getLabel(), ")")) {
-            return null; // TODO
-        } else if (Objects.equals(node.getLabel(), ">")) {
-            return InfixExpression.Operator.GREATER;
-        } else if (Objects.equals(node.getLabel(), "<")) {
-            return InfixExpression.Operator.LESS;
-        } else if (Objects.equals(node.getLabel(), ">=")) {
-            return InfixExpression.Operator.GREATER_EQUALS;
-        } else if (Objects.equals(node.getLabel(), "<=")) {
-            return InfixExpression.Operator.LESS_EQUALS;
-        } else if (Objects.equals(node.getLabel(), "&")) {
-            return InfixExpression.Operator.AND;
-        } else if (Objects.equals(node.getLabel(), "<<")) {
-            return InfixExpression.Operator.LEFT_SHIFT;
-        } else if (Objects.equals(node.getLabel(), ">>")) {
-            return InfixExpression.Operator.RIGHT_SHIFT_SIGNED;
-        } else if (Objects.equals(node.getLabel(), "|")) {
-            return InfixExpression.Operator.OR;
-        } else if (Objects.equals(node.getLabel(), ">>>")) {
-            return InfixExpression.Operator.RIGHT_SHIFT_UNSIGNED;
-        } else if (Objects.equals(node.getLabel(), "^")) {
-            return InfixExpression.Operator.XOR;
-        } else if (Objects.equals(node.getLabel(), "&&")) {
-            return InfixExpression.Operator.CONDITIONAL_AND;
-        } else if (Objects.equals(node.getLabel(), "||")) {
-            return InfixExpression.Operator.CONDITIONAL_OR;
-        } else
-            return null;
+    static boolean isAssignment(Tree node) {
+        List<String> l = new ArrayList<>();
+        l.add("=");
+        l.add("+=");
+        l.add("-=");
+        l.add("*=");
+        l.add("/=");
+        l.add("%=");
+        l.add("&=");
+        l.add("^=");
+        l.add("|=");
+        l.add("<<=");
+        l.add(">>=");
+        l.add(">>>=");
+        return l.contains(node.getLabel());
+    }
+
+    static boolean isPostfix(Tree node) {
+        List<String> l = new ArrayList<>();
+        l.add("++");
+        l.add("--");
+        return l.contains(node.getLabel());
     }
 
     public static boolean isBoolean(String input) {
@@ -142,9 +120,9 @@ public class TransformationUtils {
         else if (Objects.equals(nodeType, SrcMLNodeType.TYPE))
             new_tree = new TypeNode(inputTree);
         else if (Objects.equals(nodeType, SrcMLNodeType.SPECIFIER))
-            new_tree = new ParameterListNode(inputTree);
+            new_tree = new SpecifierNode(inputTree);
         else if (Objects.equals(nodeType, SrcMLNodeType.PARAMETER_LIST))
-            new_tree = new ParameterNode(inputTree);
+            new_tree = new ParameterListNode(inputTree);
         else if (Objects.equals(nodeType, SrcMLNodeType.PARAMETER))
             new_tree = new ParameterNode(inputTree);
         else if (Objects.equals(nodeType, SrcMLNodeType.BLOCK_CONTENT))
@@ -223,6 +201,8 @@ public class TransformationUtils {
             new_tree = new EventNode(inputTree);
         else if (Objects.equals(nodeType, SrcMLNodeType.SUPER_LIST))
             new_tree = new SuperListNode(inputTree);
+        else if (Objects.equals(nodeType, SrcMLNodeType.SUPER))
+            new_tree = new SuperNode(inputTree);
         else if (Objects.equals(nodeType, SrcMLNodeType.INTERFACE))
             new_tree = new InterfaceNode(inputTree);
         else if (Objects.equals(nodeType, SrcMLNodeType.PROPERTY))
@@ -231,7 +211,6 @@ public class TransformationUtils {
             new_tree = new StructNode(inputTree);
         else if (Objects.equals(nodeType, SrcMLNodeType.TERNARY))
             new_tree = new TernaryNode(inputTree);
-
         else if (Objects.equals(nodeType, SrcMLNodeType.ATTRIBUTE))
             new_tree = new AttributeNode(inputTree);
         else if (Objects.equals(nodeType, SrcMLNodeType.CHECKED))

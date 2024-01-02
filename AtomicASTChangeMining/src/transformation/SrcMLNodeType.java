@@ -66,6 +66,7 @@ public class SrcMLNodeType extends DefaultTree{
     public static final String ENUM = "enum";
     public static final String EVENT = "event";
     public static final String SUPER_LIST = "super_list";
+    public static final String SUPER = "super";
     public static final String INTERFACE = "interface";
     public static final String PROPERTY = "property";
     public static final String STRUCT = "struct";
@@ -1075,6 +1076,23 @@ class SuperListNode extends SrcMLNodeType {
     }
 
     protected SuperListNode(Tree other) {
+        super(other);
+    }
+    void accept(SrcMLTreeVisitor visitor){
+        visitor.visit(this);
+    }
+}
+class SuperNode extends SrcMLNodeType {
+    public static final String TYPE = "super";
+    public SuperNode(Type type) {
+        super(type);
+    }
+
+    public SuperNode(Type type, String label) {
+        super(type, label);
+    }
+
+    protected SuperNode(Tree other) {
         super(other);
     }
     void accept(SrcMLTreeVisitor visitor){

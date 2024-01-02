@@ -25,4 +25,5 @@ public class SrcMLNodeSpecifier {
     public static final String VIRTUAL = "virtual";
     public static final String VOLATILE = "volatile";
     public static final String YIELD = "yield";
+    public static final String ABSTRACT = "abstract";
 }
