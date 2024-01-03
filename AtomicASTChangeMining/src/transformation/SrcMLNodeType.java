@@ -10,6 +10,7 @@ import java.util.List;
 public class SrcMLNodeType extends DefaultTree{
 
     public static final String COMMENT = "comment";
+    public static final String RANGE = "range";
     public static final String NAMESPACE = "namespace";
     public static final String ARGUMENT_LIST = "argument_list";
     public static final String ARGUMENT = "argument";
@@ -145,7 +146,6 @@ class OperatorNode extends SrcMLNodeType {
         visitor.visit(this);
     }
 }
-
 class NamespaceNode extends SrcMLNodeType {
     public static final String TYPE = "namespace";
     public NamespaceNode(Type type) {
@@ -157,6 +157,23 @@ class NamespaceNode extends SrcMLNodeType {
     }
 
     protected NamespaceNode(Tree other) {
+        super(other);
+    }
+    void accept(SrcMLTreeVisitor visitor){
+        visitor.visit(this);
+    }
+}
+class RangeNode extends SrcMLNodeType {
+    public static final String TYPE = "range";
+    public RangeNode(Type type) {
+        super(type);
+    }
+
+    public RangeNode(Type type, String label) {
+        super(type, label);
+    }
+
+    protected RangeNode(Tree other) {
         super(other);
     }
     void accept(SrcMLTreeVisitor visitor){

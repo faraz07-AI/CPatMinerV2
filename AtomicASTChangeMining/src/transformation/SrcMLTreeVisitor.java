@@ -426,7 +426,7 @@ public class SrcMLTreeVisitor {
         Tree child = node.getChildren().get(0);
         if (child instanceof BlockContentNode)
             return this.visit((BlockContentNode) child);
-        if (child instanceof ClassNode){
+        if (child instanceof ClassNode) {
             List<TypeDeclaration> class_nodes = new ArrayList<>();
             for (Tree class_node : node.getChildren()) {
                 if (class_node instanceof ClassNode)
@@ -452,11 +452,17 @@ public class SrcMLTreeVisitor {
             if (statement instanceof DeclStmtNode) {
                 body.statements().add(this.visit((DeclStmtNode) statement));
             } else if (statement instanceof ExprStmtNode) {
-                ExpressionStatement k = this.visit((ExprStmtNode) statement);
-                body.statements().add(k);
+                body.statements().add(this.visit((ExprStmtNode) statement));
             } else if (statement instanceof ReturnNode) {
-                ReturnStatement k = this.visit((ReturnNode) statement);
-                body.statements().add(k);
+                body.statements().add(this.visit((ReturnNode) statement));
+            } else if (statement instanceof IfStmtNode) {
+                body.statements().add(this.visit((IfStmtNode) statement));
+            } else if (statement instanceof WhileNode) {
+                body.statements().add(this.visit((WhileNode) statement));
+            } else if (statement instanceof ForNode) {
+                body.statements().add(this.visit((ForNode) statement));
+            } else if (statement instanceof ForeachNode) {
+                body.statements().add(this.visit((ForeachNode) statement));
             }
         }
         return body;
@@ -464,32 +470,41 @@ public class SrcMLTreeVisitor {
 
     VariableDeclarationStatement visit(DeclStmtNode node) {
         Tree declaration = node.getChildren().get(0);
-        if (declaration instanceof DeclNode)
-            return this.visit((DeclNode) declaration);
+        if (declaration instanceof DeclNode) {
+            TransformationUtils.ReturnPair<VariableDeclarationFragment, Type> k = this.visit((DeclNode) declaration);
+            VariableDeclarationStatement variableDeclaration = asn.newVariableDeclarationStatement(k.getFirst());
+            variableDeclaration.setType(k.getSecond());
+            return variableDeclaration;
+        }
         return null;
     }
 
-    VariableDeclarationStatement visit(DeclNode node) {
+    TransformationUtils.ReturnPair<VariableDeclarationFragment, Type> visit(DeclNode node) {
         List<Tree> declaration = node.getChildren();
         VariableDeclarationFragment variableFragment = asn.newVariableDeclarationFragment();
         if (declaration.get(1) instanceof NameNode) {
             variableFragment.setName(this.visit((NameNode) declaration.get(1)));
         }
         if (declaration.size() > 2 && declaration.get(2) instanceof InitNode) {
-            Expression type_literal = this.visit((InitNode) declaration.get(2));
+            Expression type_literal = (Expression) this.visit((InitNode) declaration.get(2));
             variableFragment.setInitializer(type_literal);
         }
-        VariableDeclarationStatement variableDeclaration = asn.newVariableDeclarationStatement(variableFragment);
+        Type t = null;
         if (declaration.get(0) instanceof TypeNode) {
-            Type t = this.visit((TypeNode) declaration.get(0));
-            variableDeclaration.setType(t);
+            t = this.visit((TypeNode) declaration.get(0));
         }
-        return variableDeclaration;
+        return new TransformationUtils.ReturnPair<>(variableFragment, t);
     }
 
-    Expression visit(InitNode node) {
+    Object visit(InitNode node) {
         if (node.getChildren().get(0) instanceof ExprNode)
             return this.visit((ExprNode) node.getChildren().get(0));
+        if (node.getChildren().get(0) instanceof DeclNode) {
+            TransformationUtils.ReturnPair<VariableDeclarationFragment, Type> k = this.visit((DeclNode) node.getChildren().get(0));
+            VariableDeclarationExpression initExpression = asn.newVariableDeclarationExpression(k.getFirst());
+            initExpression.setType(k.getSecond());
+            return initExpression;
+        }
         return null;
     }
 
@@ -504,39 +519,32 @@ public class SrcMLTreeVisitor {
     TransformationUtils.ReturnPair<PackageDeclaration, List<TypeDeclaration>> visit(NamespaceNode node) {
 
         List<Tree> children = node.getChildren();
-        PackageDeclaration packageDeclaration = asn.newPackageDeclaration();;
+        PackageDeclaration packageDeclaration = asn.newPackageDeclaration();
+        ;
         List<TypeDeclaration> classes = null;
 
         if (children.get(0) instanceof NameNode)
             packageDeclaration.setName(this.visit((NameNode) children.get(0)));
-        if (children.get(1) instanceof BlockNode){
-            classes = (List<TypeDeclaration>) this.visit((BlockNode) children.get(1) );
+        if (children.get(1) instanceof BlockNode) {
+            classes = (List<TypeDeclaration>) this.visit((BlockNode) children.get(1));
         }
         return new TransformationUtils.ReturnPair<>(packageDeclaration, classes);
     }
 
     CompilationUnit visit(UnitNode node) {
         CompilationUnit compilationUnit = asn.newCompilationUnit();
-        for(Tree child:node.getChildren()){
-            if(child instanceof UsingNode){
-                this.visit((UsingNode)child); // does nothing? or imports?
-            }
-            else if(child instanceof NamespaceNode){
-                TransformationUtils.ReturnPair<PackageDeclaration , List<TypeDeclaration>> results = this.visit((NamespaceNode) child);
+        for (Tree child : node.getChildren()) {
+            if (child instanceof UsingNode) {
+                this.visit((UsingNode) child); // does nothing? or imports?
+            } else if (child instanceof NamespaceNode) {
+                TransformationUtils.ReturnPair<PackageDeclaration, List<TypeDeclaration>> results = this.visit((NamespaceNode) child);
                 compilationUnit.setPackage(results.getFirst());
-                for(TypeDeclaration t:results.getSecond()){
+                for (TypeDeclaration t : results.getSecond()) {
                     compilationUnit.types().add(t);
                 }
             }
         }
         return compilationUnit;
-    }
-
-    void visit(OnNode node) {
-    }
-
-    void visit(IfNode node) {
-
     }
 
     TypeDeclaration visit(ClassNode node) {
@@ -549,12 +557,11 @@ public class SrcMLTreeVisitor {
                 classDeclaration.setName(this.visit((NameNode) child));
             } else if (child instanceof SuperListNode) {
                 List<SimpleType> types = this.visit((SuperListNode) child);
-                if (types.size() > 1){
+                if (types.size() > 1) {
                     for (SimpleType t : types) {
                         classDeclaration.superInterfaceTypes().add(t);
                     }
-                }
-                else if (types.size() == 1){
+                } else if (types.size() == 1) {
                     classDeclaration.setSuperclassType(types.get(0));
                 }
             } else if (child instanceof BlockNode) {
@@ -566,6 +573,215 @@ public class SrcMLTreeVisitor {
 
         return classDeclaration;
     }
+
+    IfStatement visit(IfNode node) {
+        IfStatement ifStatement = asn.newIfStatement();
+        List<Tree> children = node.getChildren();
+        if (children.get(0) instanceof ConditionNode) {
+            Expression exp = this.visit((ConditionNode) children.get(0));
+            ifStatement.setExpression(exp);
+        }
+        if (children.get(1) instanceof BlockNode) {
+            Block exp = (Block) this.visit((BlockNode) children.get(1));
+            ifStatement.setThenStatement(exp);
+        }
+        return ifStatement;
+    }
+
+    Block visit(ElseNode node) {
+        Tree child = node.getChildren().get(0);
+        if (child instanceof BlockNode) {
+            Block exp = (Block) this.visit((BlockNode) child);
+            return exp;
+        }
+        return asn.newBlock();
+    }
+
+    IfStatement visit(IfStmtNode node) {
+        List<Tree> children = node.getChildren();
+        IfStatement ifStatement = asn.newIfStatement();
+        if (children.size() < 3) { // if or if-else
+            for (Tree child : children) {
+                if (child instanceof IfNode) {
+                    ifStatement = this.visit((IfNode) child);
+                } else if (child instanceof ElseNode) {
+                    ifStatement.setElseStatement(this.visit((ElseNode) child));
+                }
+            }
+            return ifStatement;
+        }
+        // if elseif elseif.... else
+        IfStatement[] statements = new IfStatement[children.size()];
+        if (children.get(0) instanceof IfNode) {
+            statements[0] = this.visit((IfNode) children.get(0));
+        }
+        for (int i = 1; i < children.size(); i++) {
+            Tree child = children.get(i);
+            if (child instanceof IfNode) {
+                statements[i] = this.visit((IfNode) child);
+                statements[i - 1].setElseStatement(statements[i]);
+            } else if (child instanceof ElseNode) {
+                statements[i - 1].setElseStatement(this.visit((ElseNode) child));
+            }
+        }
+        return statements[0];
+    }
+
+    ReturnStatement visit(ReturnNode node) {
+        ReturnStatement returnStatement = asn.newReturnStatement();
+        if (node.getChildren().get(0) instanceof ExprNode)
+            returnStatement.setExpression(this.visit((ExprNode) node.getChildren().get(0)));
+        //methodBody.statements().add(returnStatement);
+        return returnStatement;
+    }
+
+    WhileStatement visit(WhileNode node) {
+        WhileStatement whileStatement = asn.newWhileStatement();
+        List<Tree> children = node.getChildren();
+        if (children.get(0) instanceof ConditionNode) {
+            Expression exp = this.visit((ConditionNode) children.get(0));
+            whileStatement.setExpression(exp);
+        }
+        if (children.get(1) instanceof BlockNode) {
+            Block exp = (Block) this.visit((BlockNode) children.get(1));
+            whileStatement.setBody(exp);
+        }
+        return whileStatement;
+    }
+
+    Expression visit(ConditionNode node) {
+        Tree expr = node.getChildren().get(0);
+        if (expr instanceof ExprNode) {
+            return this.visit((ExprNode) expr);
+        }
+        return null;
+    }
+
+    List<SimpleType> visit(SuperListNode node) {
+        List<SimpleType> supers = new ArrayList<>();
+        for (Tree child : node.getChildren()) {
+            if (child instanceof SuperNode) {
+                supers.add(this.visit((SuperNode) child));
+            }
+        }
+        return supers;
+    }
+
+    SimpleType visit(SuperNode node) {
+        Tree name = node.getChildren().get(0);
+        if (name instanceof NameNode)
+            return this.visitType((NameNode) name);
+        return null;
+    }
+
+    ForStatement visit(ForNode node) {
+        ForStatement forStatement = asn.newForStatement();
+        List<Tree> children = node.getChildren();
+        if (children.get(0) instanceof ControlNode) {
+            forStatement = this.visit((ControlNode) children.get(0));
+        }
+        if (children.get(1) instanceof BlockNode) {
+            forStatement.setBody((Block) this.visit((BlockNode) children.get(1)));
+        }
+        return forStatement;
+    }
+
+    ForStatement visit(ControlNode node) {
+        ForStatement forStatement = asn.newForStatement();
+        for (Tree child : node.getChildren()) {
+            if (child instanceof InitNode) {
+                VariableDeclarationExpression exp = (VariableDeclarationExpression) this.visit((InitNode) child);
+                forStatement.initializers().add(exp);
+            } else if (child instanceof ConditionNode) {
+                Expression exp = this.visit((ConditionNode) child);
+                forStatement.setExpression(exp);
+            } else if (child instanceof IncrNode) {
+                Expression exp = this.visit((IncrNode) child);
+                forStatement.updaters().add(exp);
+            }
+        }
+        return forStatement;
+    }
+
+    EnhancedForStatement visitEnhanced(ControlNode node) {
+        // Will be done manually
+        EnhancedForStatement foreachStatement = asn.newEnhancedForStatement();
+        Tree child = node.getChildren().get(0);
+        SingleVariableDeclaration variableDeclaration = asn.newSingleVariableDeclaration();
+        if (child instanceof InitNode) {
+            child = child.getChildren().get(0);
+            if (child instanceof DeclNode) {
+                for (Tree c : child.getChildren()) {
+                    if (c instanceof NameNode)
+                        variableDeclaration.setName(this.visit((NameNode) c));
+                    else if (c instanceof TypeNode)
+                        variableDeclaration.setType(this.visit((TypeNode) c));
+                    else if (c instanceof RangeNode) {
+                        foreachStatement.setExpression(this.visit((RangeNode) c));
+                    }
+                }
+                foreachStatement.setParameter(variableDeclaration);
+            }
+        }
+        return foreachStatement;
+    }
+
+    Expression visit(IncrNode node) {
+        if (node.getChildren().get(0) instanceof ExprNode)
+            return this.visit((ExprNode) node.getChildren().get(0));
+        return null;
+    }
+
+    EnhancedForStatement visit(ForeachNode node) {
+        EnhancedForStatement foreachStatement = asn.newEnhancedForStatement();
+        List<Tree> children = node.getChildren();
+        if (children.get(0) instanceof ControlNode) {
+            foreachStatement = this.visitEnhanced((ControlNode) children.get(0));
+        }
+        if (children.get(1) instanceof BlockNode) {
+            foreachStatement.setBody((Block) this.visit((BlockNode) children.get(1)));
+        }
+        return foreachStatement;
+    }
+
+    Expression visit(RangeNode node) {
+        Tree child = node.getChildren().get(0);
+        if (child instanceof ExprNode)
+            return this.visit((ExprNode) child);
+        return null;
+    }
+
+    void visit(SwitchNode node) {
+
+    }
+
+    void visit(GotoNode node) {
+    }
+
+    void visit(UnsafeNode node) {
+    }
+
+    void visit(LabelNode node) {
+    }
+
+    void visit(LockNode node) {
+    }
+
+    void visit(UsingStmtNode node) {
+    }
+
+    void visit(ThenNode node) {
+    }
+
+    void visit(DelegateNode node) {
+    }
+
+    void visit(LambdaNode node) {
+    }
+
+    void visit(OnNode node) {
+    }
+
 
     void visit(EscapeNode node) {
     }
@@ -591,65 +807,6 @@ public class SrcMLTreeVisitor {
     void visit(FixedNode node) {
     }
 
-    void visit(ForNode node) {
-    }
-
-    void visit(ForeachNode node) {
-    }
-
-    void visit(GotoNode node) {
-    }
-
-    void visit(IfStmtNode node) {
-    }
-
-    void visit(LabelNode node) {
-    }
-
-    void visit(LockNode node) {
-    }
-
-    ReturnStatement visit(ReturnNode node) {
-        ReturnStatement returnStatement = asn.newReturnStatement();
-        if (node.getChildren().get(0) instanceof ExprNode)
-            returnStatement.setExpression(this.visit((ExprNode) node.getChildren().get(0)));
-        //methodBody.statements().add(returnStatement);
-        return returnStatement;
-    }
-
-    void visit(SwitchNode node) {
-    }
-
-    void visit(UnsafeNode node) {
-    }
-
-    void visit(UsingStmtNode node) {
-    }
-
-    void visit(WhileNode node) {
-    }
-
-    void visit(ConditionNode node) {
-    }
-
-    void visit(ControlNode node) {
-    }
-
-    void visit(ElseNode node) {
-    }
-
-    void visit(IncrNode node) {
-    }
-
-    void visit(ThenNode node) {
-    }
-
-    void visit(DelegateNode node) {
-    }
-
-    void visit(LambdaNode node) {
-    }
-
     void visit(ModifierNode node) {
     }
 
@@ -666,22 +823,6 @@ public class SrcMLTreeVisitor {
     void visit(EventNode node) {
     }
 
-    List<SimpleType> visit(SuperListNode node) {
-        List<SimpleType> supers = new ArrayList<>();
-        for (Tree child : node.getChildren()) {
-            if (child instanceof SuperNode) {
-                supers.add(this.visit((SuperNode) child));
-            }
-        }
-        return supers;
-    }
-
-    SimpleType visit(SuperNode node) {
-        Tree name = node.getChildren().get(0);
-        if (name instanceof NameNode)
-            return this.visitType((NameNode) name);
-        return null;
-    }
 
     void visit(InterfaceNode node) {
     }

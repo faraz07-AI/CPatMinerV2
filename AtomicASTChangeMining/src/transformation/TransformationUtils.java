@@ -191,6 +191,8 @@ public class TransformationUtils {
             new_tree = new DeclNode(inputTree);
         else if (Objects.equals(nodeType, SrcMLNodeType.DECL_STMT))
             new_tree = new DeclStmtNode(inputTree);
+        else if (Objects.equals(nodeType, SrcMLNodeType.RANGE))
+            new_tree = new RangeNode(inputTree);
         else if (Objects.equals(nodeType, SrcMLNodeType.CONSTRUCTOR))
             new_tree = new ConstructorNode(inputTree);
         else if (Objects.equals(nodeType, SrcMLNodeType.DESTRCUCTOR))
