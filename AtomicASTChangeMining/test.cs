@@ -45,6 +45,7 @@ namespace HelloWorld
             {
               case 1:
                 Console.WriteLine("Monday");
+                x = x+1;
                 break;
               case 2:
                 Console.WriteLine("Tuesday");

@@ -19,6 +19,32 @@ public class SrcMLTreeVisitor {
         // No need to map it or its children
     }
 
+    Object visit(BlockContentNode node) {
+        Block body = asn.newBlock();
+        List<Tree> statements = node.getChildren();
+        for (Tree statement : statements) {
+            if (statement instanceof DeclStmtNode) {
+                body.statements().add(this.visit((DeclStmtNode) statement));
+            } else if (statement instanceof ExprStmtNode) {
+                body.statements().add(this.visit((ExprStmtNode) statement));
+            } else if (statement instanceof ReturnNode) {
+                body.statements().add(this.visit((ReturnNode) statement));
+            } else if (statement instanceof IfStmtNode) {
+                body.statements().add(this.visit((IfStmtNode) statement));
+            } else if (statement instanceof WhileNode) {
+                body.statements().add(this.visit((WhileNode) statement));
+            } else if (statement instanceof ForNode) {
+                body.statements().add(this.visit((ForNode) statement));
+            } else if (statement instanceof ForeachNode) {
+                body.statements().add(this.visit((ForeachNode) statement));
+            } else if (statement instanceof SwitchNode) {
+                body.statements().add(this.visit((SwitchNode) statement));
+            }
+        }
+
+        return body;
+    }
+
     Expression visit(LiteralNode node) {
         String init_literal = node.getLabel();
         return TransformationUtils.type_literal(asn, init_literal);
@@ -445,29 +471,6 @@ public class SrcMLTreeVisitor {
         return functions;
     }
 
-    Block visit(BlockContentNode node) {
-        Block body = asn.newBlock();
-        List<Tree> statements = node.getChildren();
-        for (Tree statement : statements) {
-            if (statement instanceof DeclStmtNode) {
-                body.statements().add(this.visit((DeclStmtNode) statement));
-            } else if (statement instanceof ExprStmtNode) {
-                body.statements().add(this.visit((ExprStmtNode) statement));
-            } else if (statement instanceof ReturnNode) {
-                body.statements().add(this.visit((ReturnNode) statement));
-            } else if (statement instanceof IfStmtNode) {
-                body.statements().add(this.visit((IfStmtNode) statement));
-            } else if (statement instanceof WhileNode) {
-                body.statements().add(this.visit((WhileNode) statement));
-            } else if (statement instanceof ForNode) {
-                body.statements().add(this.visit((ForNode) statement));
-            } else if (statement instanceof ForeachNode) {
-                body.statements().add(this.visit((ForeachNode) statement));
-            }
-        }
-        return body;
-    }
-
     VariableDeclarationStatement visit(DeclStmtNode node) {
         Tree declaration = node.getChildren().get(0);
         if (declaration instanceof DeclNode) {
@@ -751,8 +754,64 @@ public class SrcMLTreeVisitor {
         return null;
     }
 
-    void visit(SwitchNode node) {
+    SwitchStatement visit(SwitchNode node) {
+        SwitchStatement switchStatement = asn.newSwitchStatement();
+        List<Tree> children = node.getChildren();
+        if (children.get(0) instanceof ConditionNode) {
+            switchStatement.setExpression(this.visit((ConditionNode) children.get(0)));
+        }
+        if (children.get(1) instanceof BlockNode) { // Will develop this here
+            Tree child = children.get(1).getChildren().get(0);
+            if (child instanceof BlockContentNode) {
+                List<Tree> c = child.getChildren();
+                Block casebody = asn.newBlock();
+                for (int i = 0; i < c.size(); i++) {
+                    Tree statement = c.get(i);
+                    if (statement instanceof CaseNode) {
+                        if (casebody.statements().size() > 0) {
+                            switchStatement.statements().add(casebody);
+                            casebody = asn.newBlock();
+                        }
+                        switchStatement.statements().add(this.visit((CaseNode) statement));
+                    } else if (statement instanceof BreakNode) {
+                        BreakStatement b = this.visit((BreakNode) statement);
+                        casebody.statements().add(b);
+                        switchStatement.statements().add(casebody);
+                        casebody = asn.newBlock();
+                    } else if (statement instanceof DefaultNode) {
+                        if (casebody.statements().size() > 0) {
+                            switchStatement.statements().add(casebody);
+                            casebody = asn.newBlock();
+                        }
+                        switchStatement.statements().add(this.visit((DefaultNode) statement));
+                    } else if (statement instanceof ExprStmtNode) {
+                        ExpressionStatement e = this.visit((ExprStmtNode) statement);
+                        casebody.statements().add(e);
+                    }
+                }
 
+            }
+        }
+        return switchStatement;
+
+    }
+
+    BreakStatement visit(BreakNode node) {
+        return asn.newBreakStatement();
+    }
+
+    SwitchCase visit(CaseNode node) {
+        SwitchCase casestmt = asn.newSwitchCase();
+        Tree child = node.getChildren().get(0);
+        if (child instanceof ExprNode)
+            casestmt.setExpression(this.visit((ExprNode) child));
+        return casestmt;
+    }
+
+    SwitchCase visit(DefaultNode node) {
+        SwitchCase defaultCase = asn.newSwitchCase();
+        defaultCase.setExpression(null);
+        return defaultCase;
     }
 
     void visit(GotoNode node) {
@@ -786,17 +845,9 @@ public class SrcMLTreeVisitor {
     void visit(EscapeNode node) {
     }
 
-    void visit(BreakNode node) {
-    }
-
-    void visit(CaseNode node) {
-    }
-
     void visit(ContinueNode node) {
     }
 
-    void visit(DefaultNode node) {
-    }
 
     void visit(DoNode node) {
     }
