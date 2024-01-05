@@ -3,6 +3,17 @@ using System;
 namespace HelloWorld
 {
      class Hello : SuperClass, Superinterface {
+
+     private string privateField;
+     int lol;
+     public Hello(int x, int y)
+         {
+             Class1 varrr = new Class1("test");
+         }
+         ~Hello()
+             {
+                 // Cleanup code
+             }
         public static void Main(string[] args)
         {
             Console.WriteLine( a + 5 * 33, new MyClass("hi",55));
@@ -64,6 +75,6 @@ namespace HelloWorld
     public interface Superinterface
             {
                 double CalculateArea();
-                string ShapeName { get; }
+                //string ShapeName { get; }
             }
 }

@@ -55,7 +55,7 @@ public class SrcMLTreeVisitor {
     }
 
     SimpleName visit(NameNode node) {
-        return asn.newSimpleName(node.getLabel());
+        return asn.newSimpleName(node.getLabel().replace("~", "")); //if it's a destructor
     }
 
     SimpleType visitType(NameNode node) {
@@ -375,30 +375,31 @@ public class SrcMLTreeVisitor {
 
     MethodDeclaration visit(FunctionNode node) {
         MethodDeclaration methoddec = asn.newMethodDeclaration();
-        // function name
-        List<Tree> children = node.getChildren();
-        if (children.get(1) instanceof NameNode)
-            methoddec.setName(this.visit((NameNode) children.get(1)));
 
-        List<Tree> types = children.get(0).getChildren();
-        // function specifier
-        for (int i = 0; i < types.size() - 1; i++) {
-            Tree specifier = types.get(i);
-            if (specifier instanceof SpecifierNode)
-                methoddec.modifiers().add(this.visit((SpecifierNode) specifier));
-        }
-        // function return type
-        Tree return_node = types.get(types.size() - 1); // the return type is the last one, the others are specifiers
-        if (return_node instanceof NameNode)
-            methoddec.setReturnType2(this.visitType((NameNode) return_node));
-        // function params
-        if (children.get(2) instanceof ParameterListNode) {
-            for (VariableDeclaration vdec : this.visit((ParameterListNode) children.get(2)))
-                methoddec.parameters().add(vdec);
-        }
-        // function body
-        if (children.get(3) instanceof BlockNode) {
-            methoddec.setBody((Block) this.visit((BlockNode) children.get(3)));
+        List<Tree> children = node.getChildren();
+        for (Tree child : children) {
+            // function name
+            if (child instanceof NameNode)
+                methoddec.setName(this.visit((NameNode) child));
+            if (child instanceof TypeNode) {
+                for (Tree type_child : child.getChildren()) {
+                    // function specifier
+                    if (type_child instanceof SpecifierNode)
+                        methoddec.modifiers().add(this.visit((SpecifierNode) type_child));
+                    // function return type
+                    if (type_child instanceof NameNode)
+                        methoddec.setReturnType2(this.visitType((NameNode) type_child));
+                }
+            }
+            // function params
+            if (child instanceof ParameterListNode) {
+                for (VariableDeclaration vdec : this.visit((ParameterListNode) child))
+                    methoddec.parameters().add(vdec);
+            }
+            // function body
+            if (child instanceof BlockNode) {
+                methoddec.setBody((Block) this.visit((BlockNode) child));
+            }
         }
         return methoddec;
     }
@@ -420,7 +421,7 @@ public class SrcMLTreeVisitor {
             List<Tree> param_children = node.getChildren().get(0).getChildren();
             Tree node_type = param_children.get(0);
             if (node_type instanceof TypeNode) {
-                parameter.setType(this.visit((TypeNode) node_type));
+                parameter.setType((Type) this.visit((TypeNode) node_type));
             }
 
             Tree node_name = param_children.get(1);
@@ -432,7 +433,7 @@ public class SrcMLTreeVisitor {
         return parameter;
     }
 
-    Type visit(TypeNode node) {
+    Object visit(TypeNode node) {
         Tree node_type = node.getChildren().get(0);
         if (node_type.getChildren().size() > 0) {// an array type type->name->[name:..,index:..]
             Tree param_type = node_type.getChildren().get(0);
@@ -444,6 +445,21 @@ public class SrcMLTreeVisitor {
                     return arrayType;
                 }
             }
+        } else if (node.getParents().get(3) instanceof ClassNode) { // field in class
+            VariableDeclarationFragment variableDeclarationFragment = asn.newVariableDeclarationFragment();
+            Tree namenode = node.getParents().get(0).getChildren().get(1);
+            if (namenode instanceof NameNode)
+                variableDeclarationFragment.setName(this.visit((NameNode) namenode));
+            FieldDeclaration fieldDeclaration = asn.newFieldDeclaration(variableDeclarationFragment);
+            for (Tree child : node.getChildren()) {
+                if (child instanceof SpecifierNode) {
+                    fieldDeclaration.modifiers().add(this.visit((SpecifierNode) child));
+                } else if (child instanceof NameNode) {
+                    SimpleType simpleType = this.visitType((NameNode) child);
+                    fieldDeclaration.setType(simpleType);
+                }
+            }
+            return fieldDeclaration;
         } else if (node_type instanceof NameNode) { // type->name:...
             SimpleType simpleType = this.visitType((NameNode) node_type);
             return simpleType;
@@ -466,19 +482,32 @@ public class SrcMLTreeVisitor {
             }
             return class_and_interface_nodes;
         }
-        List<MethodDeclaration> functions = new ArrayList<>();
-        for (Tree function : node.getChildren()) {
+        List<Object> functions = new ArrayList<>();
+        for (Tree function : node.getChildren()) { // in a class or interface
             if (function instanceof FunctionNode)
                 functions.add(this.visit((FunctionNode) function));
             else if (function instanceof FunctionDeclNode)
                 functions.add(this.visit((FunctionDeclNode) function));
+            else if (function instanceof DeclStmtNode)  // field, here we treat this in a special way
+                functions.add(this.visit((DeclStmtNode) function));
+            else if (function instanceof ConstructorNode)
+                functions.add(this.visit((ConstructorNode) function));
+            else if (function instanceof DestrctorNode)
+                functions.add(this.visit((DestrctorNode) function));
+
         }
         return functions;
     }
 
-    VariableDeclarationStatement visit(DeclStmtNode node) {
+    Object visit(DeclStmtNode node) {
         Tree declaration = node.getChildren().get(0);
         if (declaration instanceof DeclNode) {
+            if (node.getParents().get(1) instanceof ClassNode) {
+                Tree field = declaration.getChildren().get(0); // don't pass by the declaration node, go straight to type
+                if (field instanceof TypeNode) {
+                    return this.visit((TypeNode) field);
+                }
+            }
             TransformationUtils.ReturnPair<VariableDeclarationFragment, Type> k = this.visit((DeclNode) declaration);
             VariableDeclarationStatement variableDeclaration = asn.newVariableDeclarationStatement(k.getFirst());
             variableDeclaration.setType(k.getSecond());
@@ -499,7 +528,7 @@ public class SrcMLTreeVisitor {
         }
         Type t = null;
         if (declaration.get(0) instanceof TypeNode) {
-            t = this.visit((TypeNode) declaration.get(0));
+            t = (Type) this.visit((TypeNode) declaration.get(0));
         }
         return new TransformationUtils.ReturnPair<>(variableFragment, t);
     }
@@ -573,7 +602,7 @@ public class SrcMLTreeVisitor {
                     classDeclaration.setSuperclassType(types.get(0));
                 }
             } else if (child instanceof BlockNode) {
-                List<MethodDeclaration> lm = (List<MethodDeclaration>) this.visit((BlockNode) child);
+                List<Object> lm = (List<Object>) this.visit((BlockNode) child);
                 for (Object b : lm)
                     classDeclaration.bodyDeclarations().add(b);
             }
@@ -723,7 +752,7 @@ public class SrcMLTreeVisitor {
                     if (c instanceof NameNode)
                         variableDeclaration.setName(this.visit((NameNode) c));
                     else if (c instanceof TypeNode)
-                        variableDeclaration.setType(this.visit((TypeNode) c));
+                        variableDeclaration.setType((Type) this.visit((TypeNode) c));
                     else if (c instanceof RangeNode) {
                         foreachStatement.setExpression(this.visit((RangeNode) c));
                     }
@@ -823,6 +852,7 @@ public class SrcMLTreeVisitor {
         return asn.newContinueStatement();
 
     }
+
     TypeDeclaration visit(InterfaceNode node) {
         TypeDeclaration interfaceDeclaration = asn.newTypeDeclaration();
         interfaceDeclaration.setInterface(true);
@@ -834,9 +864,9 @@ public class SrcMLTreeVisitor {
                 interfaceDeclaration.setName(this.visit((NameNode) child));
             } else if (child instanceof SuperListNode) {
                 List<SimpleType> types = this.visit((SuperListNode) child);
-                    for (SimpleType t : types) {
-                        interfaceDeclaration.superInterfaceTypes().add(t);
-                    }
+                for (SimpleType t : types) {
+                    interfaceDeclaration.superInterfaceTypes().add(t);
+                }
             } else if (child instanceof BlockNode) {
                 List<MethodDeclaration> lm = (List<MethodDeclaration>) this.visit((BlockNode) child);
                 for (Object b : lm)
@@ -846,6 +876,26 @@ public class SrcMLTreeVisitor {
 
         return interfaceDeclaration;
     }
+
+    MethodDeclaration visit(ConstructorNode node) {
+        // treat as function
+        FunctionNode f = new FunctionNode(node);
+        f.setChildren(node.getChildren());
+        MethodDeclaration md = this.visit(f);
+        md.setConstructor(true);
+        return md;
+    }
+
+    MethodDeclaration visit(DestrctorNode node) {
+        // there is no destructor in java, so treat as function
+        FunctionNode f = new FunctionNode(node);
+        f.setChildren(node.getChildren());
+        return this.visit(f);
+    }
+
+    void visit(EnumNode node) {
+    }
+
     void visit(GotoNode node) {
     }
 
@@ -887,16 +937,6 @@ public class SrcMLTreeVisitor {
     }
 
     void visit(ModifierNode node) {
-    }
-
-
-    void visit(ConstructorNode node) {
-    }
-
-    void visit(DestrctorNode node) {
-    }
-
-    void visit(EnumNode node) {
     }
 
     void visit(EventNode node) {
