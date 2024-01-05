@@ -39,6 +39,10 @@ public class SrcMLTreeVisitor {
                 body.statements().add(this.visit((ForeachNode) statement));
             } else if (statement instanceof SwitchNode) {
                 body.statements().add(this.visit((SwitchNode) statement));
+            } else if (statement instanceof BreakNode) {
+                body.statements().add(this.visit((BreakNode) statement));
+            } else if (statement instanceof ContinueNode) {
+                body.statements().add(this.visit((ContinueNode) statement));
             }
         }
 
@@ -452,15 +456,16 @@ public class SrcMLTreeVisitor {
         Tree child = node.getChildren().get(0);
         if (child instanceof BlockContentNode)
             return this.visit((BlockContentNode) child);
-        if (child instanceof ClassNode) {
-            List<TypeDeclaration> class_nodes = new ArrayList<>();
-            for (Tree class_node : node.getChildren()) {
-                if (class_node instanceof ClassNode)
-                    class_nodes.add(this.visit((ClassNode) class_node));
+        if (child instanceof ClassNode || child instanceof InterfaceNode) {
+            List<TypeDeclaration> class_and_interface_nodes = new ArrayList<>();
+            for (Tree class_or_interface_node : node.getChildren()) {
+                if (class_or_interface_node instanceof ClassNode)
+                    class_and_interface_nodes.add(this.visit((ClassNode) class_or_interface_node));
+                if (class_or_interface_node instanceof InterfaceNode)
+                    class_and_interface_nodes.add(this.visit((InterfaceNode) class_or_interface_node));
             }
-            return class_nodes;
+            return class_and_interface_nodes;
         }
-
         List<MethodDeclaration> functions = new ArrayList<>();
         for (Tree function : node.getChildren()) {
             if (function instanceof FunctionNode)
@@ -814,6 +819,33 @@ public class SrcMLTreeVisitor {
         return defaultCase;
     }
 
+    ContinueStatement visit(ContinueNode node) {
+        return asn.newContinueStatement();
+
+    }
+    TypeDeclaration visit(InterfaceNode node) {
+        TypeDeclaration interfaceDeclaration = asn.newTypeDeclaration();
+        interfaceDeclaration.setInterface(true);
+        List<Tree> children = node.getChildren();
+        for (Tree child : children) {
+            if (child instanceof SpecifierNode) {
+                interfaceDeclaration.modifiers().add(this.visit((SpecifierNode) child));
+            } else if (child instanceof NameNode) {
+                interfaceDeclaration.setName(this.visit((NameNode) child));
+            } else if (child instanceof SuperListNode) {
+                List<SimpleType> types = this.visit((SuperListNode) child);
+                    for (SimpleType t : types) {
+                        interfaceDeclaration.superInterfaceTypes().add(t);
+                    }
+            } else if (child instanceof BlockNode) {
+                List<MethodDeclaration> lm = (List<MethodDeclaration>) this.visit((BlockNode) child);
+                for (Object b : lm)
+                    interfaceDeclaration.bodyDeclarations().add(b);
+            }
+        }
+
+        return interfaceDeclaration;
+    }
     void visit(GotoNode node) {
     }
 
@@ -841,11 +873,7 @@ public class SrcMLTreeVisitor {
     void visit(OnNode node) {
     }
 
-
     void visit(EscapeNode node) {
-    }
-
-    void visit(ContinueNode node) {
     }
 
 
@@ -872,10 +900,6 @@ public class SrcMLTreeVisitor {
     }
 
     void visit(EventNode node) {
-    }
-
-
-    void visit(InterfaceNode node) {
     }
 
     void visit(PropertyNode node) {

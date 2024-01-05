@@ -5,27 +5,10 @@ import com.github.gumtreediff.tree.TreeContext;
 import com.github.gumtreediff.client.Run;
 import com.github.gumtreediff.gen.srcml.SrcmlCsTreeGenerator;
 import org.eclipse.jdt.core.dom.*;
-import org.eclipse.jdt.core.dom.AST;
-
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
 
 public class Transformation {
 
-    private static void iterate_children(AST asn, Tree root) {
-        if (root == null) {
-            return;
-        }
-        //transformNode(root);
-        Object arr = SrcMLToJavaASTTransformation.getNodeMapping(asn, root);
-
-        for (Tree child : root.getChildren()) {
-            iterate_children(asn, child);
-        }
-    }
-
-    private static void iterate_children_test(Tree root, SrcMLTreeVisitor visitor) {
+    private static void iterate_children(Tree root, SrcMLTreeVisitor visitor) {
         if (root == null) {
             return;
         } else if (root instanceof UnitNode) {
@@ -33,7 +16,7 @@ public class Transformation {
             System.out.println(m.toString());
         } else {
             for (Tree child : root.getChildren()) {
-                iterate_children_test(child, visitor);
+                iterate_children(child, visitor);
             }
         }
     }
@@ -55,21 +38,7 @@ public class Transformation {
             transformedTree.toString();
 
             SrcMLTreeVisitor visitor = new SrcMLTreeVisitor();
-            iterate_children_test(transformedTree, visitor);
-
-            ASTParser parser = ASTParser.newParser(AST.JLS8);
-            parser.setKind(ASTParser.K_COMPILATION_UNIT);
-            File javaFile = new File(java_file);
-            BufferedReader in = new BufferedReader(new FileReader(javaFile));
-            final StringBuffer buffer = new StringBuffer();
-            String line = null;
-            while (null != (line = in.readLine())) {
-                buffer.append(line).append("\n");
-            }
-            parser.setSource(buffer.toString().toCharArray());
-            CompilationUnit compilationUnit = (CompilationUnit) parser.createAST(null);
-            //System.out.println(compilationUnit.toString());
-
+            iterate_children(transformedTree, visitor);
 
         } catch (Exception e) {
             throw new RuntimeException(e);

@@ -24,6 +24,8 @@ namespace HelloWorld
         for (int i = 1; i <= 5; i++)
         {
             Console.WriteLine(i);
+            if (True)
+                continue;
         }
         foreach (int number in numbers)
                 {
@@ -59,4 +61,9 @@ namespace HelloWorld
             public abstract void doWork();
 
         }
+    public interface Superinterface
+            {
+                double CalculateArea();
+                string ShapeName { get; }
+            }
 }
