@@ -2,13 +2,25 @@ using System;
 
 namespace HelloWorld
 {
+public enum DaysOfWeek
+    {
+        Sunday,
+        Monday,
+        Tuesday,
+        Wednesday,
+        Thursday,
+        Friday,
+        Saturday
+    }
      class Hello : SuperClass, Superinterface {
 
      private string privateField;
      int lol;
+
      public Hello(int x, int y)
          {
              Class1 varrr = new Class1("test");
+             Level myVar = Level.Medium;
          }
          ~Hello()
              {

@@ -91,8 +91,12 @@ public class SrcMLTreeVisitor {
         if (children.size() == 1) {
             if (children.get(0) instanceof LiteralNode)
                 return this.visit((LiteralNode) children.get(0));
-            if (children.get(0) instanceof NameNode)
-                return this.visit((NameNode) children.get(0));
+            if (children.get(0) instanceof NameNode){
+                if(children.get(0).getChildren().size() == 0)
+                    return this.visit((NameNode) children.get(0));
+                List<Tree> c = children.get(0).getChildren();
+                return asn.newQualifiedName(this.visit((NameNode) c.get(0)), this.visit((NameNode) c.get(2)));
+            }
             if (children.get(0) instanceof CallNode)
                 return this.visit((CallNode) children.get(0));
         } else if (children.size() == 2) {
@@ -472,13 +476,15 @@ public class SrcMLTreeVisitor {
         Tree child = node.getChildren().get(0);
         if (child instanceof BlockContentNode)
             return this.visit((BlockContentNode) child);
-        if (child instanceof ClassNode || child instanceof InterfaceNode) {
-            List<TypeDeclaration> class_and_interface_nodes = new ArrayList<>();
+        if (node.getParent() instanceof NamespaceNode) {
+            List<Object> class_and_interface_nodes = new ArrayList<>();
             for (Tree class_or_interface_node : node.getChildren()) {
                 if (class_or_interface_node instanceof ClassNode)
                     class_and_interface_nodes.add(this.visit((ClassNode) class_or_interface_node));
                 if (class_or_interface_node instanceof InterfaceNode)
                     class_and_interface_nodes.add(this.visit((InterfaceNode) class_or_interface_node));
+                if (class_or_interface_node instanceof EnumNode)
+                    class_and_interface_nodes.add(this.visit((EnumNode) class_or_interface_node));
             }
             return class_and_interface_nodes;
         }
@@ -553,17 +559,17 @@ public class SrcMLTreeVisitor {
         return null;
     }
 
-    TransformationUtils.ReturnPair<PackageDeclaration, List<TypeDeclaration>> visit(NamespaceNode node) {
+    TransformationUtils.ReturnPair<PackageDeclaration, List<Object>> visit(NamespaceNode node) {
 
         List<Tree> children = node.getChildren();
         PackageDeclaration packageDeclaration = asn.newPackageDeclaration();
         ;
-        List<TypeDeclaration> classes = null;
+        List<Object> classes = null;
 
         if (children.get(0) instanceof NameNode)
             packageDeclaration.setName(this.visit((NameNode) children.get(0)));
         if (children.get(1) instanceof BlockNode) {
-            classes = (List<TypeDeclaration>) this.visit((BlockNode) children.get(1));
+            classes = (List<Object>) this.visit((BlockNode) children.get(1));
         }
         return new TransformationUtils.ReturnPair<>(packageDeclaration, classes);
     }
@@ -574,9 +580,9 @@ public class SrcMLTreeVisitor {
             if (child instanceof UsingNode) {
                 this.visit((UsingNode) child); // does nothing? or imports?
             } else if (child instanceof NamespaceNode) {
-                TransformationUtils.ReturnPair<PackageDeclaration, List<TypeDeclaration>> results = this.visit((NamespaceNode) child);
+                TransformationUtils.ReturnPair<PackageDeclaration, List<Object>> results = this.visit((NamespaceNode) child);
                 compilationUnit.setPackage(results.getFirst());
-                for (TypeDeclaration t : results.getSecond()) {
+                for (Object t : results.getSecond()) {
                     compilationUnit.types().add(t);
                 }
             }
@@ -893,7 +899,28 @@ public class SrcMLTreeVisitor {
         return this.visit(f);
     }
 
-    void visit(EnumNode node) {
+    EnumDeclaration visit(EnumNode node) {
+        EnumDeclaration enumDeclaration = asn.newEnumDeclaration();
+        for (Tree child : node.getChildren()) {
+            if (child instanceof SpecifierNode)
+                enumDeclaration.modifiers().add(this.visit((SpecifierNode) child));
+            if (child instanceof NameNode)
+                enumDeclaration.setName(this.visit((NameNode) child));
+            if (child instanceof BlockNode) { // will treat this here because it's too specific
+                for (Tree dec_child : child.getChildren()) {
+                    if (dec_child instanceof DeclNode) {
+                        EnumConstantDeclaration constant1 = asn.newEnumConstantDeclaration();
+                        Tree name_node = dec_child.getChildren().get(0);
+                        if (name_node instanceof NameNode)
+                            constant1.setName(this.visit((NameNode) name_node));
+                        enumDeclaration.enumConstants().add(constant1);
+                    }
+                }
+            }
+
+        }
+
+        return enumDeclaration;
     }
 
     void visit(GotoNode node) {
