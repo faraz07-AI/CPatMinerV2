@@ -228,7 +228,7 @@ public class TransformationUtils {
         else if (Objects.equals(nodeType, SrcMLNodeType.CATCH))
             new_tree = new CatchNode(inputTree);
         else if (Objects.equals(nodeType, SrcMLNodeType.FINALLY))
-            return new FinallyNode(inputTree);
+            new_tree = new FinallyNode(inputTree);
         else if (Objects.equals(nodeType, SrcMLNodeType.THROW))
             new_tree = new ThrowNode(inputTree);
         else if (Objects.equals(nodeType, SrcMLNodeType.TRY))

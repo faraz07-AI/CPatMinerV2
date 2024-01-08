@@ -19,14 +19,26 @@ public enum DaysOfWeek
 
      public Hello(int x, int y)
          {
-             Class1 varrr = new Class1("test");
              Level myVar = Level.Medium;
+
+             try
+                     {
+                         throw new DivideByZeroException("oh no.");
+                     }
+                     catch (DivideByZeroException ex)
+                     {
+                         Console.WriteLine("lol" + ex.Message);
+                     }
+                     finally
+                     {
+                         Console.WriteLine("This block will always be executed.");
+                     }
          }
          ~Hello()
              {
                  // Cleanup code
              }
-        public static void Main(string[] args)
+        public static void main()
         {
             Console.WriteLine( a + 5 * 33, new MyClass("hi",55));
             Class1 varrr = new Class1("test");
@@ -82,6 +94,7 @@ public enum DaysOfWeek
     }
     abstract class testttAbstract {
             public abstract void doWork();
+
 
         }
     public interface Superinterface
