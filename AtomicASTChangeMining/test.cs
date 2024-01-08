@@ -1,4 +1,5 @@
 using System;
+using System.Reflection;
 
 namespace HelloWorld
 {
@@ -33,6 +34,9 @@ public enum DaysOfWeek
                      {
                          Console.WriteLine("This block will always be executed.");
                      }
+             using (StreamReader sr = new StreamReader("TestFile.txt")) {
+             //do smthg
+             }
          }
          ~Hello()
              {
