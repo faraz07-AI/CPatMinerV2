@@ -42,10 +42,14 @@ public enum DaysOfWeek
              {
                  // Cleanup code
              }
-        public static void main()
+        public static unsafe void main()
         {
             Console.WriteLine( a + 5 * 33, new MyClass("hi",55));
             Class1 varrr = new Class1("test");
+            unsafe {
+            a = a+ b
+            // unsafe code
+            }
 
         }
         int test(int a,  int b){

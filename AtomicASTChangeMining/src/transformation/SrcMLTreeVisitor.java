@@ -15,40 +15,43 @@ public class SrcMLTreeVisitor {
         // Do nothing since comments are not needed
     }
 
-    Object visit(BlockContentNode node) {
-        Block body = asn.newBlock();
+    List<Object> visit(BlockContentNode node) {
+        //Block body = asn.newBlock();
+        List<Object> transformed_statements = new ArrayList<>();
         List<Tree> statements = node.getChildren();
         for (Tree statement : statements) {
             if (statement instanceof DeclStmtNode) {
-                body.statements().add(this.visit((DeclStmtNode) statement));
+                transformed_statements.add(this.visit((DeclStmtNode) statement));
             } else if (statement instanceof ExprStmtNode) {
-                body.statements().add(this.visit((ExprStmtNode) statement));
+                transformed_statements.add(this.visit((ExprStmtNode) statement));
             } else if (statement instanceof ReturnNode) {
-                body.statements().add(this.visit((ReturnNode) statement));
+                transformed_statements.add(this.visit((ReturnNode) statement));
             } else if (statement instanceof IfStmtNode) {
-                body.statements().add(this.visit((IfStmtNode) statement));
+                transformed_statements.add(this.visit((IfStmtNode) statement));
             } else if (statement instanceof WhileNode) {
-                body.statements().add(this.visit((WhileNode) statement));
+                transformed_statements.add(this.visit((WhileNode) statement));
             } else if (statement instanceof ForNode) {
-                body.statements().add(this.visit((ForNode) statement));
+                transformed_statements.add(this.visit((ForNode) statement));
             } else if (statement instanceof ForeachNode) {
-                body.statements().add(this.visit((ForeachNode) statement));
+                transformed_statements.add(this.visit((ForeachNode) statement));
             } else if (statement instanceof SwitchNode) {
-                body.statements().add(this.visit((SwitchNode) statement));
+                transformed_statements.add(this.visit((SwitchNode) statement));
             } else if (statement instanceof BreakNode) {
-                body.statements().add(this.visit((BreakNode) statement));
+                transformed_statements.add(this.visit((BreakNode) statement));
             } else if (statement instanceof ContinueNode) {
-                body.statements().add(this.visit((ContinueNode) statement));
+                transformed_statements.add(this.visit((ContinueNode) statement));
             } else if (statement instanceof TryNode) {
-                body.statements().add(this.visit((TryNode) statement));
+                transformed_statements.add(this.visit((TryNode) statement));
             } else if (statement instanceof ThrowNode) {
-                body.statements().add(this.visit((ThrowNode) statement));
+                transformed_statements.add(this.visit((ThrowNode) statement));
             } else if (statement instanceof UsingStmtNode) {
-                body.statements().add(this.visit((UsingStmtNode) statement));
+                transformed_statements.add(this.visit((UsingStmtNode) statement));
+            } else if (statement instanceof UnsafeNode) {
+                for (Object bb : this.visit((UnsafeNode) statement))
+                    transformed_statements.add(bb);
             }
         }
-
-        return body;
+        return transformed_statements;
     }
 
     Expression visit(LiteralNode node) {
@@ -244,7 +247,10 @@ public class SrcMLTreeVisitor {
             modif = null;
         if (Objects.equals(node.getLabel(), SrcMLNodeSpecifier.ABSTRACT))
             modif = Modifier.ModifierKeyword.ABSTRACT_KEYWORD;
-        return asn.newModifier(modif);
+
+        if (modif != null)
+            return asn.newModifier(modif);
+        return null;
     }
 
     InfixExpression.Operator visit(OperatorNode node) {
@@ -366,8 +372,11 @@ public class SrcMLTreeVisitor {
         // function specifier
         for (int i = 0; i < types.size() - 1; i++) {
             Tree specifier = types.get(i);
-            if (specifier instanceof SpecifierNode)
-                methoddec.modifiers().add(this.visit((SpecifierNode) specifier));
+            if (specifier instanceof SpecifierNode) {
+                Modifier m = this.visit((SpecifierNode) specifier);
+                if (m != null)
+                    methoddec.modifiers().add(m);
+            }
         }
         // function return type
         Tree return_node = types.get(types.size() - 1); // the return type is the last one, the others are specifiers
@@ -392,8 +401,11 @@ public class SrcMLTreeVisitor {
             if (child instanceof TypeNode) {
                 for (Tree type_child : child.getChildren()) {
                     // function specifier
-                    if (type_child instanceof SpecifierNode)
-                        methoddec.modifiers().add(this.visit((SpecifierNode) type_child));
+                    if (type_child instanceof SpecifierNode) {
+                        Modifier m = this.visit((SpecifierNode) type_child);
+                        if (m != null)
+                            methoddec.modifiers().add(m);
+                    }
                     // function return type
                     if (type_child instanceof NameNode)
                         methoddec.setReturnType2(this.visitType((NameNode) type_child));
@@ -461,7 +473,9 @@ public class SrcMLTreeVisitor {
             FieldDeclaration fieldDeclaration = asn.newFieldDeclaration(variableDeclarationFragment);
             for (Tree child : node.getChildren()) {
                 if (child instanceof SpecifierNode) {
-                    fieldDeclaration.modifiers().add(this.visit((SpecifierNode) child));
+                    Modifier m = this.visit((SpecifierNode) child);
+                    if (m != null)
+                        fieldDeclaration.modifiers().add(m);
                 } else if (child instanceof NameNode) {
                     SimpleType simpleType = this.visitType((NameNode) child);
                     fieldDeclaration.setType(simpleType);
@@ -478,8 +492,13 @@ public class SrcMLTreeVisitor {
     Object visit(BlockNode node) {
         //Block body = asn.newBlock();
         Tree child = node.getChildren().get(0);
-        if (child instanceof BlockContentNode)
-            return this.visit((BlockContentNode) child);
+        if (child instanceof BlockContentNode) {
+            Block b = asn.newBlock();
+            for (Object obj : this.visit((BlockContentNode) child))
+                b.statements().add(obj);
+            return b;
+        }
+
         if (node.getParent() instanceof NamespaceNode) {
             List<Object> class_and_interface_nodes = new ArrayList<>();
             for (Tree class_or_interface_node : node.getChildren()) {
@@ -599,7 +618,10 @@ public class SrcMLTreeVisitor {
         TypeDeclaration classDeclaration = asn.newTypeDeclaration();
         for (Tree child : children) {
             if (child instanceof SpecifierNode) {
-                classDeclaration.modifiers().add(this.visit((SpecifierNode) child));
+                Modifier m = this.visit((SpecifierNode) child);
+                if (m != null)
+                    classDeclaration.modifiers().add(m);
+
             } else if (child instanceof NameNode) {
                 classDeclaration.setName((SimpleName) this.visit((NameNode) child));
             } else if (child instanceof SuperListNode) {
@@ -865,7 +887,10 @@ public class SrcMLTreeVisitor {
         List<Tree> children = node.getChildren();
         for (Tree child : children) {
             if (child instanceof SpecifierNode) {
-                interfaceDeclaration.modifiers().add(this.visit((SpecifierNode) child));
+                Modifier m = this.visit((SpecifierNode) child);
+                if (m != null)
+                    interfaceDeclaration.modifiers().add(m);
+
             } else if (child instanceof NameNode) {
                 interfaceDeclaration.setName((SimpleName) this.visit((NameNode) child));
             } else if (child instanceof SuperListNode) {
@@ -902,8 +927,13 @@ public class SrcMLTreeVisitor {
     EnumDeclaration visit(EnumNode node) {
         EnumDeclaration enumDeclaration = asn.newEnumDeclaration();
         for (Tree child : node.getChildren()) {
-            if (child instanceof SpecifierNode)
-                enumDeclaration.modifiers().add(this.visit((SpecifierNode) child));
+            if (child instanceof SpecifierNode) {
+
+                Modifier m = this.visit((SpecifierNode) child);
+                if (m != null)
+                    enumDeclaration.modifiers().add(m);
+
+            }
             if (child instanceof NameNode)
                 enumDeclaration.setName((SimpleName) this.visit((NameNode) child));
             if (child instanceof BlockNode) { // will treat this here because it's too specific
@@ -978,21 +1008,27 @@ public class SrcMLTreeVisitor {
 
     TryStatement visit(UsingStmtNode node) {
         TryStatement tryStatement = asn.newTryStatement();
-        for (Tree child: node.getChildren()){
-            if(child instanceof InitNode)
+        for (Tree child : node.getChildren()) {
+            if (child instanceof InitNode)
                 tryStatement.resources().add(this.visit((InitNode) child));
             else if (child instanceof BlockNode)
-                tryStatement.setBody((Block)this.visit((BlockNode) child));
+                tryStatement.setBody((Block) this.visit((BlockNode) child));
         }
         return tryStatement;
     }
 
+    List<Object> visit(UnsafeNode node) {
+        // No unsafe in java, so add the block to the main block
+        Tree child = node.getChildren().get(0);
+        if (child instanceof BlockNode) {
+            child = child.getChildren().get(0);
+            if (child instanceof BlockContentNode)
+                return this.visit((BlockContentNode) child);
+        }
+        return new ArrayList();
+    }
     void visit(GotoNode node) {
     }
-
-    void visit(UnsafeNode node) {
-    }
-
     void visit(LabelNode node) {
     }
 
