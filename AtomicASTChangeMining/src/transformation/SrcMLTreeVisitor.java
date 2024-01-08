@@ -49,6 +49,8 @@ public class SrcMLTreeVisitor {
             } else if (statement instanceof UnsafeNode) {
                 for (Object bb : this.visit((UnsafeNode) statement))
                     transformed_statements.add(bb);
+            } else if (statement instanceof LockNode) {
+                transformed_statements.add(this.visit((LockNode) statement));
             }
         }
         return transformed_statements;
@@ -1027,13 +1029,26 @@ public class SrcMLTreeVisitor {
         }
         return new ArrayList();
     }
+
+    SynchronizedStatement visit(LockNode node) {
+        SynchronizedStatement synchronizedStatement = asn.newSynchronizedStatement();
+        for (Tree child: node.getChildren()){
+            if (child instanceof InitNode)
+                synchronizedStatement.setExpression((Expression)this.visit((InitNode) child));
+            if (child instanceof BlockNode)
+                synchronizedStatement.setBody((Block)this.visit((BlockNode) child));
+        }
+
+        return synchronizedStatement;
+    }
+
+
+
     void visit(GotoNode node) {
     }
     void visit(LabelNode node) {
     }
 
-    void visit(LockNode node) {
-    }
 
     void visit(ThenNode node) {
     }

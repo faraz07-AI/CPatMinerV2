@@ -48,7 +48,9 @@ public enum DaysOfWeek
             Class1 varrr = new Class1("test");
             unsafe {
             a = a+ b
-            // unsafe code
+            }
+            lock (thisLock) {
+            a = a+ b
             }
 
         }
