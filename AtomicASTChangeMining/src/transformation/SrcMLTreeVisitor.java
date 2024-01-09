@@ -75,8 +75,14 @@ public class SrcMLTreeVisitor {
 
     Name visit(NameNode node) {
         List<Tree> children = node.getChildren();
-        if (children.size() == 0)
-            return asn.newSimpleName(node.getLabel().replace("~", "")); //if it's a destructor
+        if (children.size() == 0){
+            try{
+                return asn.newSimpleName(node.getLabel().replace("~", "")); //if it's a destructor
+            } catch(Exception e){
+                return asn.newSimpleName(TransformationUtils.capitalizeFirstLetter(node.getLabel().replace("~", ""))); //if it's a destructor
+            }
+        }
+
         return asn.newQualifiedName(this.visit((NameNode) children.get(0)), (SimpleName) this.visit((NameNode) children.get(2)));
     }
 
@@ -113,11 +119,14 @@ public class SrcMLTreeVisitor {
         if (children.size() == 1) {
             if (children.get(0) instanceof LiteralNode)
                 return this.visit((LiteralNode) children.get(0));
-            if (children.get(0) instanceof NameNode) {
+            if (children.get(0) instanceof NameNode)
                 return this.visit((NameNode) children.get(0));
-            }
             if (children.get(0) instanceof CallNode)
                 return this.visit((CallNode) children.get(0));
+            if (children.get(0) instanceof TypeOfNode)
+                return this.visit((TypeOfNode) children.get(0));
+            if (children.get(0) instanceof SizeOfNode)
+                return this.visit((SizeOfNode) children.get(0));
         } else if (children.size() == 2) {
             if (Objects.equals(children.get(0).getLabel(), "new")) {// expression with new MyClass(...)
                 ClassInstanceCreation classInstanceCreation = asn.newClassInstanceCreation();
@@ -1276,10 +1285,32 @@ public class SrcMLTreeVisitor {
         return new ArrayList();
     }
 
-    void visit(TypeOfNode node) {
+
+
+    MethodInvocation visit(TypeOfNode node) {
+        MethodInvocation methodInvocation = asn.newMethodInvocation();
+        List<Tree> children = node.getChildren();
+        methodInvocation.setName(asn.newSimpleName("typeof"));
+
+        Tree argNode = children.get(0);
+        if (argNode instanceof ArgumentListNode) {
+            for (Expression exp : this.visit((ArgumentListNode) argNode))
+                methodInvocation.arguments().add(exp);
+        }
+        return methodInvocation;
     }
 
-    void visit(SizeOfNode node) {
+    MethodInvocation visit(SizeOfNode node) {
+        MethodInvocation methodInvocation = asn.newMethodInvocation();
+        List<Tree> children = node.getChildren();
+        methodInvocation.setName(asn.newSimpleName("sizeof"));
+
+        Tree argNode = children.get(0);
+        if (argNode instanceof ArgumentListNode) {
+            for (Expression exp : this.visit((ArgumentListNode) argNode))
+                methodInvocation.arguments().add(exp);
+        }
+        return methodInvocation;
     }
 
     void visit(ByNode node) {
