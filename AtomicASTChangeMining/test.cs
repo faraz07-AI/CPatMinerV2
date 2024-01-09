@@ -1,6 +1,14 @@
 using System;
 using System.Reflection;
 
+// parenthesis - ex.lol.test....
+delegate int NumberChanger(int n);
+public struct Point
+{
+    public int X { get; set; }
+    public int Y { get; set; }
+}
+
 namespace HelloWorld
 {
 public enum DaysOfWeek
@@ -17,11 +25,17 @@ public enum DaysOfWeek
 
      private string privateField;
      int lol;
+     public event SampleEventHandler SampleEvent;
+     public double Hours {
+         get;
+         set { seconds = value * 3600; }
+     }
+
 
      public Hello(int x, int y)
          {
              Level myVar = Level.Medium;
-
+            ;
              try
                      {
                          throw new DivideByZeroException("oh no.");
@@ -36,6 +50,9 @@ public enum DaysOfWeek
                      }
              using (StreamReader sr = new StreamReader("TestFile.txt")) {
              //do smthg
+             }
+             fixed (int* p = &pt.x) {
+                 //*p = 1;
              }
          }
          ~Hello()
@@ -56,6 +73,7 @@ public enum DaysOfWeek
         }
         int test(int a,  int b){
             int k;
+            a = k ? x : y;
             a = 2;
             a++;
             a+= 5;
@@ -66,6 +84,10 @@ public enum DaysOfWeek
             {
               Console.WriteLine(i);
             }
+            do {
+                y = test( x );
+            } while ( x > 0 );
+
         for (int i = 1; i <= 5; i++)
         {
             Console.WriteLine(i);
@@ -86,7 +108,7 @@ public enum DaysOfWeek
             }
             else
             {
-              Console.WriteLine("Good evening.");
+              goto stop;
             }
             switch (day)
             {
@@ -96,6 +118,7 @@ public enum DaysOfWeek
                 break;
               case 2:
                 Console.WriteLine("Tuesday");
+                goto case 1;
               default:
                 break;
             }
@@ -110,6 +133,5 @@ public enum DaysOfWeek
     public interface Superinterface
             {
                 double CalculateArea();
-                //string ShapeName { get; }
             }
 }
