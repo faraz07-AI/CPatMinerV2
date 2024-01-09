@@ -57,6 +57,12 @@ public class SrcMLTreeVisitor {
                 transformed_statements.add(this.visit((EmptyStmtNode) statement));
             } else if (statement instanceof FixedNode) {
                 transformed_statements.add(this.visit((FixedNode) statement));
+            } else if (statement instanceof CheckedNode) {
+                for (Object bb : this.visit((CheckedNode) statement))
+                    transformed_statements.add(bb);
+            } else if (statement instanceof UncheckedNode) {
+                for (Object bb : this.visit((UncheckedNode) statement))
+                    transformed_statements.add(bb);
             }
         }
         return transformed_statements;
@@ -1249,18 +1255,31 @@ public class SrcMLTreeVisitor {
         return an;
     }
 
-    void visit(CheckedNode node) {
-
+    List<Object> visit(CheckedNode node) {
+        // No unsafe in java, so add the block to the main block
+        Tree child = node.getChildren().get(0);
+        if (child instanceof BlockNode) {
+            child = child.getChildren().get(0);
+            if (child instanceof BlockContentNode)
+                return this.visit((BlockContentNode) child);
+        }
+        return new ArrayList();
     }
-
+    List<Object> visit(UncheckedNode node) {
+        // No unsafe in java, so add the block to the main block
+        Tree child = node.getChildren().get(0);
+        if (child instanceof BlockNode) {
+            child = child.getChildren().get(0);
+            if (child instanceof BlockContentNode)
+                return this.visit((BlockContentNode) child);
+        }
+        return new ArrayList();
+    }
 
     void visit(TypeOfNode node) {
     }
 
     void visit(SizeOfNode node) {
-    }
-
-    void visit(UncheckedNode node) {
     }
 
     void visit(ByNode node) {

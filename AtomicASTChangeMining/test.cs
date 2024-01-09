@@ -36,6 +36,10 @@ public enum DaysOfWeek
      public Hello(int x, int y)
          {
              Level myVar = Level.Medium;
+             checked {
+                 int i3 = 2147483647 + ten;
+                 Console.WriteLine(i3);
+             }
             ;
              try
                      {
