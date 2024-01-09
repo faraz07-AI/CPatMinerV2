@@ -434,6 +434,10 @@ public class SrcMLTreeVisitor {
             if (child instanceof BlockNode) {
                 methoddec.setBody((Block) this.visit((BlockNode) child));
             }
+            if (child instanceof AttributeNode) {
+                for (NormalAnnotation an : this.visit((AttributeNode) child))
+                    methoddec.modifiers().add(an);
+            }
         }
         return methoddec;
     }
@@ -540,12 +544,10 @@ public class SrcMLTreeVisitor {
                 en.setChildren(child2.getChildren());
                 en.setParent(child2.getParent());
                 results.add(this.visit(en));
-            }
-            else if (child2 instanceof PropertyNode){
-                for (Object result: this.visit((PropertyNode) child2))
-                results.add(result);
-            }
-            else if (child2 instanceof ConstructorNode)
+            } else if (child2 instanceof PropertyNode) {
+                for (Object result : this.visit((PropertyNode) child2))
+                    results.add(result);
+            } else if (child2 instanceof ConstructorNode)
                 results.add(this.visit((ConstructorNode) child2));
             else if (child2 instanceof DestrctorNode)
                 results.add(this.visit((DestrctorNode) child2));
@@ -665,6 +667,9 @@ public class SrcMLTreeVisitor {
                 List<Object> lm = (List<Object>) this.visit((BlockNode) child);
                 for (Object b : lm)
                     classDeclaration.bodyDeclarations().add(b);
+            } else if (child instanceof AttributeNode) {
+                for (NormalAnnotation an : this.visit((AttributeNode) child))
+                    classDeclaration.modifiers().add(an);
             }
         }
         return classDeclaration;
@@ -1128,7 +1133,8 @@ public class SrcMLTreeVisitor {
     void visit(EscapeNode node) {
         // do nothing
     }
-    EmptyStatement  visit(EmptyStmtNode node) {
+
+    EmptyStatement visit(EmptyStmtNode node) {
         return asn.newEmptyStatement();
     }
 
@@ -1145,17 +1151,16 @@ public class SrcMLTreeVisitor {
 
     Object visit(EventNode node) {
         List<Tree> children = node.getChildren();
-        if (children.size() == 1 && children.get(0) instanceof ExprNode){
+        if (children.size() == 1 && children.get(0) instanceof ExprNode) {
             children = children.get(0).getChildren();
             VariableDeclarationFragment variableDeclarationFragment = asn.newVariableDeclarationFragment();
             FieldDeclaration fieldDeclaration = asn.newFieldDeclaration(variableDeclarationFragment);
-            for (Tree child: children){
-                if (child instanceof SpecifierNode){
+            for (Tree child : children) {
+                if (child instanceof SpecifierNode) {
                     fieldDeclaration.modifiers().add(this.visit((SpecifierNode) child));
-                }
-                else if (child instanceof NameNode){
+                } else if (child instanceof NameNode) {
                     if (variableDeclarationFragment.getName().toString().equals("MISSING"))
-                        variableDeclarationFragment.setName((SimpleName)this.visit((NameNode) child));
+                        variableDeclarationFragment.setName((SimpleName) this.visit((NameNode) child));
                     else
                         fieldDeclaration.setType(asn.newSimpleType(this.visit((NameNode) child)));
                 }
@@ -1184,8 +1189,8 @@ public class SrcMLTreeVisitor {
         results.add(this.visit(dsn));
 
         // create the getters and setters
-        if (children.get(2) instanceof BlockNode){
-            for(Tree block_child: children.get(2).getChildren()){
+        if (children.get(2) instanceof BlockNode) {
+            for (Tree block_child : children.get(2).getChildren()) {
                 if (block_child instanceof FunctionNode)
                     results.add(this.visit((FunctionNode) block_child));
                 else if (block_child instanceof FunctionDeclNode)
@@ -1203,14 +1208,50 @@ public class SrcMLTreeVisitor {
         return this.visit(an);
     }
 
-    void visit(AttributeNode node) {
-        
+    List<NormalAnnotation> visit(AttributeNode node) {
+        // Annotations in java
+        List<NormalAnnotation> an = new ArrayList<>();
+        for (Tree child : node.getChildren()) {
+            if (child instanceof ExprNode) {
+                NormalAnnotation annotation = asn.newNormalAnnotation();
+                child = child.getChildren().get(0);
+                if (child instanceof CallNode){ // treat here because special case
+                    for (Tree call_child: child.getChildren()){
+                        if (call_child instanceof NameNode)
+                            annotation.setTypeName(this.visit((NameNode) call_child));
+                        else if (call_child instanceof ArgumentListNode){
+                            for (Tree arg_child: call_child.getChildren()){
+                                MemberValuePair memberValuePair = asn.newMemberValuePair();
+                                if (arg_child instanceof ArgumentNode){
+                                    Tree expr_child = arg_child.getChildren().get(0);
+                                    if (expr_child instanceof ExprNode){
+                                        List<Tree> expr_children = expr_child.getChildren();
+                                        if (expr_children.size() == 1){
+                                            memberValuePair.setName(asn.newSimpleName("value"));
+                                            Tree literal_child = expr_children.get(0);
+                                            if (literal_child instanceof LiteralNode)
+                                                memberValuePair.setValue(this.visit((LiteralNode) literal_child));
+                                            annotation.values().add(memberValuePair);
+                                        } else if (expr_children.size() > 1){
+                                            memberValuePair.setName((SimpleName)this.visit((NameNode) expr_children.get(0)));
+                                            memberValuePair.setValue(this.visit((LiteralNode) expr_children.get(2)));
+                                            annotation.values().add(memberValuePair);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                an.add(annotation);
+            }
+        }
+        return an;
     }
 
     void visit(CheckedNode node) {
+
     }
-
-
 
 
     void visit(TypeOfNode node) {
@@ -1260,6 +1301,7 @@ public class SrcMLTreeVisitor {
 
     void visit(ConstraintNode node) {
     }
+
     void visit(LambdaNode node) {
     }
 

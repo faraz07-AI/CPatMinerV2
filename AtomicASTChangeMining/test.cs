@@ -21,6 +21,7 @@ public enum DaysOfWeek
         Friday,
         Saturday
     }
+    [Author("Jane Programmer", Version = 2), IsTested()]
      class Hello : SuperClass, Superinterface {
 
      private string privateField;
