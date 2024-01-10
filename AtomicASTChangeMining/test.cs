@@ -21,6 +21,7 @@ public enum DaysOfWeek
         Friday,
         Saturday
     }
+
     [Author("Jane Programmer", Version = 2), IsTested()]
      class Hello : SuperClass, Superinterface {
 
@@ -35,6 +36,9 @@ public enum DaysOfWeek
 
      public Hello(int x, int y)
          {
+             (Point lhs, Point rhs) => lhs.x < rhs.y;
+             x => { return x + 1; };
+
              Level myVar = Level.Medium;
              Type type = typeof(int);
              int i = sizeof(x);
