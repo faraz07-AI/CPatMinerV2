@@ -1,7 +1,6 @@
 using System;
 using System.Reflection;
 
-// parenthesis - ex.lol.test....
 delegate int NumberChanger(int n);
 public struct Point
 {
@@ -22,6 +21,18 @@ public enum DaysOfWeek
         Saturday
     }
 
+    interface IContravariant<in A> { }
+    class Conversion<out A> { }
+    class GenericList<T> where T : Employee { }
+    class Foo<T> where T : new() { }
+    class Foo<T> where T : class {
+    Foo<T> foo<X>(X x) where X : struct { }
+
+}
+
+
+
+
     [Author("Jane Programmer", Version = 2), IsTested()]
      class Hello : SuperClass, Superinterface {
 
@@ -34,12 +45,12 @@ public enum DaysOfWeek
      }
 
 
-     public Hello(int x, int y)
+     public Hello(test<lol> x, int y)
          {
              (Point lhs, Point rhs) => lhs.x < rhs.y;
              x => { return x + 1; };
 
-             Level myVar = Level.Medium;
+             Foo<test> myVar = Level.Medium;
              Type type = typeof(int);
              int i = sizeof(x);
              checked {

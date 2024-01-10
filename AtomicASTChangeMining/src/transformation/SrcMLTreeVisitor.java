@@ -86,12 +86,25 @@ public class SrcMLTreeVisitor {
                 return asn.newSimpleName(TransformationUtils.capitalizeFirstLetter(node.getLabel().replace("~", ""))); //if it's a destructor
             }
         }
+        if (children.size() == 3){
+            return asn.newQualifiedName(this.visit((NameNode) children.get(0)), (SimpleName) this.visit((NameNode) children.get(2)));
+        }
+        if (children.get(0) instanceof NameNode)
+           return asn.newSimpleName(children.get(0).getLabel());
 
-        return asn.newQualifiedName(this.visit((NameNode) children.get(0)), (SimpleName) this.visit((NameNode) children.get(2)));
+        return null;
     }
 
-    SimpleType visitType(NameNode node) {
-        return asn.newSimpleType(asn.newSimpleName(TransformationUtils.capitalizeFirstLetter(node.getLabel())));
+    Type visitType(NameNode node) {
+        if (node.getChildren().size() == 0)
+            return asn.newSimpleType(asn.newSimpleName(TransformationUtils.capitalizeFirstLetter(node.getLabel())));
+
+        ParameterizedType returnType = asn.newParameterizedType(asn.newSimpleType(this.visit((NameNode) node.getChildren().get(0))));
+        for (Expression exp: this.visit((ArgumentListNode) node.getChildren().get(1))) {
+            returnType.typeArguments().add(asn.newSimpleType((SimpleName) exp));
+        }
+
+        return returnType;
     }
 
     MethodInvocation visit(CallNode node) {
@@ -139,7 +152,7 @@ public class SrcMLTreeVisitor {
                 if (children.get(1) instanceof CallNode) {
                     children = children.get(1).getChildren();
                     if (children.get(0) instanceof NameNode) {// Class name
-                        SimpleType type = this.visitType((NameNode) children.get(0));
+                        SimpleType type = (SimpleType) this.visitType((NameNode) children.get(0));
                         classInstanceCreation.setType(type);
                     }
                     if (children.get(1) instanceof ArgumentListNode) {
@@ -393,6 +406,11 @@ public class SrcMLTreeVisitor {
         if (expr instanceof ExprNode) {
             return this.visit((ExprNode) expr);
         }
+        for (Tree child:node.getChildren()){
+            if (child instanceof NameNode){
+                return this.visit((NameNode) child);
+            }
+        }
         return null;
     }
 
@@ -431,8 +449,20 @@ public class SrcMLTreeVisitor {
         List<Tree> children = node.getChildren();
         for (Tree child : children) {
             // function name
-            if (child instanceof NameNode)
+            if (child instanceof NameNode){
                 methoddec.setName((SimpleName) this.visit((NameNode) child));
+                if (child.getChildren().size() == 2){ // if FunctionName<A>
+                    Tree l = child.getChildren().get(1);
+                    if (l instanceof ArgumentListNode){
+                        for (Expression exp: this.visit((ArgumentListNode) l)) {
+                            TypeParameter typeParameter = asn.newTypeParameter();
+                            typeParameter.setName((SimpleName) exp);
+                            methoddec.typeParameters().add(typeParameter);
+                        }
+                    }
+                }
+            }
+
             if (child instanceof TypeNode) {
                 for (Tree type_child : child.getChildren()) {
                     // function specifier
@@ -494,14 +524,17 @@ public class SrcMLTreeVisitor {
 
     Object visit(TypeNode node) {
         Tree node_type = node.getChildren().get(0);
-        if (node_type.getChildren().size() > 0) {// an array type type->name->[name:..,index:..]
+        if (node_type.getChildren().size() > 0) {// an array type type->name->[name:..,index:..] or Foo<T>
             Tree param_type = node_type.getChildren().get(0);
-            if (node_type.getChildren().size() > 1) { // an array type
+            if (node_type.getChildren().size() > 1) {
                 Tree arr_index = node_type.getChildren().get(1);
-                if (arr_index.getType().toString() == "index") {
-                    SimpleType simpleType = this.visitType((NameNode) param_type);
+                if (arr_index.getType().toString() == "index") { // an array type
+                    SimpleType simpleType = (SimpleType) this.visitType((NameNode) param_type);
                     ArrayType arrayType = asn.newArrayType(simpleType);
                     return arrayType;
+                }
+                if (arr_index instanceof ArgumentListNode) { // a Foo<T>
+                    return this.visitType((NameNode) node_type);
                 }
             }
         } else if (node.getParents().get(3) instanceof ClassNode) { // field in class
@@ -516,13 +549,13 @@ public class SrcMLTreeVisitor {
                     if (m != null)
                         fieldDeclaration.modifiers().add(m);
                 } else if (child instanceof NameNode) {
-                    SimpleType simpleType = this.visitType((NameNode) child);
+                    SimpleType simpleType = (SimpleType) this.visitType((NameNode) child);
                     fieldDeclaration.setType(simpleType);
                 }
             }
             return fieldDeclaration;
         } else if (node_type instanceof NameNode) { // type->name:...
-            SimpleType simpleType = this.visitType((NameNode) node_type);
+            SimpleType simpleType = (SimpleType)  this.visitType((NameNode) node_type);
             return simpleType;
         }
         return null;
@@ -530,14 +563,15 @@ public class SrcMLTreeVisitor {
 
     Object visit(BlockNode node) {
         //Block body = asn.newBlock();
-        Tree child = node.getChildren().get(0);
-        if (child instanceof BlockContentNode) {
-            Block b = asn.newBlock();
-            for (Object obj : this.visit((BlockContentNode) child))
-                b.statements().add(obj);
-            return b;
+        if (node.getChildren().size()>0){
+            Tree child = node.getChildren().get(0);
+            if (child instanceof BlockContentNode) {
+                Block b = asn.newBlock();
+                for (Object obj : this.visit((BlockContentNode) child))
+                    b.statements().add(obj);
+                return b;
+            }
         }
-
         if (node.getParent() instanceof NamespaceNode) {
             List<Object> class_and_interface_nodes = new ArrayList<>();
             for (Tree class_or_interface_node : node.getChildren()) {
@@ -587,7 +621,8 @@ public class SrcMLTreeVisitor {
             }
             TransformationUtils.ReturnPair<VariableDeclarationFragment, Type> k = this.visit((DeclNode) declaration);
             VariableDeclarationStatement variableDeclaration = asn.newVariableDeclarationStatement(k.getFirst());
-            variableDeclaration.setType(k.getSecond());
+            Type t = k.getSecond();
+            variableDeclaration.setType(t);
             return variableDeclaration;
         }
         return null;
@@ -669,6 +704,7 @@ public class SrcMLTreeVisitor {
     TypeDeclaration visit(ClassNode node) {
         List<Tree> children = node.getChildren();
         TypeDeclaration classDeclaration = asn.newTypeDeclaration();
+        List<TypeParameter> type_params = new ArrayList<>();
         for (Tree child : children) {
             if (child instanceof SpecifierNode) {
                 Modifier m = this.visit((SpecifierNode) child);
@@ -677,6 +713,27 @@ public class SrcMLTreeVisitor {
 
             } else if (child instanceof NameNode) {
                 classDeclaration.setName((SimpleName) this.visit((NameNode) child));
+                if (child.getChildren().size() == 2){ // if ClassName<A>
+                    Tree l = child.getChildren().get(1);
+                    if (l instanceof ArgumentListNode){
+                        for (Expression exp: this.visit((ArgumentListNode) l)) {
+                            TypeParameter typeParameter = asn.newTypeParameter();
+                            typeParameter.setName((SimpleName) exp);
+                            type_params.add(typeParameter);
+                        }
+                    }
+                }
+            } else if (child instanceof WhereNode) {
+                List<Tree> where_children = child.getChildren();
+                for (TypeParameter typeparam: type_params){
+                    if (typeparam.getName().toString().equals(where_children.get(0).getLabel())){
+                        if (where_children.get(1) instanceof ConstraintNode){
+                            SimpleType typeBound = this.visit((ConstraintNode) where_children.get(1));
+                            if (typeBound != null)
+                                typeparam.typeBounds().add(typeBound);
+                        }
+                    }
+                }
             } else if (child instanceof SuperListNode) {
                 List<SimpleType> types = this.visit((SuperListNode) child);
                 if (types.size() > 1) {
@@ -692,6 +749,9 @@ public class SrcMLTreeVisitor {
                 for (NormalAnnotation an : this.visit((AttributeNode) child))
                     classDeclaration.modifiers().add(an);
             }
+        }
+        for(TypeParameter tp : type_params){
+            classDeclaration.typeParameters().add(tp);
         }
         return classDeclaration;
     }
@@ -792,7 +852,7 @@ public class SrcMLTreeVisitor {
     SimpleType visit(SuperNode node) {
         Tree name = node.getChildren().get(0);
         if (name instanceof NameNode)
-            return this.visitType((NameNode) name);
+            return (SimpleType)  this.visitType((NameNode) name);
         return null;
     }
 
@@ -961,6 +1021,16 @@ public class SrcMLTreeVisitor {
 
             } else if (child instanceof NameNode) {
                 interfaceDeclaration.setName((SimpleName) this.visit((NameNode) child));
+                if (child.getChildren().size() == 2){ // if InterfaceName<A>
+                    Tree l = child.getChildren().get(1);
+                    if (l instanceof ArgumentListNode){
+                        for (Expression exp: this.visit((ArgumentListNode) l)) {
+                            TypeParameter typeParameter = asn.newTypeParameter();
+                            typeParameter.setName((SimpleName) exp);
+                            interfaceDeclaration.typeParameters().add(typeParameter);
+                        }
+                    }
+                }
             } else if (child instanceof SuperListNode) {
                 List<SimpleType> types = this.visit((SuperListNode) child);
                 for (SimpleType t : types) {
@@ -1319,8 +1389,13 @@ public class SrcMLTreeVisitor {
         return methodInvocation;
     }
 
-    void visit(ConstraintNode node) {
-
+    SimpleType visit(ConstraintNode node) {
+        if (node.getChildren().size() > 0){
+            Tree child = node.getChildren().get(0);
+            if (child instanceof NameNode)
+                return asn.newSimpleType(this.visit((NameNode) child));
+        }
+        return null;
     }
 
     LambdaExpression visit(LambdaNode node) {
