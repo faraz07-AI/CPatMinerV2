@@ -7,9 +7,11 @@ import com.github.gumtreediff.tree.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SrcMLNodeType extends DefaultTree{
+public class SrcMLNodeType extends DefaultTree {
 
     public static final String COMMENT = "comment";
+
+    public static final String INDEX = "index";
     public static final String RANGE = "range";
     public static final String NAMESPACE = "namespace";
     public static final String ARGUMENT_LIST = "argument_list";
@@ -108,6 +110,7 @@ public class SrcMLNodeType extends DefaultTree{
         super(other);
     }
 }
+
 class CommentNode extends SrcMLNodeType {
     public static final String TYPE = "comment";
 
@@ -123,11 +126,12 @@ class CommentNode extends SrcMLNodeType {
         super(other);
     }
 
-    void accept(SrcMLTreeVisitor visitor){
+    void accept(SrcMLTreeVisitor visitor) {
         visitor.visit(this);
     }
 
 }
+
 class OperatorNode extends SrcMLNodeType {
     public static final String TYPE = "operator";
 
@@ -142,12 +146,15 @@ class OperatorNode extends SrcMLNodeType {
     protected OperatorNode(Tree other) {
         super(other);
     }
-    void accept(SrcMLTreeVisitor visitor){
+
+    void accept(SrcMLTreeVisitor visitor) {
         visitor.visit(this);
     }
 }
+
 class NamespaceNode extends SrcMLNodeType {
     public static final String TYPE = "namespace";
+
     public NamespaceNode(Type type) {
         super(type);
     }
@@ -159,12 +166,15 @@ class NamespaceNode extends SrcMLNodeType {
     protected NamespaceNode(Tree other) {
         super(other);
     }
-    void accept(SrcMLTreeVisitor visitor){
+
+    void accept(SrcMLTreeVisitor visitor) {
         visitor.visit(this);
     }
 }
+
 class RangeNode extends SrcMLNodeType {
     public static final String TYPE = "range";
+
     public RangeNode(Type type) {
         super(type);
     }
@@ -176,12 +186,35 @@ class RangeNode extends SrcMLNodeType {
     protected RangeNode(Tree other) {
         super(other);
     }
-    void accept(SrcMLTreeVisitor visitor){
+
+    void accept(SrcMLTreeVisitor visitor) {
         visitor.visit(this);
     }
 }
+
+class IndexNode extends SrcMLNodeType {
+    public static final String TYPE = "index";
+
+    public IndexNode(Type type) {
+        super(type);
+    }
+
+    public IndexNode(Type type, String label) {
+        super(type, label);
+    }
+
+    protected IndexNode(Tree other) {
+        super(other);
+    }
+
+    void accept(SrcMLTreeVisitor visitor) {
+        visitor.visit(this);
+    }
+}
+
 class ArgumentListNode extends SrcMLNodeType {
     public static final String TYPE = "argument_list";
+
     public ArgumentListNode(Type type) {
         super(type);
     }
@@ -193,12 +226,15 @@ class ArgumentListNode extends SrcMLNodeType {
     protected ArgumentListNode(Tree other) {
         super(other);
     }
-    void accept(SrcMLTreeVisitor visitor){
+
+    void accept(SrcMLTreeVisitor visitor) {
         visitor.visit(this);
     }
 }
+
 class ArgumentNode extends SrcMLNodeType {
     public static final String TYPE = "argument";
+
     public ArgumentNode(Type type) {
         super(type);
     }
@@ -210,12 +246,15 @@ class ArgumentNode extends SrcMLNodeType {
     protected ArgumentNode(Tree other) {
         super(other);
     }
-    void accept(SrcMLTreeVisitor visitor){
+
+    void accept(SrcMLTreeVisitor visitor) {
         visitor.visit(this);
     }
 }
+
 class NameNode extends SrcMLNodeType {
     public static final String TYPE = "name";
+
     public NameNode(Type type) {
         super(type);
     }
@@ -227,12 +266,15 @@ class NameNode extends SrcMLNodeType {
     protected NameNode(Tree other) {
         super(other);
     }
-    void accept(SrcMLTreeVisitor visitor){
+
+    void accept(SrcMLTreeVisitor visitor) {
         visitor.visit(this);
     }
 }
+
 class CallNode extends SrcMLNodeType {
     public static final String TYPE = "call";
+
     public CallNode(Type type) {
         super(type);
     }
@@ -244,12 +286,15 @@ class CallNode extends SrcMLNodeType {
     protected CallNode(Tree other) {
         super(other);
     }
-    void accept(SrcMLTreeVisitor visitor){
+
+    void accept(SrcMLTreeVisitor visitor) {
         visitor.visit(this);
     }
 }
+
 class ExprNode extends SrcMLNodeType {
     public static final String TYPE = "expr";
+
     public ExprNode(Type type) {
         super(type);
     }
@@ -261,12 +306,15 @@ class ExprNode extends SrcMLNodeType {
     protected ExprNode(Tree other) {
         super(other);
     }
-    void accept(SrcMLTreeVisitor visitor){
+
+    void accept(SrcMLTreeVisitor visitor) {
         visitor.visit(this);
     }
 }
+
 class ExprStmtNode extends SrcMLNodeType {
     public static final String TYPE = "expr_stmt";
+
     public ExprStmtNode(Type type) {
         super(type);
     }
@@ -278,12 +326,15 @@ class ExprStmtNode extends SrcMLNodeType {
     protected ExprStmtNode(Tree other) {
         super(other);
     }
-    void accept(SrcMLTreeVisitor visitor){
+
+    void accept(SrcMLTreeVisitor visitor) {
         visitor.visit(this);
     }
 }
+
 class LiteralNode extends SrcMLNodeType {
     public static final String TYPE = "literal";
+
     public LiteralNode(Type type) {
         super(type);
     }
@@ -295,12 +346,15 @@ class LiteralNode extends SrcMLNodeType {
     protected LiteralNode(Tree other) {
         super(other);
     }
-    void accept(SrcMLTreeVisitor visitor){
+
+    void accept(SrcMLTreeVisitor visitor) {
         visitor.visit(this);
     }
 }
+
 class UnitNode extends SrcMLNodeType {
     public static final String TYPE = "unit";
+
     public UnitNode(Type type) {
         super(type);
     }
@@ -312,12 +366,15 @@ class UnitNode extends SrcMLNodeType {
     protected UnitNode(Tree other) {
         super(other);
     }
-    void accept(SrcMLTreeVisitor visitor){
+
+    void accept(SrcMLTreeVisitor visitor) {
         visitor.visit(this);
     }
 }
+
 class UsingNode extends SrcMLNodeType {
     public static final String TYPE = "using";
+
     public UsingNode(Type type) {
         super(type);
     }
@@ -329,12 +386,15 @@ class UsingNode extends SrcMLNodeType {
     protected UsingNode(Tree other) {
         super(other);
     }
-    void accept(SrcMLTreeVisitor visitor){
+
+    void accept(SrcMLTreeVisitor visitor) {
         visitor.visit(this);
     }
 }
+
 class ClassNode extends SrcMLNodeType {
     public static final String TYPE = "class";
+
     public ClassNode(Type type) {
         super(type);
     }
@@ -346,12 +406,15 @@ class ClassNode extends SrcMLNodeType {
     protected ClassNode(Tree other) {
         super(other);
     }
-    void accept(SrcMLTreeVisitor visitor){
+
+    void accept(SrcMLTreeVisitor visitor) {
         visitor.visit(this);
     }
 }
+
 class BlockNode extends SrcMLNodeType {
     public static final String TYPE = "block";
+
     public BlockNode(Type type) {
         super(type);
     }
@@ -363,12 +426,15 @@ class BlockNode extends SrcMLNodeType {
     protected BlockNode(Tree other) {
         super(other);
     }
-    void accept(SrcMLTreeVisitor visitor){
+
+    void accept(SrcMLTreeVisitor visitor) {
         visitor.visit(this);
     }
 }
+
 class FunctionNode extends SrcMLNodeType {
     public static final String TYPE = "function";
+
     public FunctionNode(Type type) {
         super(type);
     }
@@ -380,12 +446,15 @@ class FunctionNode extends SrcMLNodeType {
     protected FunctionNode(Tree other) {
         super(other);
     }
-    void accept(SrcMLTreeVisitor visitor){
+
+    void accept(SrcMLTreeVisitor visitor) {
         visitor.visit(this);
     }
 }
+
 class TypeNode extends SrcMLNodeType {
     public static final String TYPE = "type";
+
     public TypeNode(Type type) {
         super(type);
     }
@@ -397,12 +466,15 @@ class TypeNode extends SrcMLNodeType {
     protected TypeNode(Tree other) {
         super(other);
     }
-    void accept(SrcMLTreeVisitor visitor){
+
+    void accept(SrcMLTreeVisitor visitor) {
         visitor.visit(this);
     }
 }
+
 class SpecifierNode extends SrcMLNodeType {
     public static final String TYPE = "specifier";
+
     public SpecifierNode(Type type) {
         super(type);
     }
@@ -414,12 +486,15 @@ class SpecifierNode extends SrcMLNodeType {
     protected SpecifierNode(Tree other) {
         super(other);
     }
-    void accept(SrcMLTreeVisitor visitor){
+
+    void accept(SrcMLTreeVisitor visitor) {
         visitor.visit(this);
     }
 }
+
 class ParameterListNode extends SrcMLNodeType {
     public static final String TYPE = "parameter_list";
+
     public ParameterListNode(Type type) {
         super(type);
     }
@@ -431,12 +506,15 @@ class ParameterListNode extends SrcMLNodeType {
     protected ParameterListNode(Tree other) {
         super(other);
     }
-    void accept(SrcMLTreeVisitor visitor){
+
+    void accept(SrcMLTreeVisitor visitor) {
         visitor.visit(this);
     }
 }
+
 class ParameterNode extends SrcMLNodeType {
     public static final String TYPE = "parameter";
+
     public ParameterNode(Type type) {
         super(type);
     }
@@ -448,12 +526,15 @@ class ParameterNode extends SrcMLNodeType {
     protected ParameterNode(Tree other) {
         super(other);
     }
-    void accept(SrcMLTreeVisitor visitor){
+
+    void accept(SrcMLTreeVisitor visitor) {
         visitor.visit(this);
     }
 }
+
 class BlockContentNode extends SrcMLNodeType {
     public static final String TYPE = "block_content";
+
     public BlockContentNode(Type type) {
         super(type);
     }
@@ -465,12 +546,15 @@ class BlockContentNode extends SrcMLNodeType {
     protected BlockContentNode(Tree other) {
         super(other);
     }
-    void accept(SrcMLTreeVisitor visitor){
+
+    void accept(SrcMLTreeVisitor visitor) {
         visitor.visit(this);
     }
 }
+
 class EscapeNode extends SrcMLNodeType {
     public static final String TYPE = "escape";
+
     public EscapeNode(Type type) {
         super(type);
     }
@@ -482,12 +566,15 @@ class EscapeNode extends SrcMLNodeType {
     protected EscapeNode(Tree other) {
         super(other);
     }
-    void accept(SrcMLTreeVisitor visitor){
+
+    void accept(SrcMLTreeVisitor visitor) {
         visitor.visit(this);
     }
 }
+
 class BreakNode extends SrcMLNodeType {
     public static final String TYPE = "break";
+
     public BreakNode(Type type) {
         super(type);
     }
@@ -499,12 +586,15 @@ class BreakNode extends SrcMLNodeType {
     protected BreakNode(Tree other) {
         super(other);
     }
-    void accept(SrcMLTreeVisitor visitor){
+
+    void accept(SrcMLTreeVisitor visitor) {
         visitor.visit(this);
     }
 }
+
 class CaseNode extends SrcMLNodeType {
     public static final String TYPE = "case";
+
     public CaseNode(Type type) {
         super(type);
     }
@@ -516,12 +606,15 @@ class CaseNode extends SrcMLNodeType {
     protected CaseNode(Tree other) {
         super(other);
     }
-    void accept(SrcMLTreeVisitor visitor){
+
+    void accept(SrcMLTreeVisitor visitor) {
         visitor.visit(this);
     }
 }
+
 class ContinueNode extends SrcMLNodeType {
     public static final String TYPE = "continue";
+
     public ContinueNode(Type type) {
         super(type);
     }
@@ -533,12 +626,15 @@ class ContinueNode extends SrcMLNodeType {
     protected ContinueNode(Tree other) {
         super(other);
     }
-    void accept(SrcMLTreeVisitor visitor){
+
+    void accept(SrcMLTreeVisitor visitor) {
         visitor.visit(this);
     }
 }
+
 class DefaultNode extends SrcMLNodeType {
     public static final String TYPE = "default";
+
     public DefaultNode(Type type) {
         super(type);
     }
@@ -550,12 +646,15 @@ class DefaultNode extends SrcMLNodeType {
     protected DefaultNode(Tree other) {
         super(other);
     }
-    void accept(SrcMLTreeVisitor visitor){
+
+    void accept(SrcMLTreeVisitor visitor) {
         visitor.visit(this);
     }
 }
+
 class DoNode extends SrcMLNodeType {
     public static final String TYPE = "do";
+
     public DoNode(Type type) {
         super(type);
     }
@@ -567,12 +666,15 @@ class DoNode extends SrcMLNodeType {
     protected DoNode(Tree other) {
         super(other);
     }
-    void accept(SrcMLTreeVisitor visitor){
+
+    void accept(SrcMLTreeVisitor visitor) {
         visitor.visit(this);
     }
 }
+
 class EmptyStmtNode extends SrcMLNodeType {
     public static final String TYPE = "empty_stmt";
+
     public EmptyStmtNode(Type type) {
         super(type);
     }
@@ -584,12 +686,15 @@ class EmptyStmtNode extends SrcMLNodeType {
     protected EmptyStmtNode(Tree other) {
         super(other);
     }
-    void accept(SrcMLTreeVisitor visitor){
+
+    void accept(SrcMLTreeVisitor visitor) {
         visitor.visit(this);
     }
 }
+
 class FixedNode extends SrcMLNodeType {
     public static final String TYPE = "fixed";
+
     public FixedNode(Type type) {
         super(type);
     }
@@ -601,12 +706,15 @@ class FixedNode extends SrcMLNodeType {
     protected FixedNode(Tree other) {
         super(other);
     }
-    void accept(SrcMLTreeVisitor visitor){
+
+    void accept(SrcMLTreeVisitor visitor) {
         visitor.visit(this);
     }
 }
+
 class ForNode extends SrcMLNodeType {
     public static final String TYPE = "for";
+
     public ForNode(Type type) {
         super(type);
     }
@@ -618,13 +726,16 @@ class ForNode extends SrcMLNodeType {
     protected ForNode(Tree other) {
         super(other);
     }
-    void accept(SrcMLTreeVisitor visitor){
+
+    void accept(SrcMLTreeVisitor visitor) {
         visitor.visit(this);
     }
 
 }
+
 class ForeachNode extends SrcMLNodeType {
     public static final String TYPE = "foreach";
+
     public ForeachNode(Type type) {
         super(type);
     }
@@ -636,12 +747,15 @@ class ForeachNode extends SrcMLNodeType {
     protected ForeachNode(Tree other) {
         super(other);
     }
-    void accept(SrcMLTreeVisitor visitor){
+
+    void accept(SrcMLTreeVisitor visitor) {
         visitor.visit(this);
     }
 }
+
 class GotoNode extends SrcMLNodeType {
     public static final String TYPE = "goto";
+
     public GotoNode(Type type) {
         super(type);
     }
@@ -653,12 +767,15 @@ class GotoNode extends SrcMLNodeType {
     protected GotoNode(Tree other) {
         super(other);
     }
-    void accept(SrcMLTreeVisitor visitor){
+
+    void accept(SrcMLTreeVisitor visitor) {
         visitor.visit(this);
     }
 }
+
 class IfStmtNode extends SrcMLNodeType {
     public static final String TYPE = "if_stmt";
+
     public IfStmtNode(Type type) {
         super(type);
     }
@@ -670,12 +787,15 @@ class IfStmtNode extends SrcMLNodeType {
     protected IfStmtNode(Tree other) {
         super(other);
     }
-    void accept(SrcMLTreeVisitor visitor){
+
+    void accept(SrcMLTreeVisitor visitor) {
         visitor.visit(this);
     }
 }
+
 class IfNode extends SrcMLNodeType {
     public static final String TYPE = "if";
+
     public IfNode(Type type) {
         super(type);
     }
@@ -687,12 +807,15 @@ class IfNode extends SrcMLNodeType {
     protected IfNode(Tree other) {
         super(other);
     }
-    void accept(SrcMLTreeVisitor visitor){
+
+    void accept(SrcMLTreeVisitor visitor) {
         visitor.visit(this);
     }
 }
+
 class LabelNode extends SrcMLNodeType {
     public static final String TYPE = "label";
+
     public LabelNode(Type type) {
         super(type);
     }
@@ -704,12 +827,15 @@ class LabelNode extends SrcMLNodeType {
     protected LabelNode(Tree other) {
         super(other);
     }
-    void accept(SrcMLTreeVisitor visitor){
+
+    void accept(SrcMLTreeVisitor visitor) {
         visitor.visit(this);
     }
 }
+
 class LockNode extends SrcMLNodeType {
     public static final String TYPE = "lock";
+
     public LockNode(Type type) {
         super(type);
     }
@@ -721,12 +847,15 @@ class LockNode extends SrcMLNodeType {
     protected LockNode(Tree other) {
         super(other);
     }
-    void accept(SrcMLTreeVisitor visitor){
+
+    void accept(SrcMLTreeVisitor visitor) {
         visitor.visit(this);
     }
 }
+
 class ReturnNode extends SrcMLNodeType {
     public static final String TYPE = "return";
+
     public ReturnNode(Type type) {
         super(type);
     }
@@ -738,12 +867,15 @@ class ReturnNode extends SrcMLNodeType {
     protected ReturnNode(Tree other) {
         super(other);
     }
-    void accept(SrcMLTreeVisitor visitor){
+
+    void accept(SrcMLTreeVisitor visitor) {
         visitor.visit(this);
     }
 }
+
 class SwitchNode extends SrcMLNodeType {
     public static final String TYPE = "switch";
+
     public SwitchNode(Type type) {
         super(type);
     }
@@ -755,12 +887,15 @@ class SwitchNode extends SrcMLNodeType {
     protected SwitchNode(Tree other) {
         super(other);
     }
-    void accept(SrcMLTreeVisitor visitor){
+
+    void accept(SrcMLTreeVisitor visitor) {
         visitor.visit(this);
     }
 }
+
 class UnsafeNode extends SrcMLNodeType {
     public static final String TYPE = "unsafe";
+
     public UnsafeNode(Type type) {
         super(type);
     }
@@ -772,12 +907,15 @@ class UnsafeNode extends SrcMLNodeType {
     protected UnsafeNode(Tree other) {
         super(other);
     }
-    void accept(SrcMLTreeVisitor visitor){
+
+    void accept(SrcMLTreeVisitor visitor) {
         visitor.visit(this);
     }
 }
+
 class UsingStmtNode extends SrcMLNodeType {
     public static final String TYPE = "using_stmt";
+
     public UsingStmtNode(Type type) {
         super(type);
     }
@@ -789,12 +927,15 @@ class UsingStmtNode extends SrcMLNodeType {
     protected UsingStmtNode(Tree other) {
         super(other);
     }
-    void accept(SrcMLTreeVisitor visitor){
+
+    void accept(SrcMLTreeVisitor visitor) {
         visitor.visit(this);
     }
 }
+
 class WhileNode extends SrcMLNodeType {
     public static final String TYPE = "while";
+
     public WhileNode(Type type) {
         super(type);
     }
@@ -806,12 +947,15 @@ class WhileNode extends SrcMLNodeType {
     protected WhileNode(Tree other) {
         super(other);
     }
-    void accept(SrcMLTreeVisitor visitor){
+
+    void accept(SrcMLTreeVisitor visitor) {
         visitor.visit(this);
     }
 }
+
 class ConditionNode extends SrcMLNodeType {
     public static final String TYPE = "condition";
+
     public ConditionNode(Type type) {
         super(type);
     }
@@ -823,12 +967,15 @@ class ConditionNode extends SrcMLNodeType {
     protected ConditionNode(Tree other) {
         super(other);
     }
-    void accept(SrcMLTreeVisitor visitor){
+
+    void accept(SrcMLTreeVisitor visitor) {
         visitor.visit(this);
     }
 }
+
 class ControlNode extends SrcMLNodeType {
     public static final String TYPE = "control";
+
     public ControlNode(Type type) {
         super(type);
     }
@@ -840,12 +987,15 @@ class ControlNode extends SrcMLNodeType {
     protected ControlNode(Tree other) {
         super(other);
     }
-    void accept(SrcMLTreeVisitor visitor){
+
+    void accept(SrcMLTreeVisitor visitor) {
         visitor.visit(this);
     }
 }
+
 class ElseNode extends SrcMLNodeType {
     public static final String TYPE = "else";
+
     public ElseNode(Type type) {
         super(type);
     }
@@ -857,12 +1007,15 @@ class ElseNode extends SrcMLNodeType {
     protected ElseNode(Tree other) {
         super(other);
     }
-    void accept(SrcMLTreeVisitor visitor){
+
+    void accept(SrcMLTreeVisitor visitor) {
         visitor.visit(this);
     }
 }
+
 class IncrNode extends SrcMLNodeType {
     public static final String TYPE = "incr";
+
     public IncrNode(Type type) {
         super(type);
     }
@@ -874,12 +1027,15 @@ class IncrNode extends SrcMLNodeType {
     protected IncrNode(Tree other) {
         super(other);
     }
-    void accept(SrcMLTreeVisitor visitor){
+
+    void accept(SrcMLTreeVisitor visitor) {
         visitor.visit(this);
     }
 }
+
 class ThenNode extends SrcMLNodeType {
     public static final String TYPE = "then";
+
     public ThenNode(Type type) {
         super(type);
     }
@@ -891,12 +1047,15 @@ class ThenNode extends SrcMLNodeType {
     protected ThenNode(Tree other) {
         super(other);
     }
-    void accept(SrcMLTreeVisitor visitor){
+
+    void accept(SrcMLTreeVisitor visitor) {
         visitor.visit(this);
     }
 }
+
 class InitNode extends SrcMLNodeType {
     public static final String TYPE = "init";
+
     public InitNode(Type type) {
         super(type);
     }
@@ -908,12 +1067,15 @@ class InitNode extends SrcMLNodeType {
     protected InitNode(Tree other) {
         super(other);
     }
-    void accept(SrcMLTreeVisitor visitor){
+
+    void accept(SrcMLTreeVisitor visitor) {
         visitor.visit(this);
     }
 }
+
 class DelegateNode extends SrcMLNodeType {
     public static final String TYPE = "delegate";
+
     public DelegateNode(Type type) {
         super(type);
     }
@@ -925,12 +1087,15 @@ class DelegateNode extends SrcMLNodeType {
     protected DelegateNode(Tree other) {
         super(other);
     }
-    void accept(SrcMLTreeVisitor visitor){
+
+    void accept(SrcMLTreeVisitor visitor) {
         visitor.visit(this);
     }
 }
+
 class FunctionDeclNode extends SrcMLNodeType {
     public static final String TYPE = "function_decl";
+
     public FunctionDeclNode(Type type) {
         super(type);
     }
@@ -942,12 +1107,15 @@ class FunctionDeclNode extends SrcMLNodeType {
     protected FunctionDeclNode(Tree other) {
         super(other);
     }
-    void accept(SrcMLTreeVisitor visitor){
+
+    void accept(SrcMLTreeVisitor visitor) {
         visitor.visit(this);
     }
 }
+
 class LambdaNode extends SrcMLNodeType {
     public static final String TYPE = "lambda";
+
     public LambdaNode(Type type) {
         super(type);
     }
@@ -959,12 +1127,15 @@ class LambdaNode extends SrcMLNodeType {
     protected LambdaNode(Tree other) {
         super(other);
     }
-    void accept(SrcMLTreeVisitor visitor){
+
+    void accept(SrcMLTreeVisitor visitor) {
         visitor.visit(this);
     }
 }
+
 class ModifierNode extends SrcMLNodeType {
     public static final String TYPE = "modifier";
+
     public ModifierNode(Type type) {
         super(type);
     }
@@ -976,12 +1147,15 @@ class ModifierNode extends SrcMLNodeType {
     protected ModifierNode(Tree other) {
         super(other);
     }
-    void accept(SrcMLTreeVisitor visitor){
+
+    void accept(SrcMLTreeVisitor visitor) {
         visitor.visit(this);
     }
 }
+
 class DeclNode extends SrcMLNodeType {
     public static final String TYPE = "decl";
+
     public DeclNode(Type type) {
         super(type);
     }
@@ -993,12 +1167,15 @@ class DeclNode extends SrcMLNodeType {
     protected DeclNode(Tree other) {
         super(other);
     }
-    void accept(SrcMLTreeVisitor visitor){
+
+    void accept(SrcMLTreeVisitor visitor) {
         visitor.visit(this);
     }
 }
+
 class DeclStmtNode extends SrcMLNodeType {
     public static final String TYPE = "decl_stmt";
+
     public DeclStmtNode(Type type) {
         super(type);
     }
@@ -1010,12 +1187,15 @@ class DeclStmtNode extends SrcMLNodeType {
     protected DeclStmtNode(Tree other) {
         super(other);
     }
-    void accept(SrcMLTreeVisitor visitor){
+
+    void accept(SrcMLTreeVisitor visitor) {
         visitor.visit(this);
     }
 }
+
 class ConstructorNode extends SrcMLNodeType {
     public static final String TYPE = "constructor";
+
     public ConstructorNode(Type type) {
         super(type);
     }
@@ -1027,12 +1207,15 @@ class ConstructorNode extends SrcMLNodeType {
     protected ConstructorNode(Tree other) {
         super(other);
     }
-    void accept(SrcMLTreeVisitor visitor){
+
+    void accept(SrcMLTreeVisitor visitor) {
         visitor.visit(this);
     }
 }
+
 class DestrctorNode extends SrcMLNodeType {
     public static final String TYPE = "destructor";
+
     public DestrctorNode(Type type) {
         super(type);
     }
@@ -1044,12 +1227,15 @@ class DestrctorNode extends SrcMLNodeType {
     protected DestrctorNode(Tree other) {
         super(other);
     }
-    void accept(SrcMLTreeVisitor visitor){
+
+    void accept(SrcMLTreeVisitor visitor) {
         visitor.visit(this);
     }
 }
+
 class EnumNode extends SrcMLNodeType {
     public static final String TYPE = "enum";
+
     public EnumNode(Type type) {
         super(type);
     }
@@ -1061,12 +1247,15 @@ class EnumNode extends SrcMLNodeType {
     protected EnumNode(Tree other) {
         super(other);
     }
-    void accept(SrcMLTreeVisitor visitor){
+
+    void accept(SrcMLTreeVisitor visitor) {
         visitor.visit(this);
     }
 }
+
 class EventNode extends SrcMLNodeType {
     public static final String TYPE = "event";
+
     public EventNode(Type type) {
         super(type);
     }
@@ -1078,12 +1267,15 @@ class EventNode extends SrcMLNodeType {
     protected EventNode(Tree other) {
         super(other);
     }
-    void accept(SrcMLTreeVisitor visitor){
+
+    void accept(SrcMLTreeVisitor visitor) {
         visitor.visit(this);
     }
 }
+
 class SuperListNode extends SrcMLNodeType {
     public static final String TYPE = "super_list";
+
     public SuperListNode(Type type) {
         super(type);
     }
@@ -1095,12 +1287,15 @@ class SuperListNode extends SrcMLNodeType {
     protected SuperListNode(Tree other) {
         super(other);
     }
-    void accept(SrcMLTreeVisitor visitor){
+
+    void accept(SrcMLTreeVisitor visitor) {
         visitor.visit(this);
     }
 }
+
 class SuperNode extends SrcMLNodeType {
     public static final String TYPE = "super";
+
     public SuperNode(Type type) {
         super(type);
     }
@@ -1112,12 +1307,15 @@ class SuperNode extends SrcMLNodeType {
     protected SuperNode(Tree other) {
         super(other);
     }
-    void accept(SrcMLTreeVisitor visitor){
+
+    void accept(SrcMLTreeVisitor visitor) {
         visitor.visit(this);
     }
 }
+
 class InterfaceNode extends SrcMLNodeType {
     public static final String TYPE = "interface";
+
     public InterfaceNode(Type type) {
         super(type);
     }
@@ -1129,12 +1327,15 @@ class InterfaceNode extends SrcMLNodeType {
     protected InterfaceNode(Tree other) {
         super(other);
     }
-    void accept(SrcMLTreeVisitor visitor){
+
+    void accept(SrcMLTreeVisitor visitor) {
         visitor.visit(this);
     }
 }
+
 class PropertyNode extends SrcMLNodeType {
     public static final String TYPE = "property";
+
     public PropertyNode(Type type) {
         super(type);
     }
@@ -1146,12 +1347,15 @@ class PropertyNode extends SrcMLNodeType {
     protected PropertyNode(Tree other) {
         super(other);
     }
-    void accept(SrcMLTreeVisitor visitor){
+
+    void accept(SrcMLTreeVisitor visitor) {
         visitor.visit(this);
     }
 }
+
 class StructNode extends SrcMLNodeType {
     public static final String TYPE = "struct";
+
     public StructNode(Type type) {
         super(type);
     }
@@ -1163,12 +1367,15 @@ class StructNode extends SrcMLNodeType {
     protected StructNode(Tree other) {
         super(other);
     }
-    void accept(SrcMLTreeVisitor visitor){
+
+    void accept(SrcMLTreeVisitor visitor) {
         visitor.visit(this);
     }
 }
+
 class TernaryNode extends SrcMLNodeType {
     public static final String TYPE = "ternary";
+
     public TernaryNode(Type type) {
         super(type);
     }
@@ -1180,12 +1387,15 @@ class TernaryNode extends SrcMLNodeType {
     protected TernaryNode(Tree other) {
         super(other);
     }
-    void accept(SrcMLTreeVisitor visitor){
+
+    void accept(SrcMLTreeVisitor visitor) {
         visitor.visit(this);
     }
 }
+
 class AttributeNode extends SrcMLNodeType {
     public static final String TYPE = "attribute";
+
     public AttributeNode(Type type) {
         super(type);
     }
@@ -1197,12 +1407,15 @@ class AttributeNode extends SrcMLNodeType {
     protected AttributeNode(Tree other) {
         super(other);
     }
-    void accept(SrcMLTreeVisitor visitor){
+
+    void accept(SrcMLTreeVisitor visitor) {
         visitor.visit(this);
     }
 }
+
 class CheckedNode extends SrcMLNodeType {
     public static final String TYPE = "checked";
+
     public CheckedNode(Type type) {
         super(type);
     }
@@ -1214,12 +1427,15 @@ class CheckedNode extends SrcMLNodeType {
     protected CheckedNode(Tree other) {
         super(other);
     }
-    void accept(SrcMLTreeVisitor visitor){
+
+    void accept(SrcMLTreeVisitor visitor) {
         visitor.visit(this);
     }
 }
+
 class TypeOfNode extends SrcMLNodeType {
     public static final String TYPE = "typeof";
+
     public TypeOfNode(Type type) {
         super(type);
     }
@@ -1231,12 +1447,15 @@ class TypeOfNode extends SrcMLNodeType {
     protected TypeOfNode(Tree other) {
         super(other);
     }
-    void accept(SrcMLTreeVisitor visitor){
+
+    void accept(SrcMLTreeVisitor visitor) {
         visitor.visit(this);
     }
 }
+
 class SizeOfNode extends SrcMLNodeType {
     public static final String TYPE = "sizeof";
+
     public SizeOfNode(Type type) {
         super(type);
     }
@@ -1248,12 +1467,15 @@ class SizeOfNode extends SrcMLNodeType {
     protected SizeOfNode(Tree other) {
         super(other);
     }
-    void accept(SrcMLTreeVisitor visitor){
+
+    void accept(SrcMLTreeVisitor visitor) {
         visitor.visit(this);
     }
 }
+
 class UncheckedNode extends SrcMLNodeType {
     public static final String TYPE = "unchecked";
+
     public UncheckedNode(Type type) {
         super(type);
     }
@@ -1265,12 +1487,15 @@ class UncheckedNode extends SrcMLNodeType {
     protected UncheckedNode(Tree other) {
         super(other);
     }
-    void accept(SrcMLTreeVisitor visitor){
+
+    void accept(SrcMLTreeVisitor visitor) {
         visitor.visit(this);
     }
 }
+
 class ConstraintNode extends SrcMLNodeType {
     public static final String TYPE = "constraint";
+
     public ConstraintNode(Type type) {
         super(type);
     }
@@ -1282,12 +1507,15 @@ class ConstraintNode extends SrcMLNodeType {
     protected ConstraintNode(Tree other) {
         super(other);
     }
-    void accept(SrcMLTreeVisitor visitor){
+
+    void accept(SrcMLTreeVisitor visitor) {
         visitor.visit(this);
     }
 }
+
 class CatchNode extends SrcMLNodeType {
     public static final String TYPE = "catch";
+
     public CatchNode(Type type) {
         super(type);
     }
@@ -1299,12 +1527,15 @@ class CatchNode extends SrcMLNodeType {
     protected CatchNode(Tree other) {
         super(other);
     }
-    void accept(SrcMLTreeVisitor visitor){
+
+    void accept(SrcMLTreeVisitor visitor) {
         visitor.visit(this);
     }
 }
+
 class FinallyNode extends SrcMLNodeType {
     public static final String TYPE = "finally";
+
     public FinallyNode(Type type) {
         super(type);
     }
@@ -1316,12 +1547,15 @@ class FinallyNode extends SrcMLNodeType {
     protected FinallyNode(Tree other) {
         super(other);
     }
-    void accept(SrcMLTreeVisitor visitor){
+
+    void accept(SrcMLTreeVisitor visitor) {
         visitor.visit(this);
     }
 }
+
 class ThrowNode extends SrcMLNodeType {
     public static final String TYPE = "throw";
+
     public ThrowNode(Type type) {
         super(type);
     }
@@ -1333,12 +1567,15 @@ class ThrowNode extends SrcMLNodeType {
     protected ThrowNode(Tree other) {
         super(other);
     }
-    void accept(SrcMLTreeVisitor visitor){
+
+    void accept(SrcMLTreeVisitor visitor) {
         visitor.visit(this);
     }
 }
+
 class TryNode extends SrcMLNodeType {
     public static final String TYPE = "try";
+
     public TryNode(Type type) {
         super(type);
     }
@@ -1350,12 +1587,15 @@ class TryNode extends SrcMLNodeType {
     protected TryNode(Tree other) {
         super(other);
     }
-    void accept(SrcMLTreeVisitor visitor){
+
+    void accept(SrcMLTreeVisitor visitor) {
         visitor.visit(this);
     }
 }
+
 class ByNode extends SrcMLNodeType {
     public static final String TYPE = "by";
+
     public ByNode(Type type) {
         super(type);
     }
@@ -1367,12 +1607,15 @@ class ByNode extends SrcMLNodeType {
     protected ByNode(Tree other) {
         super(other);
     }
-    void accept(SrcMLTreeVisitor visitor){
+
+    void accept(SrcMLTreeVisitor visitor) {
         visitor.visit(this);
     }
 }
+
 class EqualsNode extends SrcMLNodeType {
     public static final String TYPE = "equals";
+
     public EqualsNode(Type type) {
         super(type);
     }
@@ -1384,12 +1627,15 @@ class EqualsNode extends SrcMLNodeType {
     protected EqualsNode(Tree other) {
         super(other);
     }
-    void accept(SrcMLTreeVisitor visitor){
+
+    void accept(SrcMLTreeVisitor visitor) {
         visitor.visit(this);
     }
 }
+
 class FromNode extends SrcMLNodeType {
     public static final String TYPE = "from";
+
     public FromNode(Type type) {
         super(type);
     }
@@ -1401,12 +1647,15 @@ class FromNode extends SrcMLNodeType {
     protected FromNode(Tree other) {
         super(other);
     }
-    void accept(SrcMLTreeVisitor visitor){
+
+    void accept(SrcMLTreeVisitor visitor) {
         visitor.visit(this);
     }
 }
+
 class GroupNode extends SrcMLNodeType {
     public static final String TYPE = "group";
+
     public GroupNode(Type type) {
         super(type);
     }
@@ -1418,12 +1667,15 @@ class GroupNode extends SrcMLNodeType {
     protected GroupNode(Tree other) {
         super(other);
     }
-    void accept(SrcMLTreeVisitor visitor){
+
+    void accept(SrcMLTreeVisitor visitor) {
         visitor.visit(this);
     }
 }
+
 class InNode extends SrcMLNodeType {
     public static final String TYPE = "in";
+
     public InNode(Type type) {
         super(type);
     }
@@ -1435,12 +1687,15 @@ class InNode extends SrcMLNodeType {
     protected InNode(Tree other) {
         super(other);
     }
-    void accept(SrcMLTreeVisitor visitor){
+
+    void accept(SrcMLTreeVisitor visitor) {
         visitor.visit(this);
     }
 }
+
 class IntoNode extends SrcMLNodeType {
     public static final String TYPE = "into";
+
     public IntoNode(Type type) {
         super(type);
     }
@@ -1452,12 +1707,15 @@ class IntoNode extends SrcMLNodeType {
     protected IntoNode(Tree other) {
         super(other);
     }
-    void accept(SrcMLTreeVisitor visitor){
+
+    void accept(SrcMLTreeVisitor visitor) {
         visitor.visit(this);
     }
 }
+
 class JoinNode extends SrcMLNodeType {
     public static final String TYPE = "join";
+
     public JoinNode(Type type) {
         super(type);
     }
@@ -1469,12 +1727,15 @@ class JoinNode extends SrcMLNodeType {
     protected JoinNode(Tree other) {
         super(other);
     }
-    void accept(SrcMLTreeVisitor visitor){
+
+    void accept(SrcMLTreeVisitor visitor) {
         visitor.visit(this);
     }
 }
+
 class LetNode extends SrcMLNodeType {
     public static final String TYPE = "let";
+
     public LetNode(Type type) {
         super(type);
     }
@@ -1486,12 +1747,15 @@ class LetNode extends SrcMLNodeType {
     protected LetNode(Tree other) {
         super(other);
     }
-    void accept(SrcMLTreeVisitor visitor){
+
+    void accept(SrcMLTreeVisitor visitor) {
         visitor.visit(this);
     }
 }
+
 class LinqNode extends SrcMLNodeType {
     public static final String TYPE = "linq";
+
     public LinqNode(Type type) {
         super(type);
     }
@@ -1503,12 +1767,15 @@ class LinqNode extends SrcMLNodeType {
     protected LinqNode(Tree other) {
         super(other);
     }
-    void accept(SrcMLTreeVisitor visitor){
+
+    void accept(SrcMLTreeVisitor visitor) {
         visitor.visit(this);
     }
 }
+
 class OnNode extends SrcMLNodeType {
     public static final String TYPE = "on";
+
     public OnNode(Type type) {
         super(type);
     }
@@ -1520,12 +1787,15 @@ class OnNode extends SrcMLNodeType {
     protected OnNode(Tree other) {
         super(other);
     }
-    void accept(SrcMLTreeVisitor visitor){
+
+    void accept(SrcMLTreeVisitor visitor) {
         visitor.visit(this);
     }
 }
+
 class OrderByNode extends SrcMLNodeType {
     public static final String TYPE = "orderby";
+
     public OrderByNode(Type type) {
         super(type);
     }
@@ -1537,12 +1807,15 @@ class OrderByNode extends SrcMLNodeType {
     protected OrderByNode(Tree other) {
         super(other);
     }
-    void accept(SrcMLTreeVisitor visitor){
+
+    void accept(SrcMLTreeVisitor visitor) {
         visitor.visit(this);
     }
 }
+
 class SelectNode extends SrcMLNodeType {
     public static final String TYPE = "select";
+
     public SelectNode(Type type) {
         super(type);
     }
@@ -1554,12 +1827,15 @@ class SelectNode extends SrcMLNodeType {
     protected SelectNode(Tree other) {
         super(other);
     }
-    void accept(SrcMLTreeVisitor visitor){
+
+    void accept(SrcMLTreeVisitor visitor) {
         visitor.visit(this);
     }
 }
+
 class WhereNode extends SrcMLNodeType {
     public static final String TYPE = "where";
+
     public WhereNode(Type type) {
         super(type);
     }
@@ -1571,7 +1847,8 @@ class WhereNode extends SrcMLNodeType {
     protected WhereNode(Tree other) {
         super(other);
     }
-    void accept(SrcMLTreeVisitor visitor){
+
+    void accept(SrcMLTreeVisitor visitor) {
         visitor.visit(this);
     }
 }

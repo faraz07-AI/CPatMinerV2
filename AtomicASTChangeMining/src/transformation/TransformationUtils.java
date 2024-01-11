@@ -165,6 +165,8 @@ public class TransformationUtils {
             new_tree = new UnsafeNode(inputTree);
         else if (Objects.equals(nodeType, SrcMLNodeType.USING_STMT))
             new_tree = new UsingStmtNode(inputTree);
+        else if (Objects.equals(nodeType, SrcMLNodeType.INDEX))
+            new_tree = new IndexNode(inputTree);
         else if (Objects.equals(nodeType, SrcMLNodeType.WHILE))
             new_tree = new WhileNode(inputTree);
         else if (Objects.equals(nodeType, SrcMLNodeType.CONDITION))
