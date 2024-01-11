@@ -134,6 +134,8 @@ public class SrcMLTreeVisitor {
     Expression visit(ExprNode node) {
         List<Tree> children = node.getChildren();
         if (children.size() == 1) {
+            if (children.get(0) instanceof LinqNode)
+                return this.visit((LinqNode) children.get(0));
             if (children.get(0) instanceof LambdaNode)
                 return this.visit((LambdaNode) children.get(0));
             if (children.get(0) instanceof LiteralNode)
@@ -184,6 +186,8 @@ public class SrcMLTreeVisitor {
                     assignment.setRightHandSide(this.visit((LiteralNode) children.get(2)));
                 else if (children.get(2) instanceof TernaryNode)
                     assignment.setRightHandSide(this.visit((TernaryNode) children.get(2)));
+                else if (children.get(2) instanceof CallNode)
+                    assignment.setRightHandSide(this.visit((CallNode) children.get(2)));
                 return assignment;
             } else {
                 InfixExpression infixExpression = asn.newInfixExpression();
@@ -216,10 +220,13 @@ public class SrcMLTreeVisitor {
                 return assignment;
             }
             Expression result;
+
             if (children.get(0) instanceof LiteralNode)
                 result = this.visit((LiteralNode) children.get(0));
             else if (children.get(0) instanceof TernaryNode)
                 result = this.visit((TernaryNode) children.get(0));
+            else if (children.get(0) instanceof CallNode)
+                result = this.visit((CallNode) children.get(0));
             else
                 result = this.visit((NameNode) children.get(0));
             for (int i = 1; i < children.size() - 1; i += 2) {
@@ -233,6 +240,8 @@ public class SrcMLTreeVisitor {
                     infixExpression.setRightOperand(this.visit((NameNode) children.get(i + 1)));
                 else if (children.get(i + 1) instanceof TernaryNode)
                     infixExpression.setRightOperand(this.visit((TernaryNode) children.get(i + 1)));
+                else if (children.get(i + 1) instanceof CallNode)
+                    infixExpression.setRightOperand(this.visit((CallNode) children.get(i + 1)));
 
                 result = infixExpression;
             }
@@ -1411,36 +1420,34 @@ public class SrcMLTreeVisitor {
         return lambda;
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-    void visit(LinqNode node) {
-        // no equivalent
+    Expression visit(LinqNode node) {
+        // no equivalent, transform into method
+        List<MethodInvocation> chainedlist = new ArrayList<>();
         for(Tree child: node.getChildren()){
             if (child instanceof FromNode)
-                this.visit((FromNode) child);
+                chainedlist.add(this.visit((FromNode) child));
             else if (child instanceof SelectNode)
-                this.visit((SelectNode) child);
+                chainedlist.add(this.visit((SelectNode) child));
             else if (child instanceof GroupNode)
-                this.visit((GroupNode) child);
+                chainedlist.add(this.visit((GroupNode) child));
             else if (child instanceof OrderByNode)
-                this.visit((OrderByNode) child);
+                chainedlist.add(this.visit((OrderByNode) child));
+            else if (child instanceof WhereNode)
+                chainedlist.add(this.visit((WhereNode) child));
+            else if (child instanceof JoinNode)
+                chainedlist.add(this.visit((JoinNode) child));
+            else if (child instanceof LetNode)
+                chainedlist.add(this.visit((LetNode) child));
         }
+        for (int i =1; i <chainedlist.size(); i++){
+            chainedlist.get(i).setExpression(chainedlist.get(i-1));
+        }
+        return chainedlist.get(chainedlist.size()-1);
     }
 
     MethodInvocation visit(FromNode node) {
         MethodInvocation fromMethodInvocation = asn.newMethodInvocation();
-        fromMethodInvocation.setExpression(asn.newSimpleName("from"));
+        fromMethodInvocation.setName(asn.newSimpleName("from"));
         LambdaExpression lambda = asn.newLambdaExpression();
         fromMethodInvocation.arguments().add(lambda);
 
@@ -1462,33 +1469,106 @@ public class SrcMLTreeVisitor {
             return this.visit((ExprNode) child);
         return asn.newSimpleName("table");
     }
-    void visit(SelectNode node) {
+    MethodInvocation visit(SelectNode node) {
+        MethodInvocation selectMethodInvocation = asn.newMethodInvocation();
+        selectMethodInvocation.setName(asn.newSimpleName("select"));
+        Tree child = node.getChildren().get(0);
+        if (child instanceof ExprNode)
+            selectMethodInvocation.arguments().add(this.visit((ExprNode) child));
+        return selectMethodInvocation;
     }
 
-    void visit(WhereNode node) {
+    MethodInvocation visit(WhereNode node) {
+        MethodInvocation whereMethodInvocation = asn.newMethodInvocation();
+        whereMethodInvocation.setName(asn.newSimpleName("where"));
+        Tree child = node.getChildren().get(0);
+        if (child instanceof ExprNode)
+            whereMethodInvocation.arguments().add(this.visit((ExprNode) child));
+        return whereMethodInvocation;
     }
 
-    void visit(GroupNode node) {
+    MethodInvocation visit(OrderByNode node) {
+        MethodInvocation orderbyMethodInvocation = asn.newMethodInvocation();
+        orderbyMethodInvocation.setName(asn.newSimpleName("orderBy"));
+        for (Tree child:node.getChildren()){
+            if (child instanceof ExprNode)
+                orderbyMethodInvocation.arguments().add(this.visit((ExprNode) child));
+            if (child instanceof NameNode)
+                orderbyMethodInvocation.arguments().add(this.visit((NameNode) child));
+        }
+        return orderbyMethodInvocation;
     }
 
-    void visit(IntoNode node) {
+    MethodInvocation visit(GroupNode node) {
+        MethodInvocation groupMethodInvocation = asn.newMethodInvocation();
+        groupMethodInvocation.setName(asn.newSimpleName("group"));
+        for (Tree child: node.getChildren()){
+            if (child instanceof ExprNode)
+                groupMethodInvocation.arguments().add(this.visit((ExprNode) child));
+            if (child instanceof ByNode)
+                groupMethodInvocation.arguments().add(this.visit((ByNode) child));
+            if (child instanceof IntoNode)
+                groupMethodInvocation.arguments().add(this.visit((IntoNode) child));
+        }
+        return groupMethodInvocation;
     }
 
-    void visit(JoinNode node) {
+    Expression visit(ByNode node) {
+        Tree child = node.getChildren().get(0);
+        if (child instanceof ExprNode)
+            return this.visit((ExprNode) child);
+        return null;
+    }
+    Expression visit(IntoNode node) {
+        Tree child = node.getChildren().get(0);
+        if (child instanceof ExprNode)
+            return this.visit((ExprNode) child);
+        return null;
     }
 
-    void visit(LetNode node) {
+    MethodInvocation visit(JoinNode node) {
+        MethodInvocation joinMethodInvocation = asn.newMethodInvocation();
+        joinMethodInvocation.setName(asn.newSimpleName("join"));
+        LambdaExpression lambda = asn.newLambdaExpression();
+        joinMethodInvocation.arguments().add(lambda);
+        for (Tree child:node.getChildren()){
+            if (child instanceof ExprNode){
+                SingleVariableDeclaration sv = asn.newSingleVariableDeclaration();
+                sv.setName((SimpleName)this.visit((ExprNode) child));
+                sv.setType(asn.newSimpleType(asn.newSimpleName("var")));
+                lambda.parameters().add(sv);
+            }
+            if (child instanceof InNode)
+                lambda.setBody(this.visit((InNode) child));
+            if (child instanceof OnNode)
+                joinMethodInvocation.arguments().add(this.visit((OnNode) child));
+            if (child instanceof EqualsNode)
+                joinMethodInvocation.arguments().add(this.visit((EqualsNode) child));
+        }
+        return joinMethodInvocation;
     }
 
-    void visit(OrderByNode node) {
+    Expression visit(EqualsNode node) {
+        Tree child = node.getChildren().get(0);
+        if (child instanceof ExprNode)
+            return this.visit((ExprNode) child);
+        return null;
     }
 
-    void visit(ByNode node) {
+    Expression visit(OnNode node) {
+        Tree child = node.getChildren().get(0);
+        if (child instanceof ExprNode)
+            return this.visit((ExprNode) child);
+        return null;
     }
 
-    void visit(EqualsNode node) {
-    }
-
-    void visit(OnNode node) {
+    MethodInvocation visit(LetNode node) {
+        MethodInvocation letMethodInvocation = asn.newMethodInvocation();
+        letMethodInvocation.setName(asn.newSimpleName("let"));
+        for (Tree child: node.getChildren()){
+            if (child instanceof ExprNode)
+                letMethodInvocation.arguments().add(this.visit((ExprNode) child));
+        }
+        return letMethodInvocation;
     }
 }
