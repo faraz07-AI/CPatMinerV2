@@ -4,6 +4,7 @@ import com.github.gumtreediff.tree.Tree;
 import org.eclipse.jdt.core.dom.*;
 
 import java.util.ArrayList;
+import java.util.Stack;
 import java.util.List;
 import java.util.Objects;
 
@@ -149,33 +150,47 @@ public class SrcMLTreeVisitor {
         return methodInvocation;
     }
 
+    Expression visitParenthesis(ExprNode node) {
+        Stack<Integer> numbers = new Stack<>();
+        Stack<Character> operators = new Stack<>();
+        for (Tree child: node.getChildren()) {
+            if (child instanceof OperatorNode){
+
+            }
+        }
+        return null;
+    }
+    Expression evaluateNode(Tree child){
+        if (child instanceof LinqNode)
+            return this.visit((LinqNode) child);
+        if (child instanceof LambdaNode)
+            return this.visit((LambdaNode) child);
+        if (child instanceof LiteralNode)
+            return this.visit((LiteralNode) child);
+        if (child instanceof NameNode)
+            return this.visitNameSpecial((NameNode) child);
+        if (child instanceof CallNode)
+            return this.visit((CallNode) child);
+        if (child instanceof TypeOfNode)
+            return this.visit((TypeOfNode) child);
+        if (child instanceof SizeOfNode)
+            return this.visit((SizeOfNode) child);
+        if (child instanceof TernaryNode)
+            return this.visit((TernaryNode) child);
+        return null;
+    }
     Expression visit(ExprNode node) {
         List<Tree> children = node.getChildren();
         if (children.size() == 1) {
-            if (children.get(0) instanceof LinqNode)
-                return this.visit((LinqNode) children.get(0));
-            if (children.get(0) instanceof LambdaNode)
-                return this.visit((LambdaNode) children.get(0));
-            if (children.get(0) instanceof LiteralNode)
-                return this.visit((LiteralNode) children.get(0));
-            if (children.get(0) instanceof NameNode)
-                return this.visitNameSpecial((NameNode) children.get(0));
-            if (children.get(0) instanceof CallNode)
-                return this.visit((CallNode) children.get(0));
-            if (children.get(0) instanceof TypeOfNode)
-                return this.visit((TypeOfNode) children.get(0));
-            if (children.get(0) instanceof SizeOfNode)
-                return this.visit((SizeOfNode) children.get(0));
+            return this.evaluateNode(children.get(0));
         } else if (children.size() == 2) {
             if (Objects.equals(children.get(0).getLabel(), "new")) {// expression with new MyClass(...)
                 ClassInstanceCreation classInstanceCreation = asn.newClassInstanceCreation();
                 if (children.get(1) instanceof CallNode) {
                     children = children.get(1).getChildren();
-                    if (children.get(0) instanceof NameNode) {// Class name
-                        SimpleType type = (SimpleType) this.visitType((NameNode) children.get(0));
-                        classInstanceCreation.setType(type);
-                    }
-                    if (children.get(1) instanceof ArgumentListNode) {
+                    if (children.get(0) instanceof NameNode) // Class name
+                        classInstanceCreation.setType((SimpleType) this.visitType((NameNode) children.get(0)));
+                    if (children.get(1) instanceof ArgumentListNode) { // arguments
                         for (Expression exp : this.visit((ArgumentListNode) children.get(1)))
                             classInstanceCreation.arguments().add(exp);
                     }
@@ -183,58 +198,20 @@ public class SrcMLTreeVisitor {
                 return classInstanceCreation;
             } else if (TransformationUtils.isPostfix(children.get(1))) { // a++ or a--
                 PostfixExpression postfixExpression = asn.newPostfixExpression();
-                if (children.get(0) instanceof NameNode) {
-                    SimpleName s = (SimpleName) this.visit((NameNode) children.get(0));
-                    postfixExpression.setOperand(s);
-                }
+                if (children.get(0) instanceof NameNode)
+                    postfixExpression.setOperand((SimpleName) this.visit((NameNode) children.get(0)));
                 if (children.get(1) instanceof OperatorNode)
                     postfixExpression.setOperator(this.visitPostfix((OperatorNode) children.get(1)));
                 return postfixExpression;
             }
-        } else if (children.size() == 3) { // expression with one operator a+b or assig a+= 5
-            if (children.get(1) instanceof OperatorNode && TransformationUtils.isAssignment(children.get(1))) {
-                Assignment assignment = asn.newAssignment();
-                if (children.get(0) instanceof NameNode)
-                    assignment.setLeftHandSide(this.visitNameSpecial((NameNode) children.get(0)));
-                if (children.get(1) instanceof OperatorNode)
-                    assignment.setOperator(this.visitAssig((OperatorNode) children.get(1)));
-                if (children.get(2) instanceof NameNode)
-                    assignment.setRightHandSide(this.visitNameSpecial((NameNode) children.get(2)));
-                else if (children.get(2) instanceof LiteralNode)
-                    assignment.setRightHandSide(this.visit((LiteralNode) children.get(2)));
-                else if (children.get(2) instanceof TernaryNode)
-                    assignment.setRightHandSide(this.visit((TernaryNode) children.get(2)));
-                else if (children.get(2) instanceof CallNode)
-                    assignment.setRightHandSide(this.visit((CallNode) children.get(2)));
-                return assignment;
-            } else {
-                if (children.get(0) instanceof CallNode) {
-                    MethodInvocation mi = this.visit((CallNode) children.get(2));
-                    mi.setExpression(this.visit((CallNode) children.get(0)));
-                    return mi;
-                }
-                InfixExpression infixExpression = asn.newInfixExpression();
-                if (children.get(0) instanceof LiteralNode)
-                    infixExpression.setLeftOperand(this.visit((LiteralNode) children.get(0)));
-                else if (children.get(0) instanceof NameNode) // variable name
-                    infixExpression.setLeftOperand(this.visitNameSpecial((NameNode) children.get(0)));
-                if (children.get(1) instanceof OperatorNode)
-                    infixExpression.setOperator(this.visit((OperatorNode) children.get(1)));
-                if (children.get(2) instanceof LiteralNode)
-                    infixExpression.setRightOperand(this.visit((LiteralNode) children.get(2)));
-                else if (children.get(2) instanceof NameNode) {// variable or ex.msg
-                    infixExpression.setRightOperand(this.visitNameSpecial((NameNode) children.get(2)));
-                }
-                return infixExpression;
-            }
-        } else if (children.size() > 3) { // expression with one or more operators a+b-c*d
+        } else if (children.size() > 2) { // expression with one or more operators a+b-c*d
             if (children.get(1) instanceof OperatorNode && TransformationUtils.isAssignment(children.get(1))) { // assignement
                 Assignment assignment = asn.newAssignment();
                 if (children.get(0) instanceof NameNode)
                     assignment.setLeftHandSide(this.visitNameSpecial((NameNode) children.get(0)));
                 if (children.get(1) instanceof OperatorNode)
                     assignment.setOperator(this.visitAssig((OperatorNode) children.get(1)));
-                // Since after the variable and the assign operator, we pretty much just have an Expr and we just want a InfixExpression , we can just visit
+                // Since after the variable and the assign operator, we pretty much just have an Expr, we can just visit
                 ExprNode copy_without_assig = new ExprNode(node);
                 // copy all children but remove the first two elements
                 for (int i = 2; i < children.size(); i++)
@@ -242,36 +219,16 @@ public class SrcMLTreeVisitor {
                 assignment.setRightHandSide(this.visit(copy_without_assig));
                 return assignment;
             }
-            Expression result;
-
-            if (children.get(0) instanceof LiteralNode)
-                result = this.visit((LiteralNode) children.get(0));
-            else if (children.get(0) instanceof TernaryNode)
-                result = this.visit((TernaryNode) children.get(0));
-            else if (children.get(0) instanceof CallNode)
-                result = this.visit((CallNode) children.get(0));
-            else
-                result = this.visitNameSpecial((NameNode) children.get(0));
-            for (int i = 1; i < children.size() - 1; i += 2) {
-                InfixExpression infixExpression = asn.newInfixExpression();
-                infixExpression.setLeftOperand(result);
-                if (children.get(i) instanceof OperatorNode) {
-                    if (!(Objects.equals(children.get(i).getLabel(), "."))){
-                        infixExpression.setOperator(this.visit((OperatorNode) children.get(i)));
-                    }
-                }
-                if (children.get(i + 1) instanceof LiteralNode)
-                    infixExpression.setRightOperand(this.visit((LiteralNode) children.get(i + 1)));
-                else if (children.get(i + 1) instanceof NameNode) // variable
-                    infixExpression.setRightOperand(this.visitNameSpecial((NameNode) children.get(i + 1)));
-                else if (children.get(i + 1) instanceof TernaryNode)
-                    infixExpression.setRightOperand(this.visit((TernaryNode) children.get(i + 1)));
-                else if (children.get(i + 1) instanceof CallNode)
-                    infixExpression.setRightOperand(this.visit((CallNode) children.get(i + 1)));
-
-                result = infixExpression;
-            }
-            return result;
+            InfixExpression infixExpression = asn.newInfixExpression();
+            infixExpression.setLeftOperand(this.evaluateNode(children.get(0)));
+            if (children.get(1) instanceof OperatorNode)
+                infixExpression.setOperator(this.visit((OperatorNode) children.get(1)));
+            // Visit the rest minus the first two elements
+            ExprNode copy_without_first_two_elements = new ExprNode(node);
+            for (int i = 2; i < children.size(); i++)
+                copy_without_first_two_elements.addChild(children.get(i));
+            infixExpression.setRightOperand(this.visit(copy_without_first_two_elements));
+            return infixExpression;
         }
         return null;
     }

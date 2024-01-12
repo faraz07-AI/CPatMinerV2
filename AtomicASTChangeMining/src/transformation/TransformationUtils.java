@@ -34,6 +34,17 @@ public class TransformationUtils {
             return input;
         return input.substring(0, 1).toUpperCase() + input.substring(1);
     }
+    static boolean containsParenthesis(Tree node) {
+        for(Tree child: node.getChildren()){
+            if (isParenthesis(child))
+                return true;
+        }
+        return false;
+    }
+    static boolean isParenthesis(Tree node) {
+            return node instanceof OperatorNode && Objects.equals(node.getLabel(), ".");
+    }
+
 
     static boolean isAssignment(Tree node) {
         List<String> l = new ArrayList<>();
