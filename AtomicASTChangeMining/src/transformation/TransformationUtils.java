@@ -8,6 +8,7 @@ import org.eclipse.jdt.core.dom.Expression;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Stack;
 
 public class TransformationUtils {
 
@@ -36,15 +37,11 @@ public class TransformationUtils {
     }
     static boolean containsParenthesis(Tree node) {
         for(Tree child: node.getChildren()){
-            if (isParenthesis(child))
+            if (child instanceof OperatorNode && Objects.equals(child.getLabel(), "("))
                 return true;
         }
         return false;
     }
-    static boolean isParenthesis(Tree node) {
-            return node instanceof OperatorNode && Objects.equals(node.getLabel(), ".");
-    }
-
 
     static boolean isAssignment(Tree node) {
         List<String> l = new ArrayList<>();

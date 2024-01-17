@@ -2,24 +2,39 @@ package transformation;
 
 import com.github.gumtreediff.tree.Tree;
 import com.github.gumtreediff.tree.TreeContext;
-import com.github.gumtreediff.client.Run;
 import com.github.gumtreediff.gen.srcml.SrcmlCsTreeGenerator;
 import org.eclipse.jdt.core.dom.*;
+import com.github.gumtreediff.client.Run;
+
 
 public class Transformation {
 
-    private static void iterate_children(Tree root, SrcMLTreeVisitor visitor) {
-        if (root == null) {
-            return;
-        } else if (root instanceof UnitNode) {
-            CompilationUnit m = visitor.visit((UnitNode) root);
-            System.out.println(m.toString());
-        } else {
-            for (Tree child : root.getChildren()) {
-                iterate_children(child, visitor);
+    public static CompilationUnit transform_csharp_to_java(String content) {
+        try {
+            SrcmlCsTreeGenerator l = new SrcmlCsTreeGenerator();
+            TreeContext tc = l.generateFrom().string(content);
+            Tree tree_csharp = tc.getRoot();
+            Tree transformedTree = TransformationUtils.transformTree(tree_csharp);
+            String tree_string = tree_csharp.toTreeString();
+            System.out.println(tree_string);
+
+            SrcMLTreeVisitor visitor = new SrcMLTreeVisitor();
+            if (transformedTree instanceof UnitNode) {
+                CompilationUnit m = visitor.visit((UnitNode) transformedTree);
+                System.out.println(m.toString());
+                return m;
             }
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
+        return null;
     }
+
+
+
+
+
 
     public static void transform() {
 
@@ -43,7 +58,19 @@ public class Transformation {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-
-
     }
+
+    private static void iterate_children(Tree root, SrcMLTreeVisitor visitor) {
+        if (root == null) {
+            return;
+        } else if (root instanceof UnitNode) {
+            CompilationUnit m = visitor.visit((UnitNode) root);
+            System.out.println(m.toString());
+        } else {
+            for (Tree child : root.getChildren()) {
+                iterate_children(child, visitor);
+            }
+        }
+    }
+
 }
