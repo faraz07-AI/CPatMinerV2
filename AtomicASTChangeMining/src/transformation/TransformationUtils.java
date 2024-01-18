@@ -68,7 +68,14 @@ public class TransformationUtils {
         return l.contains(node.getLabel());
     }
     static boolean isPrefix(Tree node) {
-        return Objects.equals(node.getLabel(), "!");
+        List<String> l = new ArrayList<>();
+        l.add("++");
+        l.add("--");
+        l.add("!");
+        l.add("-");
+        l.add("~");
+        l.add("+");
+        return l.contains(node.getLabel());
     }
 
     static ExprNode createNewExprNode(Tree node, int first_element){

@@ -130,7 +130,13 @@ public class SrcMLTreeVisitor {
         if (children.size() > 1 && children.get(1) instanceof ArgumentListNode) {
             ParameterizedType returnType = asn.newParameterizedType(asn.newSimpleType(this.visit((NameNode) node.getChildren().get(0))));
             for (Expression exp : this.visit((ArgumentListNode) node.getChildren().get(1))) {
-                returnType.typeArguments().add(asn.newSimpleType((SimpleName) exp));
+                if (exp instanceof SimpleName)
+                    returnType.typeArguments().add(asn.newSimpleType((Name) exp));
+                /*else if (exp instanceof QualifiedName){
+                    QualifiedName k = (QualifiedName) exp;
+                    returnType.typeArguments().add(asn.newQualifiedType(asn.newSimpleType(k.getQualifier()),k.getName()));
+                }*/
+
             }
             return returnType;
         }
@@ -138,7 +144,11 @@ public class SrcMLTreeVisitor {
             String res = "";
             for (Tree child : children)
                 res += child.getLabel();
-            return asn.newSimpleType(asn.newName(res));
+            try {
+                return asn.newSimpleType(asn.newName(res));
+            } catch (Exception e) {
+                return null;
+            }
         }
         return null;
     }
@@ -163,9 +173,6 @@ public class SrcMLTreeVisitor {
             for (Expression exp : this.visit((ArgumentListNode) argNode)) {
                 if (exp != null)
                     methodInvocation.arguments().add(exp);
-                else {
-                    System.out.println("woh");
-                }
             }
         }
         return methodInvocation;
@@ -218,19 +225,16 @@ public class SrcMLTreeVisitor {
                     postfixExpression.setOperator(this.visitPostfix((OperatorNode) children.get(1)));
                 return postfixExpression;
             } else if (isPrefix(children.get(0))) { // !a
-                PrefixExpression negationExpression = asn.newPrefixExpression();
+                PrefixExpression prefixExpression = asn.newPrefixExpression();
                 if (children.get(1) instanceof NameNode)
-                    negationExpression.setOperand(this.visit((NameNode) children.get(1)));
-                negationExpression.setOperator(PrefixExpression.Operator.NOT);
-                return negationExpression;
+                    prefixExpression.setOperand(this.visit((NameNode) children.get(1)));
+                if (children.get(0) instanceof OperatorNode)
+                    prefixExpression.setOperator(this.visitPrefix((OperatorNode) children.get(0)));
+                return prefixExpression;
             } else if (Objects.equals(children.get(0).getLabel(), "$") && children.get(1) instanceof LiteralNode) { // string with $ sign
                 return this.visit((LiteralNode) children.get(1));
             } else if (children.get(0) instanceof OperatorNode && children.get(1) instanceof CallNode) { // await methodcall()
                 return this.visit((CallNode) children.get(1));
-            } else if (children.get(0) instanceof OperatorNode && children.get(1) instanceof LiteralNode) {// number with minus -
-                LiteralNode n = (LiteralNode) children.get(1);
-                n.setLabel("-" + n.getLabel());
-                return this.visit(n);
             }
         } else if (children.size() > 2) { // expression with one or more operators a+b-c*d
             if (children.get(1) instanceof OperatorNode && isAssignment(children.get(1))) { // assignement
@@ -249,17 +253,13 @@ public class SrcMLTreeVisitor {
             } else {
                 InfixExpression infixExpression = asn.newInfixExpression();
                 if (children.get(0) instanceof OperatorNode) {
-                    if (Objects.equals(children.get(0).getLabel(), "!")) {// !(a == b)
-                        PrefixExpression negationExpression = asn.newPrefixExpression();
-                        negationExpression.setOperator(PrefixExpression.Operator.NOT);
+                    if (isPrefix(children.get(0))) {// !(a == b)
+                        PrefixExpression preExpression = asn.newPrefixExpression();
+                        if (children.get(0) instanceof OperatorNode)
+                            preExpression.setOperator(this.visitPrefix((OperatorNode) children.get(0)));
                         ExprNode copy_without_first_element = createNewExprNode(node, 1);
-                        negationExpression.setOperand(this.visit(copy_without_first_element));
-                        return negationExpression;
-                    }
-                    if (Objects.equals(children.get(0).getLabel(), "-")) {// -5
-                        children.get(1).setLabel("-" + children.get(1).getLabel()); // add the minus to the next element, which is a literal
-                        children.remove(0); // remove the - element
-                        infixExpression.setLeftOperand(this.evaluateNode(children.get(0)));
+                        preExpression.setOperand(this.visit(copy_without_first_element));
+                        return preExpression;
                     }
                 } else
                     infixExpression.setLeftOperand(this.evaluateNode(children.get(0)));
@@ -274,7 +274,7 @@ public class SrcMLTreeVisitor {
                 return infixExpression;
             }
         }
-        return null;
+        return asn.newInfixExpression();
     }
 
     Expression visitExprNodeParenthesis(Tree node) {
@@ -294,9 +294,10 @@ public class SrcMLTreeVisitor {
                     if (operands.peek() instanceof NameNode && node.getChildren().size() >= 4) { // Cast expression
                         CastExpression castExpression = asn.newCastExpression();
                         castExpression.setType(asn.newSimpleType(this.visit((NameNode) operands.pop())));
-                        // creat ExprNode with the rest of children
-                        Expression e = this.evaluateNode(children.remove(i + 1));
-                        castExpression.setExpression(e);
+                        if (!(children.get(i + 1) instanceof OperatorNode)) {
+                            Expression e = this.evaluateNode(children.remove(i + 1));
+                            castExpression.setExpression(e);
+                        }
                         operands.push(castExpression);
                     }
                     operators.pop(); // Pop the opening parenthesis
@@ -310,7 +311,17 @@ public class SrcMLTreeVisitor {
         }
         if (operands.peek() instanceof NameNode)
             return this.visit((NameNode) operands.pop());
-        return (Expression) operands.pop();
+        if (operands.peek() instanceof CastExpression && operands.size() == 2) {
+            CastExpression e = (CastExpression) operands.pop();
+            if (operands.peek() instanceof Tree)
+                e.setExpression(this.evaluateNode((Tree) operands.pop()));
+            else if (operands.peek() instanceof Expression)
+                e.setExpression((Expression) operands.peek());
+            return e;
+        }
+        if (operands.peek() instanceof Expression)
+            return (Expression) operands.pop();
+        return asn.newParenthesizedExpression();
     }
 
     Expression performOperation(Tree operator, Object operand2, Object operand1, Boolean is_parenthesis) {
@@ -484,6 +495,23 @@ public class SrcMLTreeVisitor {
             return null;
     }
 
+    PrefixExpression.Operator visitPrefix(OperatorNode node) {
+        if (Objects.equals(node.getLabel(), "--")) {
+            return PrefixExpression.Operator.DECREMENT;
+        } else if (Objects.equals(node.getLabel(), "++")) {
+            return PrefixExpression.Operator.INCREMENT;
+        } else if (Objects.equals(node.getLabel(), "!")) {
+            return PrefixExpression.Operator.NOT;
+        } else if (Objects.equals(node.getLabel(), "-")) {
+            return PrefixExpression.Operator.MINUS;
+        } else if (Objects.equals(node.getLabel(), "+")) {
+            return PrefixExpression.Operator.PLUS;
+        } else if (Objects.equals(node.getLabel(), "~")) {
+            return PrefixExpression.Operator.COMPLEMENT;
+        } else
+            return null;
+    }
+
     List<Expression> visit(ArgumentListNode node) {
         List<Expression> results = new ArrayList<>();
         List<Tree> args = node.getChildren();
@@ -603,7 +631,9 @@ public class SrcMLTreeVisitor {
         if (node.getChildren().get(0) instanceof DeclNode) {
             for (Tree param_child : node.getChildren().get(0).getChildren()) {
                 if (param_child instanceof TypeNode) {
-                    parameter.setType((Type) this.visit((TypeNode) param_child));
+                    Type t = (Type) this.visit((TypeNode) param_child);
+                    if (t != null)
+                        parameter.setType(t);
                 }
                 if (param_child instanceof NameNode)
                     parameter.setName((SimpleName) this.visit((NameNode) param_child));
@@ -1562,7 +1592,9 @@ public class SrcMLTreeVisitor {
         for (Tree child : node.getChildren()) {
             if (child instanceof ExprNode) {
                 SingleVariableDeclaration sv = asn.newSingleVariableDeclaration();
-                sv.setName((SimpleName) this.visit((ExprNode) child));
+                Expression exp = this.visit((ExprNode) child);
+                if (exp instanceof SimpleName)
+                    sv.setName((SimpleName) exp);
                 sv.setType(asn.newSimpleType(asn.newSimpleName("var")));
                 lambda.parameters().add(sv);
             }
