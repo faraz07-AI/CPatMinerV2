@@ -35,8 +35,9 @@ public class TransformationUtils {
             return input;
         return input.substring(0, 1).toUpperCase() + input.substring(1);
     }
+
     static boolean containsParenthesis(Tree node) {
-        for(Tree child: node.getChildren()){
+        for (Tree child : node.getChildren()) {
             if (child instanceof OperatorNode && Objects.equals(child.getLabel(), "("))
                 return true;
         }
@@ -66,6 +67,18 @@ public class TransformationUtils {
         l.add("--");
         return l.contains(node.getLabel());
     }
+    static boolean isPrefix(Tree node) {
+        return Objects.equals(node.getLabel(), "!");
+    }
+
+    static ExprNode createNewExprNode(Tree node, int first_element){
+        // Create a new Expression node without the first n elements in input
+        ExprNode exp = new ExprNode(node);
+        for (int i = first_element; i< node.getChildren().size(); i++)
+            exp.addChild( node.getChildren().get(i));
+        return exp;
+    }
+
 
     public static boolean isBoolean(String input) {
         return Objects.equals(input, "true") || Objects.equals(input, "false");
@@ -76,7 +89,12 @@ public class TransformationUtils {
             Integer.parseInt(input);
             return true;
         } catch (NumberFormatException e) {
-            return false;
+            try {
+                Double.parseDouble(input);
+                return true;
+            } catch (NumberFormatException e2) {
+                return false;
+            }
         }
     }
 

@@ -89,7 +89,7 @@ public enum DaysOfWeek
         public static unsafe void main()
         {
             Console.WriteLine( a + 5 * 33, new MyClass("hi",55));
-            Class1 varrr = new Class1("test");
+            Class1 varrr = (String )a.get(lol) + 5;
             unsafe {
             a = a+ b
             }
