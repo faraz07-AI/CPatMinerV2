@@ -1,0 +1,13 @@
+<HTML><H1>Patterns That Have Been Found:</H1><body><link rel="stylesheet" href="../../jquery.dataTables.min.css" />
+ <script src="../../jquery-2.2.3.min.js"></script>
+<script src="../../jquery.dataTables.min.js"></script><table id="sorttable" class="sortable-theme-minimal" data-sortable>
+<thead><tr><th class="sort" data-sort="id">ID</th><th class="sort" data-sort="size">Pattern Size</th><th class="sort" data-sort="numFound">NumberFound</th><th class="sort" data-sort="details">details</th><th class="sort" data-sort="nodeTypes">NodeTypes</th></tr></thead></table>
+<script>
+$(document).ready(function(){
+    $('#myTable').DataTable(
+    	{
+        "lengthMenu": [[-1, 25, 50, 100], ["All", 25, 50, 100]]
+    } 
+    	);
+});
+</script>

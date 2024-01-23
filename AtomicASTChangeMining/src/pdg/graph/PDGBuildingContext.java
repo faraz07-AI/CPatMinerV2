@@ -289,14 +289,16 @@ public class PDGBuildingContext {
 					String path = sourceFilePath.substring(0, sourceFilePath.lastIndexOf('/'));
 					if (path.endsWith(pkg.replace('.', '/'))) {
 						path = path.substring(0, path.length() - pkg.length());
-						path += qn.replace('.', '/') + ".java";
+						//path += qn.replace('.', '/') + ".java";
+						path += qn.replace('.', '/') + ".cs";
 						return path;
 					}
 				}
 			}
 		}
 		String path = sourceFilePath.substring(0, sourceFilePath.lastIndexOf('/'));
-		path += "/" + stype + ".java";
+		//path += "/" + stype + ".java";
+		path += "/" + stype + ".cs";
 		return path;
 	}
 }

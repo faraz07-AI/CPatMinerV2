@@ -189,7 +189,8 @@ public class SVNConnector {
 							: path + "/" + entry.getName(), revision);
 					count[0] += sub[0];
 					count[1] += sub[1];
-				} else if (entry.getName().endsWith(".java")) {
+				//} else if (entry.getName().endsWith(".java")) {
+				} else if (entry.getName().endsWith(".cs")) {
 					count[0]++;
 					ByteArrayOutputStream out = new ByteArrayOutputStream();
 					getRepository().getFile(path + "/" + entry.getName(),
@@ -221,7 +222,8 @@ public class SVNConnector {
 							: path + "/" + entry.getName(), revision);
 					count[0] += sub[0];
 					count[1] += sub[1];
-				} else if (entry.getName().endsWith(".java")) {
+				//} else if (entry.getName().endsWith(".java")) {
+				} else if (entry.getName().endsWith(".cs")) {
 					count[0]++;
 				} else if (entry.getName().endsWith(".jar")
 						&& entry.getName().trim().contains("junit")) {
@@ -324,7 +326,8 @@ public class SVNConnector {
 							.hasNext();) {
 						SVNLogEntryPath entryPath = (SVNLogEntryPath) logEntry
 								.getChangedPaths().get(changedPaths.next());
-						if (entryPath.getPath().endsWith(".java")) {
+						//if (entryPath.getPath().endsWith(".java")) {
+						if (entryPath.getPath().endsWith(".cs")) {
 							revs.add((int) logEntry.getRevision());
 							System.out.println(logEntry.getRevision());
 							break;
@@ -383,7 +386,8 @@ public class SVNConnector {
 									+ entry.getName(), revision);
 					count[0] += sub[0];
 					count[1] += sub[1];
-				} else if (entry.getName().endsWith(".java")) {
+				//} else if (entry.getName().endsWith(".java")) {
+				} else if (entry.getName().endsWith(".cs")) {
 					count[0]++;
 					ByteArrayOutputStream out = new ByteArrayOutputStream();
 					repository.getFile(path + "/" + entry.getName(), revision,
@@ -417,7 +421,8 @@ public class SVNConnector {
 									+ entry.getName(), revision);
 					count[0] += sub[0];
 					count[1] += sub[1];
-				} else if (entry.getName().endsWith(".java")) {
+				//} else if (entry.getName().endsWith(".java")) {
+				} else if (entry.getName().endsWith(".cs")) {
 					count[0]++;
 					ByteArrayOutputStream out = new ByteArrayOutputStream();
 					repository.getFile(path + "/" + entry.getName(), revision,

@@ -4,6 +4,7 @@ import com.github.gumtreediff.tree.Tree;
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.StringLiteral;
 import org.eclipse.jdt.core.dom.Expression;
+import java.util.regex.Pattern;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,6 +67,11 @@ public class TransformationUtils {
         l.add("++");
         l.add("--");
         return l.contains(node.getLabel());
+    }
+
+    static boolean string_doesnt_contain_operator(String label) {
+        String regex = ".*[!@#$%^&*()+\\-=\\[\\]{};':\"\\\\|,.<>\\/?].*";
+        return !Pattern.matches(regex, label);
     }
     static boolean isPrefix(Tree node) {
         List<String> l = new ArrayList<>();

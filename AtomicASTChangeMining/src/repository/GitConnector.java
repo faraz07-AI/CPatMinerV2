@@ -208,7 +208,8 @@ public class GitConnector extends AbstractConnector {
 				df.setRepository(repository);
 				df.setDiffComparator(RawTextComparator.DEFAULT);
 				df.setDetectRenames(true);
-				df.setPathFilter(PathSuffixFilter.create(".java"));
+				//df.setPathFilter(PathSuffixFilter.create(".java"));
+				df.setPathFilter(PathSuffixFilter.create(".cs"));
 				List<DiffEntry> diffs = null;
 				try {
 					diffs = df.scan(parent.getTree(), commit.getTree());
@@ -311,7 +312,8 @@ public class GitConnector extends AbstractConnector {
 			df.setRepository(repository);
 			df.setDiffComparator(RawTextComparator.DEFAULT);
 			df.setDetectRenames(true);
-			df.setPathFilter(PathSuffixFilter.create(".java"));
+			//df.setPathFilter(PathSuffixFilter.create(".java"));
+			df.setPathFilter(PathSuffixFilter.create(".cs"));
 			List<DiffEntry> diffs = null;
 			try {
 				diffs = df.scan(parent.getTree(), commit.getTree());

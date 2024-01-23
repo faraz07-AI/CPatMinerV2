@@ -33,8 +33,8 @@ public class MineChangePatterns {
 	private static NotifyingBlockingThreadPoolExecutor pool = new NotifyingBlockingThreadPoolExecutor(THREAD_POOL_SIZE, THREAD_POOL_SIZE, 15, TimeUnit.SECONDS, 200, TimeUnit.MILLISECONDS, blockingTimeoutCallback);
 	
 	private static AtomicInteger numOfCommits = new AtomicInteger(0), numOfGraphs = new AtomicInteger(0);
-	private static String changesPath ="E:/PhD1/research_project_2/CPatMiner/outputs";
-	private static String reposPath = "E:/PhD1/research_project_2/CPatMiner/repositories";
+	private static String changesPath ="E:/PhD1/research_project_2/CPatMinerV2/outputs";
+	private static String reposPath = "E:/PhD1/research_project_2/CPatMinerV2/repositories";
 
 	public static void main(String[] args) {
 		long start = System.currentTimeMillis();
@@ -42,7 +42,7 @@ public class MineChangePatterns {
 		//		+ "E.g. inPath = repos-junit should contains junit-team/junit/*.dat"
 		//		+ "or inPath = repos could contains junit-team/junit/*.dat and JetBrains/intellij-community/*.dat";
 
-		reposPath = "E:/PhD1/research_project_2/CPatMiner/repositories"; changesPath = "E:/PhD1/research_project_2/CPatMiner/outputs/";
+		reposPath = "E:/PhD1/research_project_2/CPatMinerV2/repositories"; changesPath = "E:/PhD1/research_project_2/CPatMinerV2/outputs/";
 		if (args.length > 0) {
 			Pattern.mode = Integer.parseInt(args[0]);
 			if (Pattern.mode == 0) {
@@ -59,10 +59,10 @@ public class MineChangePatterns {
 			content = FileIO.readStringFromFile("/home/hoan/github/selected-repos.csv");
 		} else if (SystemUtils.IS_OS_WINDOWS){
 			System.out.println("hereeee");
-			content = FileIO.readStringFromFile("E:/PhD1/research_project_2/CPatMiner/repositories/repos.csv");
+			content = FileIO.readStringFromFile("E:/PhD1/research_project_2/CPatMinerV2/repositories/repos.csv");
 		}
-		reposPath = "E:/PhD1/research_project_2/CPatMiner/repositories"; changesPath = "E:/PhD1/research_project_2/CPatMiner/outputs";
-		content = FileIO.readStringFromFile("E:/PhD1/research_project_2/CPatMiner/repositories/repos.csv");
+		reposPath = "E:/PhD1/research_project_2/CPatMinerV2/repositories"; changesPath = "E:/PhD1/research_project_2/CPatMinerV2/outputs";
+		content = FileIO.readStringFromFile("E:/PhD1/research_project_2/CPatMinerV2/repositories/repos.csv");
 		Scanner sc = new Scanner(content);
 		while (sc.hasNextLine()) {
 //			if (projectNames.size() >= 8000)

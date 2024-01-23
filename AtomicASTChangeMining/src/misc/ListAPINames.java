@@ -18,6 +18,7 @@ import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
 import org.eclipse.jdt.core.dom.Type;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 
+import transformation.Transformation;
 import utils.FileIO;
 import utils.JavaASTUtil;
 
@@ -67,8 +68,10 @@ public class ListAPINames {
 		if (file.isDirectory())
 			for (File sub : file.listFiles())
 				parse(sub);
-		else if (file.getName().endsWith(".java")){
-			ASTNode ast = JavaASTUtil.parseSource(FileIO.readStringFromFile(file.getAbsolutePath()));
+		//else if (file.getName().endsWith(".java")){
+		else if (file.getName().endsWith(".cs")){
+			//ASTNode ast = JavaASTUtil.parseSource(FileIO.readStringFromFile(file.getAbsolutePath()));
+			ASTNode ast = Transformation.transform_csharp_to_java(FileIO.readStringFromFile(file.getAbsolutePath()));
 			CompilationUnit cu = (CompilationUnit) ast;
 			if (cu.getPackage() != null) {
 				String pkg = cu.getPackage().getName().getFullyQualifiedName();
@@ -94,8 +97,10 @@ public class ListAPINames {
 		if (file.isDirectory())
 			for (File sub : file.listFiles())
 				parseSupers(sub);
-		else if (file.getName().endsWith(".java")){
-			ASTNode ast = JavaASTUtil.parseSource(FileIO.readStringFromFile(file.getAbsolutePath()));
+		//else if (file.getName().endsWith(".java")){
+		else if (file.getName().endsWith(".cs")){
+			ASTNode ast = Transformation.transform_csharp_to_java(FileIO.readStringFromFile(file.getAbsolutePath()));
+			//ASTNode ast = JavaASTUtil.parseSource(FileIO.readStringFromFile(file.getAbsolutePath()));
 			CompilationUnit cu = (CompilationUnit) ast;
 			if (cu.getPackage() != null) {
 				String pkg = cu.getPackage().getName().getFullyQualifiedName();

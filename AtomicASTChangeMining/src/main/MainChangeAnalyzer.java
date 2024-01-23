@@ -28,26 +28,14 @@ public class MainChangeAnalyzer {
 	public static String inputPath = "E:/PhD1/research_project_2/CPatMinerV2/repositories", outputPath = "E:/PhD1/research_project_2/CPatMinerV2/outputs";
 	public static void main(String[] args) {
 
-		Transformation.transform();
+		//Transformation.transform(); // for testing
 
 		String content = null;
-
 		if (SystemUtils.IS_OS_WINDOWS) {
 			THREAD_POOL_SIZE = 8;
 			pool = new NotifyingBlockingThreadPoolExecutor(THREAD_POOL_SIZE, THREAD_POOL_SIZE, 15, TimeUnit.SECONDS, 200, TimeUnit.MILLISECONDS, blockingTimeoutCallback);
 			inputPath = "E:/PhD1/research_project_2/CPatMinerV2/repositories"; outputPath = "E:/PhD1/research_project_2/CPatMinerV2/outputs";
 			content = FileIO.readStringFromFile("E:/PhD1/research_project_2/CPatMinerV2/repositories/repos.csv");
-		}
-		else if (SystemUtils.IS_OS_MAC) {
-			THREAD_POOL_SIZE = 8;
-			pool = new NotifyingBlockingThreadPoolExecutor(THREAD_POOL_SIZE, THREAD_POOL_SIZE, 15, TimeUnit.SECONDS, 200, TimeUnit.MILLISECONDS, blockingTimeoutCallback);
-            		content = FileIO.readStringFromFile(inputPath + "/list.csv");
-		} else if (SystemUtils.IS_OS_LINUX) {
-			THREAD_POOL_SIZE = 24;
-			pool = new NotifyingBlockingThreadPoolExecutor(THREAD_POOL_SIZE, THREAD_POOL_SIZE, 15, TimeUnit.SECONDS, 200, TimeUnit.MILLISECONDS, blockingTimeoutCallback);
-			inputPath = "/home/hoan/github/repositories/java-stars-100";
-			outputPath = "/home/hoan/github/change graphs/repos-99";
-			content = FileIO.readStringFromFile("/home/hoan/github/selected-repos.csv");
 		}
 		if (args.length > 0) {
 			for (int i = 0; i < args.length; i++) {
@@ -61,7 +49,7 @@ public class MainChangeAnalyzer {
 		}
 
 		inputPath = "E:/PhD1/research_project_2/CPatMinerV2/repositories"; outputPath = "E:/PhD1/research_project_2/CPatMinerV2/outputs";
-		/*content = FileIO.readStringFromFile("E:/PhD1/research_project_2/CPatMinerV2/repositories/repos.csv");
+		content = FileIO.readStringFromFile("E:/PhD1/research_project_2/CPatMinerV2/repositories/repos.csv");
 		Scanner sc = new Scanner(content);
 		while (sc.hasNextLine()) {
 			String line = sc.nextLine();
@@ -69,12 +57,10 @@ public class MainChangeAnalyzer {
 			if (index < 0)
 				index = line.length();
 			String name = line.substring(0, index);
-			//File dir = new File(inputPath + "/" + name);
-				//analyze(dir, name);
+			File dir = new File(inputPath + "/" + name);
+				analyze(dir, name);
 		}
-		sc.close();*/
-		File dir = new File("E:/PhD1/research_project_2/tes_csharp");
-		analyze(dir, "tes_csharp");
+		sc.close();
 
 		try {
 			pool.await(Long.MAX_VALUE, TimeUnit.NANOSECONDS);

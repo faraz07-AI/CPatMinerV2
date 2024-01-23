@@ -1,0 +1,41 @@
+digraph G {
+subgraph cluster0 {
+1 [label="Handle" a="32" s="-1,-1" l="0,0" shape="box"];
+3 [label="SimpleName" a="42" s="-1" l="0" shape="ellipse"];
+4 [label="SimpleName" a="42" s="-1" l="0" shape="ellipse"];
+5 [label="True" a="32" s="-1,-1" l="0,0" shape="box"];
+6 [label="InfixExpression:r" a="27" s="-1" l="0" shape="box"];
+7 [label="SimpleName" a="42" s="-1" l="0" shape="ellipse"];
+8 [label="WriteDelimitedTo" a="32" s="-1,-1" l="0,0" shape="box"];
+9 [label="SimpleName" a="42" s="-1" l="0" shape="ellipse"];
+10 [label="SimpleName" a="42" s="-1" l="0" shape="ellipse"];
+11 [label="SimpleName" a="42" s="-1" l="0" shape="ellipse"];
+13 [label="SimpleName" a="42" s="-1" l="0" shape="ellipse"];
+14 [label="SimpleName" a="42" s="-1" l="0" shape="ellipse"];
+15 [label="SimpleName" a="42" s="-1" l="0" shape="ellipse"];
+16 [label="SimpleName" a="42" s="-1" l="0" shape="ellipse"];
+label = "Old";
+style="dotted";
+}
+subgraph cluster1 {
+2 [label="SendAndCheck" a="32" s="-1,-1" l="0,0" shape="box"];
+12 [label="SimpleName" a="42" s="-1" l="0" shape="ellipse"];
+label = "New";
+style="dotted";
+}
+1 -> 3 [label="_def_"];
+1 -> 2 [label="_map_"];
+3 -> 11 [label="_ref_"];
+3 -> 10 [label="_ref_"];
+4 -> 5 [label="_para_"];
+6 -> 5 [label="_para_"];
+7 -> 6 [label="_para_"];
+9 -> 8 [label="_para_"];
+10 -> 4 [label="_qual_"];
+11 -> 7 [label="_qual_"];
+12 -> 2 [label="_para_"];
+13 -> 5 [label="_recv_"];
+14 -> 1 [label="_recv_"];
+15 -> 6 [label="_para_"];
+16 -> 8 [label="_recv_"];
+}

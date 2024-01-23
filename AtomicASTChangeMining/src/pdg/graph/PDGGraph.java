@@ -1755,8 +1755,9 @@ public class PDGGraph implements Serializable {
 	}
 
 	private void buildDataClosure(PDGNode node, HashSet<PDGNode> doneNodes) {
-		if (node.getDefinitions().isEmpty()) {
-			for (PDGEdge e : new HashSet<PDGEdge>(node.getInEdges())) {
+		if (node.getDefinitions().isEmpty() && !node.getInEdges().isEmpty()) {
+			HashSet<PDGEdge> sets = new HashSet<>(node.getInEdges());
+			for (PDGEdge e : sets) {
 				if (e instanceof PDGDataEdge) {
 					String label = e.getLabel();
 					ArrayList<PDGNode> inNodes = e.getSource().getDefinitions();
