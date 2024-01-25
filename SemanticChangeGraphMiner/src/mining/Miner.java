@@ -298,7 +298,7 @@ public class Miner {
 				afterLastChange = currEndPos;
 			}
 		}
-		System.out.println("&&&&&&&&&&&&&&&&&&&&&&");
+//		System.out.println("&&&&&&&&&&&&&&&&&&&&&&");
 //		System.out.println(beforeAndAfter.get(0).substring(beforeFirstChange-200,beforeLastChange+200));
 //		System.out.println("&&&&&&&&&&&&&&&&&&&&&&");
 
