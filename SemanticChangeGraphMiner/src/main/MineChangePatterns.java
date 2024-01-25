@@ -145,24 +145,26 @@ public class MineChangePatterns {
 			//System.out.println("Commit " + i + ": " + file.getName());
 			@SuppressWarnings("unchecked")
 			HashMap<String, HashMap<String, ChangeGraph>> fileChangeGraphs = (HashMap<String, HashMap<String, ChangeGraph>>) FileIO.readObjectFromFile(sub.getAbsolutePath());
-			for (String fp : fileChangeGraphs.keySet()) {
-				//System.out.println(fp);
-				HashMap<String, ChangeGraph> cgs = fileChangeGraphs.get(fp);
-				for (String method : cgs.keySet()) {
-					//System.out.println(method);
-				    int index = sub.getName().indexOf('.');
-				    if (index < 0) {
-				        index = sub.getName().length();
-				    }
-					String name = FileIO.getSimpleFileName(sub.getName().substring(0, index)) + "," + fp + "," + method;
-					ChangeGraph cg = cgs.get(method);
-					if (cg.getNodes().size() <= 2) continue;
-					numOfGraphs.incrementAndGet();
-					GROUMGraph g = new GROUMGraph(cg, name);
-					// FIXME
-					g.pruneDoubleEdges();
-					g.setProject(projectName);
-					graphs.add(g);
+			if (fileChangeGraphs != null) {
+				for (String fp : fileChangeGraphs.keySet()) {
+					//System.out.println(fp);
+					HashMap<String, ChangeGraph> cgs = fileChangeGraphs.get(fp);
+					for (String method : cgs.keySet()) {
+						//System.out.println(method);
+						int index = sub.getName().indexOf('.');
+						if (index < 0) {
+							index = sub.getName().length();
+						}
+						String name = FileIO.getSimpleFileName(sub.getName().substring(0, index)) + "," + fp + "," + method;
+						ChangeGraph cg = cgs.get(method);
+						if (cg.getNodes().size() <= 2) continue;
+						numOfGraphs.incrementAndGet();
+						GROUMGraph g = new GROUMGraph(cg, name);
+						// FIXME
+						g.pruneDoubleEdges();
+						g.setProject(projectName);
+						graphs.add(g);
+					}
 				}
 			}
 		}

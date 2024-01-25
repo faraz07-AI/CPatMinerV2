@@ -170,7 +170,7 @@ public class ItemBagMining {
 					int end = currItem.getLengthOfIndex(i);
 					int newHighlight = 1;
 					int version = (currItem.getType() <= 1) ? 0 : 1;
-//					System.out.println("Debug [start - length - version] : " + Integer.toString(start) + " , " + Integer.toString(end) + " , " + Integer.toString(version));
+					System.out.println("Debug [start - length - version] : " + Integer.toString(start) + " , " + Integer.toString(end) + " , " + Integer.toString(version));
 					if (version == 0) {
 						newHighlight = getNewHighlight(start, end, newHighlight, beforeHighlights);
 						if (newHighlight > 0) {

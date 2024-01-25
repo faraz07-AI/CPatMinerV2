@@ -141,9 +141,9 @@ public class Miner {
 			//ListOfPatterns
 			foundPatterns.put(step,patterns);
 		}
-//		System.out.println("Done reporting.");
-//		System.out.println("Patterns:");
-//		System.out.println(foundPatterns);
+		System.out.println("Done reporting.");
+		System.out.println("Patterns:");
+		System.out.println(foundPatterns);
 		if (dir.exists()) {
 			DirectoryHTML d = new DirectoryHTML();
 			d.write(foundPatterns, dir);
@@ -190,6 +190,7 @@ public class Miner {
 		try { // FIXME
 			sampleChange.append(writeDiffs(beforeAndAfter, rf));
 		} catch (StringIndexOutOfBoundsException e) {
+			//throw new RuntimeException(e);
 			return;
 		}
 
@@ -239,7 +240,7 @@ public class Miner {
 		ArrayList<GROUMNode> nodes = rf.getNodes();
 		for(GROUMNode node : nodes) {
 			if(node.getStarts() == null){
-//				System.out.println("NuLL");
+				System.out.println("NuLL");
 			} else {
 				if (node.getStarts().length > 0) {
 					int i = 0;
@@ -265,8 +266,8 @@ public class Miner {
 						}
 						i++;
 					}
-//					System.out.println("Before: " + beforeHighlights);
-//					System.out.println("After: " + afterHighlights);
+					//System.out.println("Before: " + beforeHighlights);
+					//System.out.println("After: " + afterHighlights);
 				}
 			}
 		}
@@ -297,7 +298,7 @@ public class Miner {
 				afterLastChange = currEndPos;
 			}
 		}
-//		System.out.println("&&&&&&&&&&&&&&&&&&&&&&");
+		System.out.println("&&&&&&&&&&&&&&&&&&&&&&");
 //		System.out.println(beforeAndAfter.get(0).substring(beforeFirstChange-200,beforeLastChange+200));
 //		System.out.println("&&&&&&&&&&&&&&&&&&&&&&");
 

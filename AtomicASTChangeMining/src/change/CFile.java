@@ -35,10 +35,10 @@ public class CFile extends ChangeEntity {
             compileUnit = Transformation.transform_csharp_to_java(content);
             //System.out.println(compileUnit);
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            //throw new RuntimeException(e);
         } // FIXME somehow throw org/eclipse/text/edits/MalformedTreeException
         if (compileUnit == null || compileUnit.types() == null || compileUnit.types().isEmpty()) {
-            System.out.println("\t\tDiscarded " + filePath);
+            //System.out.println("\t\tDiscarded " + filePath);
         } else {
             VectorVisitor vectorVisitor = new VectorVisitor();
             compileUnit.accept(vectorVisitor);

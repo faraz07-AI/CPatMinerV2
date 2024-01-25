@@ -1,9 +1,8 @@
 package transformation;
 
 import com.github.gumtreediff.tree.Tree;
-import org.eclipse.jdt.core.dom.AST;
-import org.eclipse.jdt.core.dom.StringLiteral;
-import org.eclipse.jdt.core.dom.Expression;
+import org.eclipse.jdt.core.dom.*;
+
 import java.util.regex.Pattern;
 
 import java.util.ArrayList;
@@ -97,7 +96,7 @@ public class TransformationUtils {
         return Objects.equals(input, "true") || Objects.equals(input, "false");
     }
 
-    public static boolean isInteger(String input) {
+    public static boolean isNumber(String input) {
         try {
             Integer.parseInt(input);
             return true;
@@ -111,14 +110,20 @@ public class TransformationUtils {
         }
     }
 
-    static Expression type_literal(AST asn, String input) {
+    static Expression type_literal(AST asn, Tree node) {
+        String input = node.getLabel();
         if (isBoolean(input)) {
-            return asn.newBooleanLiteral(Boolean.parseBoolean(input));
-        } else if (isInteger(input)) {
-            return asn.newNumberLiteral(input);
+            BooleanLiteral o = asn.newBooleanLiteral(Boolean.parseBoolean(input));
+            o.setSourceRange(node.getPos(),node.getLength());
+            return o;
+        } else if (isNumber(input)) {
+            NumberLiteral o = asn.newNumberLiteral(input);
+            o.setSourceRange(node.getPos(),node.getLength());
+            return o;
         } else {
             StringLiteral stringLiteral = asn.newStringLiteral();
             stringLiteral.setLiteralValue(input);
+            stringLiteral.setSourceRange(node.getPos(),node.getLength());
             return stringLiteral;
         }
     }
