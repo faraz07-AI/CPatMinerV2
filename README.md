@@ -38,7 +38,7 @@ changesPath = change_graph_path: output_path of the extraction step
 
 file repos.csv under reposPath: a text file containing the names of repos to be processed, one repo name on each line. ls reposPath > repos.csv to create this file if you want to process all repos
 
-output: in a directory patterns/input_repos_root_path-hybrid under the working directory
+output: in a directory SemanticChangeGraphMiner/output/patterns/input_repos_root_path-hybrid under the working directory.
 ```
 **Note:** The directory SemanticChangeGraphMiner/src/resources has to be in a directory named src under the working directory.
 
