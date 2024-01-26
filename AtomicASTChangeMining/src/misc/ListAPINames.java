@@ -69,7 +69,7 @@ public class ListAPINames {
 			for (File sub : file.listFiles())
 				parse(sub);
 		//else if (file.getName().endsWith(".java")){
-		else if (file.getName().endsWith(".cs")){
+		else if (file.getName().endsWith(".cs") && file.getName().toLowerCase().contains("test")){
 			//ASTNode ast = JavaASTUtil.parseSource(FileIO.readStringFromFile(file.getAbsolutePath()));
 			ASTNode ast = Transformation.transform_csharp_to_java(FileIO.readStringFromFile(file.getAbsolutePath()));
 			CompilationUnit cu = (CompilationUnit) ast;
@@ -98,7 +98,7 @@ public class ListAPINames {
 			for (File sub : file.listFiles())
 				parseSupers(sub);
 		//else if (file.getName().endsWith(".java")){
-		else if (file.getName().endsWith(".cs")){
+		else if (file.getName().endsWith(".cs") && file.getName().toLowerCase().contains("test")){
 			ASTNode ast = Transformation.transform_csharp_to_java(FileIO.readStringFromFile(file.getAbsolutePath()));
 			//ASTNode ast = JavaASTUtil.parseSource(FileIO.readStringFromFile(file.getAbsolutePath()));
 			CompilationUnit cu = (CompilationUnit) ast;

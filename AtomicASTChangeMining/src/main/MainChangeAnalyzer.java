@@ -15,79 +15,76 @@ import change.ChangeAnalyzer;
 
 
 public class MainChangeAnalyzer {
-	private static int THREAD_POOL_SIZE = 1;
+    private static int THREAD_POOL_SIZE = 1;
 
-	private static final Callable<Boolean> blockingTimeoutCallback = new Callable<Boolean>() {
-		@Override
-		public Boolean call() throws Exception {
-			return true; // keep waiting
-		}
-	};
-	private static NotifyingBlockingThreadPoolExecutor pool = new NotifyingBlockingThreadPoolExecutor(THREAD_POOL_SIZE, THREAD_POOL_SIZE, 15, TimeUnit.SECONDS, 200, TimeUnit.MILLISECONDS, blockingTimeoutCallback);
-	
-	public static String inputPath = "E:/PhD1/research_project_2/CPatMinerV2/repositories", outputPath = "E:/PhD1/research_project_2/CPatMinerV2/outputs";
-	public static void main(String[] args) {
+    private static final Callable<Boolean> blockingTimeoutCallback = new Callable<Boolean>() {
+        @Override
+        public Boolean call() throws Exception {
+            return true; // keep waiting
+        }
+    };
+    private static NotifyingBlockingThreadPoolExecutor pool = new NotifyingBlockingThreadPoolExecutor(THREAD_POOL_SIZE, THREAD_POOL_SIZE, 15, TimeUnit.SECONDS, 200, TimeUnit.MILLISECONDS, blockingTimeoutCallback);
 
-		//Transformation.transform(); // for testing
+    public static String inputPath = "E:/PhD1/research_project_2/CPatMinerV2/repositories", outputPath = "E:/PhD1/research_project_2/CPatMinerV2/outputs";
 
-		String content = null;
-		if (SystemUtils.IS_OS_WINDOWS) {
-			THREAD_POOL_SIZE = 8;
-			pool = new NotifyingBlockingThreadPoolExecutor(THREAD_POOL_SIZE, THREAD_POOL_SIZE, 15, TimeUnit.SECONDS, 200, TimeUnit.MILLISECONDS, blockingTimeoutCallback);
-			inputPath = "E:/PhD1/research_project_2/CPatMinerV2/repositories"; outputPath = "E:/PhD1/research_project_2/CPatMinerV2/outputs";
-			content = FileIO.readStringFromFile("E:/PhD1/research_project_2/CPatMinerV2/repositories/repos.csv");
-		}
-		if (args.length > 0) {
-			for (int i = 0; i < args.length; i++) {
-				if (args[i].equals("-i")) {
-					inputPath = args[i+1];
-				}
-				if (args[i].equals("-o")) {
-					outputPath = args[i+1];
-				}
-			}
-		}
+    public static void main(String[] args) {
 
-		inputPath = "E:/PhD1/research_project_2/CPatMinerV2/repositories"; outputPath = "E:/PhD1/research_project_2/CPatMinerV2/outputs";
-		content = FileIO.readStringFromFile("E:/PhD1/research_project_2/CPatMinerV2/repositories/repos.csv");
-		Scanner sc = new Scanner(content);
-		while (sc.hasNextLine()) {
-			String line = sc.nextLine();
-			int index = line.indexOf(',');
-			if (index < 0)
-				index = line.length();
-			String name = line.substring(0, index);
-			File dir = new File(inputPath + "/" + name);
-				analyze(dir, name);
-		}
-		sc.close();
+        //Transformation.transform(); // for testing
 
-		try {
-			pool.await(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
-		} catch (final InterruptedException e) { }
-	}
+        String content = null;
+        if (args.length > 0) {
+            for (int i = 0; i < args.length; i++) {
+                if (args[i].equals("-i")) {
+                    inputPath = args[i + 1];
+                }
+                if (args[i].equals("-o")) {
+                    outputPath = args[i + 1];
+                }
+            }
+        }
 
-	private static void analyze(final File dir, final String name) {
-		if (!dir.isDirectory())
-			return;
-		File git = new File(dir, ".git");
-		if (git.exists()) {
-			pool.execute(new Runnable() {
-				@Override
-				public void run() {
-					long startProjectTime = System.currentTimeMillis();
-					System.out.println(name);
-					String url = dir.getAbsolutePath();
-					ChangeAnalyzer ca = new ChangeAnalyzer(name, -1, url);
-					ca.buildGitConnector();
-					ca.analyzeGit();
-			    	long endProjectTime = System.currentTimeMillis();
-			    	ca.getCproject().setRunningTime(endProjectTime - startProjectTime);
-			    	ca.closeGitConnector();
-					System.out.println("Done " + name + " in " + (endProjectTime - startProjectTime) / 1000 + "s");
-				}
-			});
-		}
-	}
+        inputPath = "E:/PhD1/research_project_2/CPatMinerV2/repositories";
+        outputPath = "E:/PhD1/research_project_2/CPatMinerV2/outputs";
+        content = FileIO.readStringFromFile(inputPath + "/repos.csv");
+        Scanner sc = new Scanner(content);
+        while (sc.hasNextLine()) {
+            String line = sc.nextLine();
+            int index = line.indexOf(',');
+            if (index < 0)
+                index = line.length();
+            String name = line.substring(0, index);
+            File dir = new File(inputPath + "/" + name);
+            analyze(dir, name);
+        }
+        sc.close();
+
+        try {
+            pool.await(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
+        } catch (final InterruptedException e) {
+        }
+    }
+
+    private static void analyze(final File dir, final String name) {
+        if (!dir.isDirectory())
+            return;
+        File git = new File(dir, ".git");
+        if (git.exists()) {
+            pool.execute(new Runnable() {
+                @Override
+                public void run() {
+                    long startProjectTime = System.currentTimeMillis();
+                    System.out.println(name);
+                    String url = dir.getAbsolutePath();
+                    ChangeAnalyzer ca = new ChangeAnalyzer(name, -1, url);
+                    ca.buildGitConnector();
+                    ca.analyzeGit();
+                    long endProjectTime = System.currentTimeMillis();
+                    ca.getCproject().setRunningTime(endProjectTime - startProjectTime);
+                    ca.closeGitConnector();
+                    System.out.println("Done " + name + " in " + (endProjectTime - startProjectTime) / 1000 + "s");
+                }
+            });
+        }
+    }
 
 }

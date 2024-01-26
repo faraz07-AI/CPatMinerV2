@@ -175,61 +175,6 @@ public class GitConnector extends AbstractConnector {
 		return content;
 	}
 
-	public String getFileContent(ObjectId objectId) {
-		return getFileContent(objectId, Constants.OBJ_BLOB);
-	}
-
-	public ArrayList<Integer> getJavaFixRevisions() {
-		ArrayList<Integer> revisions = new ArrayList<>();
-		Iterable<RevCommit> commits = null;
-		try {
-			commits = git.log().call();
-		} catch (GitAPIException e) {
-			System.err.println(e.getMessage());
-		}
-		if (commits == null)
-			return revisions;
-		for (RevCommit commit : commits) {
-			if (commit.getParentCount() > 0) {
-				if (!isFixingCommit(commit.getFullMessage()))
-					continue;
-				RevWalk rw = new RevWalk(repository);
-				RevCommit parent = null;
-				try {
-					parent = rw.parseCommit(commit.getParent(0).getId());
-				} catch (IOException e) {
-					System.err.println(e.getMessage());
-				}
-				if (parent == null) {
-					rw.close();
-					continue;
-				}
-				DiffFormatter df = new DiffFormatter(NullOutputStream.INSTANCE);
-				df.setRepository(repository);
-				df.setDiffComparator(RawTextComparator.DEFAULT);
-				df.setDetectRenames(true);
-				//df.setPathFilter(PathSuffixFilter.create(".java"));
-				df.setPathFilter(PathSuffixFilter.create(".cs"));
-				List<DiffEntry> diffs = null;
-				try {
-					diffs = df.scan(parent.getTree(), commit.getTree());
-				} catch (IOException e) {
-					System.err.println(e.getMessage());
-				}
-				if (diffs != null && !diffs.isEmpty()) {
-					int index = Collections.binarySearch(revisions,
-							commit.getCommitTime());
-					if (index < 0)
-						index = -index - 1;
-					revisions.add(index, commit.getCommitTime());
-				}
-				rw.close();
-				df.close();
-			}
-		}
-		return revisions;
-	}
-
 	public int getNumberOfCommits(String extension) {
 		Iterable<RevCommit> commits = null;
 		try {

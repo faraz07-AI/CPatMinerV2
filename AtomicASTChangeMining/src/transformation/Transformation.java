@@ -30,12 +30,6 @@ public class Transformation {
         }
         return null;
     }
-
-
-
-
-
-
     public static void transform() {
 
         Run.initGenerators(); // registers the available parsers
