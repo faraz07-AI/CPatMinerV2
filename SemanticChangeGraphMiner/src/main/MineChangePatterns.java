@@ -58,7 +58,6 @@ public class MineChangePatterns {
 		} else if (SystemUtils.IS_OS_LINUX) {
 			content = FileIO.readStringFromFile("/home/hoan/github/selected-repos.csv");
 		} else if (SystemUtils.IS_OS_WINDOWS){
-			System.out.println("hereeee");
 			content = FileIO.readStringFromFile("E:/PhD1/research_project_2/CPatMinerV2/repositories/repos.csv");
 		}
 		reposPath = "E:/PhD1/research_project_2/CPatMinerV2/repositories"; changesPath = "E:/PhD1/research_project_2/CPatMinerV2/outputs";

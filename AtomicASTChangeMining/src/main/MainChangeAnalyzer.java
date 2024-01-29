@@ -29,7 +29,7 @@ public class MainChangeAnalyzer {
 
     public static void main(String[] args) {
 
-        //Transformation.transform(); // for testing
+        //Transformation.transform(); // for testing and debugging with test.cs file
 
         String content = null;
         if (args.length > 0) {

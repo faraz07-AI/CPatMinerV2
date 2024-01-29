@@ -102,7 +102,7 @@ public class Miner {
 			if (nodes.size() < Pattern.minFreq || !GROUMNode.isCoreAction(label.split(PAIR_SEPARATOR)[0]))
 				nodesOfLabel.remove(label);
 		}
-		System.out.println("Got all first pairs");
+		//System.out.println("Got all first pairs");
 		for (String label : nodesOfLabel.keySet()) {
 			HashSet<GROUMNode[]> pairs = nodesOfLabel.get(label);
 			HashSet<Fragment> fragments = new HashSet<>();
@@ -141,9 +141,9 @@ public class Miner {
 			//ListOfPatterns
 			foundPatterns.put(step,patterns);
 		}
-		System.out.println("Done reporting.");
-		System.out.println("Patterns:");
-		System.out.println(foundPatterns);
+		//System.out.println("Done reporting.");
+		//System.out.println("Patterns:");
+		//System.out.println(foundPatterns);
 		if (dir.exists()) {
 			DirectoryHTML d = new DirectoryHTML();
 			d.write(foundPatterns, dir);
@@ -561,7 +561,7 @@ public class Miner {
 					|| (!GROUMNode.isCoreAction(labels[1]) && !GROUMNode.isControl(labels[1])))
 				nodesOfLabel.remove(label);
 		}
-		System.out.println("Got all first pairs");
+		//System.out.println("Got all first pairs");
 		for (String label : nodesOfLabel.keySet()) {
 			HashSet<GROUMNode[]> pairs = nodesOfLabel.get(label);
 			HashSet<Fragment> fragments = new HashSet<>();

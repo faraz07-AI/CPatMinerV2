@@ -13,6 +13,8 @@ import transformation.Transformation;
 import utils.FileIO;
 import utils.JavaASTUtil;
 
+import static utils.StringUtils.CheckIfFileNameContainsTest;
+
 public class CFile extends ChangeEntity {
     private static final long serialVersionUID = 4073095618526557436L;
     public static final int MAX_SIZE = 500000;
@@ -25,44 +27,45 @@ public class CFile extends ChangeEntity {
 
     public CFile(RevisionAnalyzer revisionAnalyzer, String filePath,
                  String content) {
-
-        this.startLine = 0;
-        this.cRevisionAnalyzer = revisionAnalyzer;
-        this.path = filePath;
-        this.simpleName = FileIO.getSimpleFileName(path);
-        try {
-            //compileUnit = (CompilationUnit) JavaASTUtil.parseSource(content);
-            compileUnit = Transformation.transform_csharp_to_java(content);
-            //System.out.println(compileUnit);
-        } catch (Exception e) {
-            //throw new RuntimeException(e);
-        } // FIXME somehow throw org/eclipse/text/edits/MalformedTreeException
-        if (compileUnit == null || compileUnit.types() == null || compileUnit.types().isEmpty()) {
-            //System.out.println("\t\tDiscarded " + filePath);
-        } else {
-            VectorVisitor vectorVisitor = new VectorVisitor();
-            compileUnit.accept(vectorVisitor);
-            for (int index = 0; index < compileUnit.types().size(); index++) {
-                AbstractTypeDeclaration declaration = (AbstractTypeDeclaration) compileUnit
-                        .types().get(index);
-                switch (declaration.getNodeType()) {
-                    case ASTNode.TYPE_DECLARATION: {
-                        TypeDeclaration type = (TypeDeclaration) declaration;
-                        this.classes.add(new CClass(this, type, null));
-                        break;
-                    }
-                    case ASTNode.ENUM_DECLARATION: {
-                        break;
-                    }
-                    case ASTNode.ANNOTATION_TYPE_DECLARATION: {
-                        AnnotationTypeDeclaration type = (AnnotationTypeDeclaration) declaration;
-                        this.classes.add(new CClass(this, type, null));
-                        break;
-                    }
-                    default: {
-                         System.out.println("Info: Some other type declaration not implemented. "
-                         + declaration.getClass().getSimpleName());
-                        break;
+        if (filePath.toLowerCase().contains("test")) {
+            this.startLine = 0;
+            this.cRevisionAnalyzer = revisionAnalyzer;
+            this.path = filePath;
+            this.simpleName = FileIO.getSimpleFileName(path);
+            try {
+                //compileUnit = (CompilationUnit) JavaASTUtil.parseSource(content);
+                compileUnit = Transformation.transform_csharp_to_java(content);
+                //System.out.println(compileUnit);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            } // FIXME somehow throw org/eclipse/text/edits/MalformedTreeException
+            if (compileUnit == null || compileUnit.types() == null || compileUnit.types().isEmpty()) {
+                //System.out.println("\t\tDiscarded " + filePath);
+            } else {
+                VectorVisitor vectorVisitor = new VectorVisitor();
+                compileUnit.accept(vectorVisitor);
+                for (int index = 0; index < compileUnit.types().size(); index++) {
+                    AbstractTypeDeclaration declaration = (AbstractTypeDeclaration) compileUnit
+                            .types().get(index);
+                    switch (declaration.getNodeType()) {
+                        case ASTNode.TYPE_DECLARATION: {
+                            TypeDeclaration type = (TypeDeclaration) declaration;
+                            this.classes.add(new CClass(this, type, null));
+                            break;
+                        }
+                        case ASTNode.ENUM_DECLARATION: {
+                            break;
+                        }
+                        case ASTNode.ANNOTATION_TYPE_DECLARATION: {
+                            AnnotationTypeDeclaration type = (AnnotationTypeDeclaration) declaration;
+                            this.classes.add(new CClass(this, type, null));
+                            break;
+                        }
+                        default: {
+                            System.out.println("Info: Some other type declaration not implemented. "
+                                    + declaration.getClass().getSimpleName());
+                            break;
+                        }
                     }
                 }
             }

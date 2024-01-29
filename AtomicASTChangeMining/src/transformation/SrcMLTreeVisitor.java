@@ -1912,8 +1912,11 @@ public class SrcMLTreeVisitor {
         whereMethodInvocation.setName(asn.newSimpleName("where"));
         if (!node.getChildren().isEmpty()) {
             Tree child = node.getChildren().get(0);
-            if (child instanceof ExprNode)
-                whereMethodInvocation.arguments().add(this.visit((ExprNode) child));
+            if (child instanceof ExprNode) {
+                Expression exp = this.visit((ExprNode) child);
+                if (exp != null)
+                    whereMethodInvocation.arguments().add(exp);
+            }
         }
         return whereMethodInvocation;
     }
