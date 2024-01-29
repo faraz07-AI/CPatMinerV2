@@ -14,7 +14,8 @@ This can be further adapted to other ASTs transformed to SrcML format.
 **SemanticChangeGraphMiner:** mines change templates from change graphs.
 
 ## Requirements
-- Java 11 or above
+- **Java** 11 or above.
+- **srcML** v1.0.0, you can download it from [here](https://www.srcml.org/#download).
 
 ## Extracting change graphs from commits
 
