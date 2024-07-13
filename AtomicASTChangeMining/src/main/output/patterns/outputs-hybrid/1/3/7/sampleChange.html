@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3>4847d0bec9e4172edd780e12347c4df115e09e84,Test/Test.VirtualRadar.Library/Listener/MergedFeedListenerTests.cs,MergedFeedListenerTests,MergedFeedListener_SetListener_Events_Are_Filtered_Correctly,#,-1
+</h3><h3>Before Change</h3><pre><code class='java'>
+                        Assert.AreSame(_MergedFeed, baseStationMessageEventRecorder.Sender);
+                        Assert.AreSame(baseStationMessageEventArgs, baseStationMessageEventRecorder.Args);
+
+                        Assert.<a id="change">AreEqual(</a>1, positionResetEventRecorder.CallCount, failDetails, "PositionReset"<a id="change">)</a>;
+                        Assert.AreSame(_MergedFeed, positionResetEventRecorder.Sender);
+                        Assert.AreSame(positionResetEventArgs, positionResetEventRecorder.Args);
+                    }</code></pre><h3>After Change</h3><pre><code class='java'>
+                        if(!resetExpected) {
+                            Assert.AreEqual(0, positionResetEventRecorder.CallCount, failDetails, "PostionReset");
+                        } else {
+                            Assert.<a id="change">AreEqual(</a>1, positionResetEventRecorder.CallCount, failDetails, "PositionReset"<a id="change">)</a>;
+                            Assert.AreSame(_MergedFeed, positionResetEventRecorder.Sender);
+                            Assert.AreSame(positionResetEventArgs, positionResetEventRecorder.Args);
+                        }</code></pre>
