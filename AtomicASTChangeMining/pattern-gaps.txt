@@ -1,0 +1,3 @@
+file:////Users/farazgurramkonda/IdeaProjects/CPatMinerV2/CPatMinerV2/AtomicASTChangeMining/src/main/output/patterns/outputs-hybrid/1/21/12/sampleChange.html
+file:////Users/farazgurramkonda/IdeaProjects/CPatMinerV2/CPatMinerV2/AtomicASTChangeMining/src/main/output/patterns/outputs-hybrid/1/21/12/details.html
+
