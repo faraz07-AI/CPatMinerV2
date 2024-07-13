@@ -1,0 +1,43 @@
+digraph G {
+subgraph cluster0 {
+1 [label="Assert.That()" a="32" s="10724,10801" l="5,1" shape="box"];
+label = "Old";
+style="dotted";
+}
+subgraph cluster1 {
+2 [label="Assert.That()" a="32" s="13921,14013" l="5,1" shape="box"];
+3 [label="InfixExpression:r" a="27" s="13696" l="4" shape="box"];
+4 [label="NumberLiteral" a="34" s="13700" l="1" shape="ellipse"];
+5 [label="IfStatement" a="25" s="13677,13701" l="9,2" shape="diamond"];
+6 [label="QueryArg.ToQuery()" a="32" s="14040" l="9" shape="box"];
+7 [label="SimpleName" a="42" s="13686" l="10" shape="ellipse"];
+8 [label="InfixExpression:a" a="27" s="14049" l="-13" shape="box"];
+9 [label="Assert.That()" a="32" s="14031,14109" l="5,1" shape="box"];
+10 [label="Is.EqualTo()" a="32" s="14099,14108" l="8,1" shape="box"];
+11 [label="QueryArg.ToQuery()" a="32" s="13590" l="9" shape="box"];
+12 [label="SimpleName" a="42" s="13686" l="4" shape="ellipse"];
+13 [label="SimpleName" a="42" s="14036" l="3" shape="ellipse"];
+14 [label="SimpleName" a="42" s="13586" l="3" shape="ellipse"];
+15 [label="SimpleName" a="42" s="14096" l="2" shape="ellipse"];
+16 [label="SimpleName" a="42" s="14024" l="6" shape="ellipse"];
+label = "New";
+style="dotted";
+}
+1 -> 2 [label="_map_"];
+3 -> 5 [label="_cond_"];
+4 -> 3 [label="_para_"];
+5 -> 10 [label="_control_"];
+5 -> 9 [label="_control_"];
+5 -> 2 [label="_control_"];
+5 -> 6 [label="_control_"];
+5 -> 8 [label="_control_"];
+6 -> 8 [label="_para_"];
+7 -> 3 [label="_para_"];
+8 -> 9 [label="_para_"];
+10 -> 9 [label="_para_"];
+12 -> 7 [label="_qual_"];
+13 -> 6 [label="_recv_"];
+14 -> 11 [label="_recv_"];
+15 -> 10 [label="_recv_"];
+16 -> 9 [label="_recv_"];
+}

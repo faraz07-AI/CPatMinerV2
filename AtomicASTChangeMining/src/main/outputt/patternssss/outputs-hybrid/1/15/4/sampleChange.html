@@ -1,0 +1,58 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3>3ec125fc4ea4a7a241c605b9cf5d252dba084adf,Test/Test.VirtualRadar.Interface/WebSite/ReportAircraftJsonTests.cs,ReportAircraftJsonTests,ReportAircraftJson_Constructor_Initialises_To_Known_State_And_Properties_Work,#,-1
+</h3><h3>Before Change</h3><pre><code class='java'>
+            TestUtilities.TestProperty(json, "Interested", false);
+            TestUtilities.TestProperty(json, "IsUnknown", false);
+            TestUtilities.TestProperty(json, "Manufacturer", null, "Ab");
+            <a id="change">TestUtilities</a>.<a id="change">TestProperty(json</a>, <a id="change">"Military"</a>, <a id="change">false</a><a id="change">)</a>;
+            TestUtilities.TestProperty(json, "ModeSCountry", null, "Ab");
+            TestUtilities.TestProperty(json, "MTOW", null, "Ab");
+            TestUtilities.TestProperty(json, "Notes", null, "Ab");
+            TestUtilities.TestProperty(json, "OperatorFlagCode", null, "Ab");
+            TestUtilities.TestProperty(json, "OwnershipStatus", null, "Ab");
+            TestUtilities.TestProperty(json, "PictureUrl1", null, "Ab");
+            TestUtilities.TestProperty(json, "PictureUrl2", null, "Ab");
+            TestUtilities.TestProperty(json, "PictureUrl3", null, "Ab");
+            TestUtilities.TestProperty(json, "PictureWidth", 0, 1203);
+            TestUtilities.TestProperty(json, "PictureHeight", 0, 9182);
+            TestUtilities.<a id="change">TestProperty(</a>json, <a id="change">"PopularName"</a>, null, "Ab"<a id="change">)</a>;
+            TestUtilities.TestProperty(json, "PreviousId", null, "Ab");
+            TestUtilities.TestProperty(json, "RegisteredOwners", null, "Ab");
+            TestUtilities.TestProperty(json, "Registration", null, "Ab");
+            TestUtilities.TestProperty(json, "SerialNumber", null, "Ab");
+            TestUtilities.<a id="change">TestProperty(</a>json, <a id="change">"Species"</a>, null, 1<a id="change">)</a>;
+            TestUtilities.TestProperty(json, "Status", null, "Ab");
+            TestUtilities.TestProperty(json, "TotalHours", null, "Ab");
+            TestUtilities.TestProperty(json, "Type", null, "Ab");</code></pre><h3>After Change</h3><pre><code class='java'>
+            TestUtilities.TestProperty(json, r =&gt; r.IcaoTypeCode, null, "Ab");
+            TestUtilities.TestProperty(json, r =&gt; r.InfoUrl, null, "Ab");
+            TestUtilities.TestProperty(json, r =&gt; r.Interested, false);
+            <a id="change">TestUtilities</a>.<a id="change">TestProperty(json</a>, r =&gt; r.IsUnknown, <a id="change">false</a><a id="change">)</a>;
+            TestUtilities.TestProperty(json, r =&gt; r.Manufacturer, null, "Ab");
+            TestUtilities.TestProperty(json, r =&gt; r.Military, false);
+            TestUtilities.TestProperty(json, r =&gt; r.ModeSCountry, null, "Ab");
+            TestUtilities.TestProperty(json, r =&gt; r.MTOW, null, "Ab");
+            TestUtilities.TestProperty(json, r =&gt; r.Notes, null, "Ab");
+            TestUtilities.TestProperty(json, r =&gt; r.OperatorFlagCode, null, "Ab");
+            TestUtilities.TestProperty(json, r =&gt; r.OwnershipStatus, null, "Ab");
+            TestUtilities.TestProperty(json, r =&gt; r.PictureUrl1, null, "Ab");
+            TestUtilities.TestProperty(json, r =&gt; r.PictureUrl2, null, "Ab");
+            TestUtilities.<a id="change">TestProperty(</a>json, r =&gt; r.PictureUrl3, null, "Ab"<a id="change">)</a>;
+            TestUtilities.TestProperty(json, r =&gt; r.PictureWidth, 0, 1203);
+            TestUtilities.TestProperty(json, r =&gt; r.PictureHeight, 0, 9182);
+            TestUtilities.TestProperty(json, r =&gt; r.PopularName, null, "Ab");
+            TestUtilities.TestProperty(json, r =&gt; r.PreviousId, null, "Ab");
+            TestUtilities.TestProperty(json, r =&gt; r.RegisteredOwners, null, "Ab");
+            TestUtilities.TestProperty(json, r =&gt; r.Registration, null, "Ab");
+            TestUtilities.TestProperty(json, r =&gt; r.SerialNumber, null, "Ab");
+            TestUtilities.TestProperty(json, r =&gt; r.Species, null, 1);
+            TestUtilities.TestProperty(json, r =&gt; r.Status, null, "Ab");
+            TestUtilities.TestProperty(json, r =&gt; r.TotalHours, null, "Ab");
+            TestUtilities.TestProperty(json, r =&gt; r.Type, null, "Ab");
+            TestUtilities.TestProperty(json, r =&gt; r.UserTag, null, "Ab");
+            TestUtilities.<a id="change">TestProperty(</a>json, r =&gt; r.WakeTurbulenceCategory, null, 1<a id="change">)</a>;
+            TestUtilities.TestProperty(json, r =&gt; r.YearBuilt, null, "Ab");
+        }
+    }</code></pre>

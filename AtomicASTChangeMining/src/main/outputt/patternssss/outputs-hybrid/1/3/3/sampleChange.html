@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3>4a28fc777801b2912d60345abdea88b184deee19,Assets/_Scripts/MaximaTest.cs,MaximaTest,Integrate,#String#Int#Int#String#,-1
+</h3><h3>Before Change</h3><pre><code class='java'>
+    }
+    public static string Integrate(string expr, int from, int to, string wrt = "x")
+    {
+        <a id="change">return </a><a id="change">Eval(</a>string.Format("integrate({0}, {1}, {2}, {3})", expr, wrt, from, to)<a id="change">)</a>;
+    }
+    #endregion
+</code></pre><h3>After Change</h3><pre><code class='java'>
+    }
+    public static void Integrate(string expr, int from, int to, string wrt = "x")
+    {
+        <a id="change">Eval(</a>string.Format("integrate({0}, {1}, {2}, {3})", expr, wrt, from, to)<a id="change">)</a>;
+    }
+    #endregion
+</code></pre>

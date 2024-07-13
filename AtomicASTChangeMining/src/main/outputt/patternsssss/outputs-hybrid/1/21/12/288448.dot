@@ -1,0 +1,51 @@
+digraph G {
+subgraph cluster0 {
+1 [label="Is.EqualTo()" a="32" s="10584,10609" l="8,1" shape="box"];
+6 [label="Assert.That()" a="32" s="10929,10958" l="5,1" shape="box"];
+9 [label="LIST_0.Query()" a="32" s="10829" l="7" shape="box"];
+17 [label="SimpleName" a="42" s="10822" l="6" shape="ellipse"];
+label = "Old";
+style="dotted";
+}
+subgraph cluster1 {
+2 [label="Is.EqualTo()" a="32" s="13976,14012" l="8,1" shape="box"];
+3 [label="InfixExpression:r" a="27" s="13474" l="4" shape="box"];
+4 [label="NumberLiteral" a="34" s="13478" l="1" shape="ellipse"];
+5 [label="Assert.That()" a="32" s="13803,13888" l="5,1" shape="box"];
+7 [label="QueryArg.ToQuery()" a="32" s="13812" l="9" shape="box"];
+8 [label="IfStatement" a="25" s="13460,13479" l="4,2" shape="diamond"];
+10 [label="SimpleName" a="42" s="13464" l="10" shape="ellipse"];
+11 [label="QueryArg.ToQuery()" a="32" s="14136" l="9" shape="box"];
+12 [label="InfixExpression:a" a="27" s="13643" l="1" shape="box"];
+13 [label="Assert.That()" a="32" s="13581,13666" l="5,1" shape="box"];
+14 [label="this.WithPrevious()" a="32" s="14050,14069" l="13,17" shape="box"];
+15 [label="SimpleName" a="42" s="14063" l="6" shape="ellipse"];
+16 [label="SimpleName" a="42" s="13574" l="6" shape="ellipse"];
+18 [label="SimpleName" a="42" s="14132" l="3" shape="ellipse"];
+19 [label="SimpleName" a="42" s="13808" l="3" shape="ellipse"];
+20 [label="SimpleName" a="42" s="13464" l="4" shape="ellipse"];
+label = "New";
+style="dotted";
+}
+1 -> 2 [label="_map_"];
+3 -> 8 [label="_cond_"];
+4 -> 3 [label="_para_"];
+6 -> 5 [label="_map_"];
+7 -> 5 [label="_para_"];
+8 -> 7 [label="_control_"];
+8 -> 14 [label="_control_"];
+8 -> 13 [label="_control_"];
+8 -> 5 [label="_control_"];
+8 -> 12 [label="_control_"];
+8 -> 11 [label="_control_"];
+8 -> 2 [label="_control_"];
+9 -> 6 [label="_para_"];
+10 -> 3 [label="_para_"];
+12 -> 13 [label="_para_"];
+15 -> 14 [label="_para_"];
+16 -> 13 [label="_recv_"];
+17 -> 9 [label="_recv_"];
+18 -> 11 [label="_recv_"];
+19 -> 7 [label="_recv_"];
+20 -> 10 [label="_qual_"];
+}

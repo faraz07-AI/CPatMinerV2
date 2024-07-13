@@ -1,0 +1,34 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3>dbf472efb616eec877e82f2887046626a3570016,Assets/LeapMotion/Core/Scripts/Query/Editor/QueryTests.cs,QueryTests,WithPreviousOffsetTest,#,-1
+</h3><h3>Before Change</h3><pre><code class='java'>
+
+    [Test]
+    public void WithPreviousOffsetTest() {
+      Assert.That(LIST_0.Query().WithPrevious(offset: 4).Count(), Is.<a id="change">EqualTo(</a>LIST_0.Length - 4<a id="change">)</a>);
+      Assert.That(LIST_0.Query().WithPrevious(offset: LIST_0.Length + 1).Count(), Is.EqualTo(0));
+      Assert.That(LIST_0.Query().WithPrevious(offset: int.MaxValue).Count(), Is.EqualTo(0));
+
+      var item = <a id="change">LIST_0</a>.<a id="change">Query()</a>.WithPrevious(offset: 4).First();
+      Assert.That(item.value, Is.EqualTo(5));
+      Assert.<a id="change">That(</a>item.prev, Is.EqualTo(1)<a id="change">)</a>;
+
+      Assert.That(Values.Range(0, 10).WithPrevious(offset: 2).All(i =&gt; i.value - i.prev == 2));
+    }</code></pre><h3>After Change</h3><pre><code class='java'>
+    [Test]
+    public void WithPreviousOffsetTest([ValueSource("list0")] QueryArg arg) {
+      var list = arg.ToList();
+      <a id="change">if (list.Count == </a><a id="change">0</a><a id="change">) </a>{
+        Assert.That(arg.ToQuery().WithPrevious(offset: 4).Count(), Is.EqualTo(0));
+        <a id="change">Assert</a>.<a id="change">That(</a>arg.ToQuery().WithPrevious(offset: 4, includeStart: true)<a id="change">.</a>Count(), Is.EqualTo(0)<a id="change">)</a>;
+      } else if (list.Count == 1) {
+        Assert.That(arg.ToQuery().WithPrevious(offset: 4).Count(), Is.EqualTo(0));
+        Assert.<a id="change">That(arg</a>.<a id="change">ToQuery()</a>.WithPrevious(offset: 4, includeStart: true).Count(), Is.EqualTo(1)<a id="change">)</a>;
+      } else {
+        Assert.That(arg.ToQuery().WithPrevious(offset: 4).Count(), Is.<a id="change">EqualTo(</a>Mathf.Max(0, list.Count - 4)<a id="change">)</a>);
+        Assert.That(arg.ToQuery().<a id="change">WithPrevious(offset</a><a id="change">: list.Count + 1)</a>.Count(), Is.EqualTo(0));
+        Assert.That(<a id="change">arg</a>.<a id="change">ToQuery()</a>.WithPrevious(offset: int.MaxValue).Count(), Is.EqualTo(0));
+      }
+
+      Assert.That(Values.Range(0, 10).WithPrevious(offset: 2).All(i =&gt; i.value - i.prev == 2));</code></pre>

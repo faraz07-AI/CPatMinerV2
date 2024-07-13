@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3>dbf472efb616eec877e82f2887046626a3570016,Assets/LeapMotion/Core/Scripts/Query/Editor/QueryTests.cs,QueryTests,IndexOfTests,#,-1
+</h3><h3>Before Change</h3><pre><code class='java'>
+    [Test]
+    public void IndexOfTests() {
+      Assert.AreEqual(LIST_0.Query().IndexOf(3), 2);
+      Assert.<a id="change">AreEqual(LIST_0</a>.<a id="change">Query()</a>.IndexOf(100), -1<a id="change">)</a>;
+    }
+
+    [Test]</code></pre><h3>After Change</h3><pre><code class='java'>
+      Assert.That(arg.ToQuery().IndexOf(3), Is.EqualTo(
+                  arg.ToList().IndexOf(3)));
+
+      Assert.<a id="change">That(arg</a>.<a id="change">ToQuery()</a>.IndexOf(100), Is.EqualTo(
+                  <a id="change">arg</a>.<a id="change">ToList().</a>IndexOf(100))<a id="change">)</a>;
+    }
+
+    [Test]</code></pre>

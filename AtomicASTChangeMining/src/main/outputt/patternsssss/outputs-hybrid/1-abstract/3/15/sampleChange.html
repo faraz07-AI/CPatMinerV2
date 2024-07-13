@@ -1,0 +1,21 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3>0f9872f5d6a96c4ee346fc17c19d19a7e63f9554,Assets/LeapMotion/Core/Scripts/Query/Editor/QueryTests.cs,QueryTests,ZipTest,#,-1
+</h3><h3>Before Change</h3><pre><code class='java'>
+
+    [Test]
+    public void ZipTest() {
+      Assert.That(LIST_0.Query().Zip(LIST_1.Query(), (a, b) =&gt; a.ToString() + b.ToString()).ToList().<a id="change">SequenceEqual(
+                  </a>new string[] { "16", "27", "38", "49", "510" }<a id="change">)</a>);
+    }
+
+    public class TestEnumerator : IEnumerator&lt;int&gt; {</code></pre><h3>After Change</h3><pre><code class='java'>
+
+    [Test]
+    public void ZipTest() {
+      Assert.That(LIST_0.Query().Zip(LIST_1.Query(), (a, b) =&gt; a.ToString() + b.ToString()).ToList(), <a id="change">Is</a>.<a id="change">EquivalentTo(
+                  </a>new string[] { "16", "27", "38", "49", "510" }<a id="change">)</a>);
+    }
+
+    public class TestEnumerator : IEnumerator&lt;int&gt; {</code></pre>

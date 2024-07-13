@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="eclipse.platform.equinox.common" type="repository">
+    <properties maven-id="org.eclipse.platform:org.eclipse.equinox.common:3.8.0" />
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/eclipse/platform/org.eclipse.equinox.common/3.8.0/org.eclipse.equinox.common-3.8.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

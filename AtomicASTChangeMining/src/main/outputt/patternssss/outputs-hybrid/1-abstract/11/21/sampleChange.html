@@ -1,0 +1,23 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3>45baaffbcb45ef672e91555b29742fbb7fd357ca,VRDR.Tests/Messaging_Should.cs,Messaging_Should,CreateCauseOfDeathCodingResponse,#,-1
+</h3><h3>Before Change</h3><pre><code class='java'>
+            ije.DOI_DY = "15";
+            CauseOfDeathCodingMessage message = new CauseOfDeathCodingMessage(ije.ToDeathRecord());
+            Assert.Equal(CauseOfDeathCodingMessage.MESSAGE_TYPE, message.MessageType);
+            Assert.<a id="change">Equal(</a>"http://nchs.cdc.gov/vrdr_submission", <a id="change">message.MessageDestination</a><a id="change">)</a>;
+            Assert.Equal((uint)123, message.CertNo);
+            Assert.Equal((uint)2022, message.DeathYear);
+            Assert.Equal("500", message.StateAuxiliaryId);</code></pre><h3>After Change</h3><pre><code class='java'>
+            ije.DOI_MO = "1";
+            ije.DOI_DY = "15";
+            CauseOfDeathCodingMessage message = new CauseOfDeathCodingMessage(ije.ToDeathRecord());
+            <a id="change">message.MessageSource</a> = <a id="change">"http://nchs.cdc.gov/vrdr_submission"</a>;
+            <a id="change">message.MessageDestination</a> = <a id="change">"https://example.org/jurisdiction/endpoint"</a>;
+            Assert.Equal(CauseOfDeathCodingMessage.MESSAGE_TYPE, message.MessageType);
+            Assert.<a id="change">Equal(</a>"http://nchs.cdc.gov/vrdr_submission", <a id="change">message.MessageSource</a><a id="change">)</a>;
+            <a id="change">Assert</a>.<a id="change">Equal("https://example.org/jurisdiction/endpoint"</a>, <a id="change">message.MessageDestination</a><a id="change">)</a>;
+            Assert.Equal((uint)123, message.CertNo);
+            Assert.Equal((uint)2022, message.DeathYear);
+            Assert.Equal("500", message.StateAuxiliaryId);</code></pre>

@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="eclipse.core.contenttype" type="repository">
+    <properties maven-id="org.eclipse.core:contenttype:3.2.100-v20070319" />
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/eclipse/core/contenttype/3.2.100-v20070319/contenttype-3.2.100-v20070319.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/eclipse/equinox/preferences/3.5.200-v20140224-1527/preferences-3.5.200-v20140224-1527.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/eclipse/equinox/registry/3.5.400-v20140428-1507/registry-3.5.400-v20140428-1507.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/eclipse/equinox/common/3.6.200-v20130402-1505/common-3.6.200-v20130402-1505.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

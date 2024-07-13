@@ -1,0 +1,22 @@
+<link rel="stylesheet" href="../../../../default.css">
+<script src="../../../../highlight.pack.js"></script> 
+<script>hljs.initHighlightingOnLoad();</script>
+<html><h3>d50ea841128f82ba3ae8fedbced41be4c39393af,FhirDeathRecord.Tests/DeathRecord_Should.cs,DeathRecord_Should,Get_TobaccoUseContributedToDeath,#,-1
+</h3><h3>Before Change</h3><pre><code class='java'>
+        public void Get_TobaccoUseContributedToDeath()
+        {
+            Assert.Equal("(373067005, http://snomed.info/sct, No)", Convert.ToString(((DeathRecord)XMLRecords[0]).TobaccoUseContributedToDeath));
+            <a id="change">Assert</a>.<a id="change">Equal("(373067005, http://snomed.info/sct, No)"</a>, <a id="change">Convert</a>.<a id="change">ToString(</a><a id="change">((DeathRecord)</a>JSONRecords[0]).TobaccoUseContributedToDeath<a id="change">))</a>;
+        }
+
+        private string FixturePath(string filePath)</code></pre><h3>After Change</h3><pre><code class='java'>
+            Assert.Equal("373067005", xmlDictionary["code"]);
+            Assert.Equal("http://snomed.info/sct", xmlDictionary["system"]);
+            Assert.Equal("No", xmlDictionary["display"]);
+            Dictionary&lt;string, string&gt; <a id="change">jsonDictionary</a> = <a id="change">((DeathRecord)</a>JSONRecords[0]).TobaccoUseContributedToDeath;
+            <a id="change">Assert</a>.<a id="change">Equal("373067005"</a>, <a id="change">jsonDictionary["code"</a><a id="change">])</a>;
+            <a id="change">Assert</a>.<a id="change">Equal("http://snomed.info/sct"</a>, <a id="change">jsonDictionary["system"</a><a id="change">])</a>;
+            <a id="change">Assert</a>.<a id="change">Equal("No"</a>, <a id="change">jsonDictionary["display"</a><a id="change">]</a><a id="change">)</a>;
+        }
+
+        private string FixturePath(string filePath)</code></pre>

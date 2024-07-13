@@ -1,0 +1,16 @@
+<component name="libraryTable">
+  <library name="eclipse.platform.core.contenttype" type="repository">
+    <properties maven-id="org.eclipse.platform:org.eclipse.core.contenttype:3.9.400" />
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/eclipse/platform/org.eclipse.core.contenttype/3.9.400/org.eclipse.core.contenttype-3.9.400.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/eclipse/platform/org.eclipse.equinox.preferences/3.11.100/org.eclipse.equinox.preferences-3.11.100.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/osgi/org.osgi.service.prefs/1.1.2/org.osgi.service.prefs-1.1.2.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/osgi/osgi.annotation/8.0.1/osgi.annotation-8.0.1.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/eclipse/platform/org.eclipse.equinox.registry/3.12.100/org.eclipse.equinox.registry-3.12.100.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/eclipse/platform/org.eclipse.equinox.common/3.19.100/org.eclipse.equinox.common-3.19.100.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/eclipse/platform/org.eclipse.osgi/3.20.0/org.eclipse.osgi-3.20.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
