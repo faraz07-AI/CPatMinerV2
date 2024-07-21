@@ -11,12 +11,22 @@ import utils.DirectoryHTML;
 import utils.FileIO;
 import utils.JGitUtil;
 
+import javax.sound.midi.SysexMessage;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * @author hoan
@@ -134,7 +144,7 @@ public class Miner {
 		return patterns;
 	}
 
-	private void printOutResults() {
+	private void  printOutResults() {
 		//Data structure so we can build the navigation Table
 		HashMap<Integer, ArrayList<ArrayList<String>>> foundPatterns = new HashMap<>();
 
@@ -457,109 +467,228 @@ public class Miner {
 	}
 
 	private void collectPatternsForNextStep(ArrayList<GROUMGraph> patterns) {
-        //Data structure so we can build the navigation Table
-        ArrayList<String> pattern_array = new ArrayList<>();
-        HashMap<Integer, ArrayList<ArrayList<String>>> foundPatterns = new HashMap<>();
+		//Data structure so we can build the navigation Table
+		ArrayList<String> pattern_array = new ArrayList<>();
+		HashMap<Integer, ArrayList<ArrayList<String>>> foundPatterns = new HashMap<>();
 
-        File dir = new File("output/patterns" + "/" + this.getCurrDir() + "/" + this.level + "-abstract");
+		File dir = new File("output/patterns" + "/" + this.getCurrDir() + "/" + this.level + "-abstract");
 
-        Object x = null;
-        for (int step = Pattern.minSize; step <= lattices.size(); step++) {
-            Lattice lat = lattices.get(step - 1);
-            System.out.println("lat:" + lat);
-            HashMap<String, HashSet<Fragment>> labelFragments = new HashMap<String, HashSet<Fragment>>();
-            x = null;
-            for (Pattern p : lat.getPatterns()) {
-                Fragment f = p.getRepresentative();
-                GROUMGraph g = new GROUMGraph(f);
-                for (String intermediateMap : g.intermediateMaps) {
-                    pattern_array.addAll(g.intermediateMaps);
-                }
-                System.out.println("after iteration:" + pattern_array);
+		Object x = null;
+		for (int step = Pattern.minSize; step <= lattices.size(); step++) {
+			Lattice lat = lattices.get(step - 1);
+			System.out.println("lat:" + lat);
+			HashMap<String, HashSet<Fragment>> labelFragments = new HashMap<String, HashSet<Fragment>>();
+			x = null;
+			for (Pattern p : lat.getPatterns()) {
+				Fragment f = p.getRepresentative();
+				GROUMGraph g = new GROUMGraph(f);
+				for (String intermediateMap : g.intermediateMaps) {
+					pattern_array.addAll(g.intermediateMaps);
+				}
+				System.out.println("after iteration:" + pattern_array);
 //				GROUMGraph k = new GROUMGraph(f,String.valueOf(pattern_array));
 //				pattern_array.add(String.valueOf(k));
 //				System.out.println("pattern_array:"+pattern_array);
-                System.out.println("g:" + g);
-                g.setPatternId(p.getId());
-                patterns.add(g);
-                System.out.println("patterns:" + patterns);
-                if (level == 1) {
-                    ArrayList<GROUMNode> nodes = new ArrayList<GROUMNode>(g.getNodes());
-                    System.out.println("getnodes:" + g.getNodes());
-                    Collections.sort(nodes, new Comparator<GROUMNode>() {
-                        @Override
-                        public int compare(GROUMNode n1, GROUMNode n2) {
-                            return n1.getLabel().compareTo(n2.getLabel());
-                        }
-                    });
-                    Fragment af = new Fragment(nodes);
-                    af.setGraph(g);
-                    System.out.println("af:" + af);
-                    String label = nodes.toString();
-                    HashSet<Fragment> fragments = labelFragments.get(label);
-                    if (fragments == null) {
-                        fragments = new HashSet<Fragment>();
-                        labelFragments.put(label, fragments);
-                        System.out.println("fragments in if:" + fragments);
-                    }
-                    fragments.add(af);
-                    System.out.println("fragments:" + fragments);
-                }
-                x = common_pattern_similarity_filteration(pattern_array);
-                System.out.println("x:" + x);
-//				compute_simililarity_for_comman_pattern((ArrayList<List>) x);
-            }
+				System.out.println("g:" + g);
+				g.setPatternId(p.getId());
+				patterns.add(g);
+				System.out.println("patterns:" + patterns);
+				if (level == 1) {
+					ArrayList<GROUMNode> nodes = new ArrayList<GROUMNode>(g.getNodes());
+					System.out.println("getnodes:" + g.getNodes());
+					Collections.sort(nodes, new Comparator<GROUMNode>() {
+						@Override
+						public int compare(GROUMNode n1, GROUMNode n2) {
+							return n1.getLabel().compareTo(n2.getLabel());
+						}
+					});
+					Fragment af = new Fragment(nodes);
+					af.setGraph(g);
+					System.out.println("af:" + af);
+					String label = nodes.toString();
+					HashSet<Fragment> fragments = labelFragments.get(label);
+					if (fragments == null) {
+						fragments = new HashSet<Fragment>();
+						labelFragments.put(label, fragments);
+						System.out.println("fragments in if:" + fragments);
+					}
+					fragments.add(af);
+					System.out.println("fragments:" + fragments);
+				}
+				x = common_pattern_similarity_filteration(pattern_array);
+				System.out.println("x:" + x);
+				//ArrayList<List> index_of_samplehtml = compute_simililarity_for_comman_pattern((ArrayList<List>) x);
+			}
+			if (level == 1) {
+				HashSet<HashSet<Fragment>> groups = new HashSet<>();
+				for (String label : labelFragments.keySet()) {
+					HashSet<Fragment> fragments = labelFragments.get(label);
+					HashMap<Integer, HashSet<Fragment>> buckets = hash(fragments);
+					System.out.println("bucket list:" + buckets);
+					for (int h : buckets.keySet()) {
+						HashSet<Fragment> bucket = buckets.get(h);
+						System.out.println("bucket list in loop:" + buckets);
+						while (!bucket.isEmpty()) {
+							Fragment f = null;
+							for (Fragment fragment : bucket) {
+								f = fragment;
+								break;
+							}
+							HashSet<Fragment> group = new HashSet<>();
+							group.add(f);
+							System.out.println("group:" + group);
+							bucket.remove(f);
+							for (Fragment g : new HashSet<Fragment>(bucket)) {
+								if (f.getVector().equals(g.getVector())) {
+									group.add(g);
+									bucket.remove(g);
+								}
+							}
+							groups.add(group);
+						}
+						bucket.clear();
+					}
+					fragments.clear();
+				}
+				ArrayList<ArrayList<String>> patternInfo = new ArrayList<>();
+				for (HashSet<Fragment> g : groups) {
+					Pattern p = new Pattern(g, g.size());
+					p.setId();
+					printOutResults(dir, step, p, patternInfo, true);
+				}
+				//ListOfPatterns
+				foundPatterns.put(step, patternInfo);
+				System.out.println("found patterns:" + foundPatterns);
+				labelFragments.clear();
+			}
+			lat.clear();
+		}
+		if (level == 1 && dir.exists()) {
+			DirectoryHTML d = new DirectoryHTML();
+			d.write(foundPatterns, dir);
+		}
+		ArrayList<List> index_of_samplehtml =compute_simililarity_for_comman_pattern((ArrayList<List>) x);
+		System.out.println("index of simple.html"+index_of_samplehtml);
+//		String rootDirectoryPath = null;
+//		List<String> filePaths = null;
+//		try {
+//			rootDirectoryPath = "/Users/farazgurramkonda/IdeaProjects/CPatMinerV2/CPatMinerV2/AtomicASTChangeMining/src/main/output/patterns/outputs-hybrid/1";
+//			filePaths = getFilePaths(rootDirectoryPath, "sampleChange.html");
+//			filePaths.forEach(System.out::println);
+//		} catch (IOException e) {
+//			// Handle the exception
+//			System.err.println("An IOException occurred: " + e.getMessage());
+//			e.printStackTrace();
+//		}
+//		System.out.println("filePaths" + filePaths);
+//		List files_source=new ArrayList<>();
+//		List index_list_1 = index_of_samplehtml.get(0);
+//		List index_list_2= index_of_samplehtml.get(1);
+//		for (int kt=0;kt<index_list_1.size();kt++){
+//			List idx_ref = (List) index_list_1.get(kt);
+//			int file_idx = (int) idx_ref.get(0);
+//			System.out.println("index_list:"+idx_ref.get(0));
+//			files_source.add(filePaths.get(file_idx+1));
+//		}
+//
+//		System.out.println("files_Source"+files_source);
+//		System.out.println("highlight_pattern:"+index_list_2);
+//		String outputDirectory = "/Users/farazgurramkonda/IdeaProjects/CPatMinerV2/CPatMinerV2/AtomicASTChangeMining/src/main/comman_pattern"; // Replace with your desired output directory
+//		highlightAndSaveFiles(files_source, index_list_2, outputDirectory);
+//    }
+//
+//	private void highlightAndSaveFiles(List<String> filesSource, List<List<String>> highlightPatterns, String outputDirectory) {
+//		Path outputDirPath = Paths.get(outputDirectory);
+//		if (!Files.exists(outputDirPath)) {
+//			try {
+//				Files.createDirectories(outputDirPath);
+//			} catch (IOException e) {
+//				e.printStackTrace();
+//				return;
+//			}
+//		}
+//
+//		for (int i = 0; i < filesSource.size(); i++) {
+//			String filePath = filesSource.get(i);
+//			List<String> patterns = highlightPatterns.get(i);
+//			processFile(filePath, patterns, outputDirectory, i);
+//		}
+//	}
+//
+//	private void processFile(String filePath, List<String> patterns, String outputDirectory, int index) {
+//		try {
+//			Path inputPath = Paths.get(filePath);
+//			String content = new String(Files.readAllBytes(inputPath), StandardCharsets.UTF_8);
+//
+//			// Apply highlighting to the content
+//			for (String pattern : patterns) {
+//				String escapedPattern = escapeSpecialCharacters(pattern);
+//				content = content.replaceAll(escapedPattern, "<mark style=\"background-color: green;\">" + pattern + "</mark>");
+//				System.out.println("Pattern: " + pattern + " -> " + escapedPattern);  // Log the pattern replacement
+//			}
+//
+//			// Define the output file path, ensuring it doesn't overwrite existing files
+//			Path outputPath = Paths.get(outputDirectory, "highlighted_" + index + "_" + inputPath.getFileName().toString());
+//
+//			// Write the modified content to the new file
+//			Files.write(outputPath, content.getBytes(StandardCharsets.UTF_8));
+//			System.out.println("Processed and saved: " + outputPath);
+//
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
+//	}
+//
+//	private String escapeSpecialCharacters(String str) {
+//		return str.replaceAll("([\\\\{}()\\[\\].+*?^$|])", "\\\\$1");
+//	}
+//	// Other existing methods (e.g., getFilePaths, getSortablePath, tryParseInt, ListOfIntegerComparator)
+//
+//	private static List<String> getFilePaths(String rootDirectory, String fileName) throws IOException {
+//		List<String> filePaths = new ArrayList<>();
+//
+//		System.out.println("Searching for files in: " + rootDirectory + " with name: " + fileName);
+//
+//		try (Stream<Path> paths = Files.walk(Paths.get(rootDirectory))) {
+//			filePaths = paths.filter(Files::isRegularFile)
+//					.filter(path -> path.getFileName().toString().equals(fileName))
+//					.sorted(Comparator.comparing(Miner::getSortablePath, new ListOfIntegerComparator()))
+//					.map(Path::toString)
+//					.collect(Collectors.toList());
+//		}
+//
+//		return filePaths;
+//	}
 
-            if (level == 1) {
-                HashSet<HashSet<Fragment>> groups = new HashSet<>();
-                for (String label : labelFragments.keySet()) {
-                    HashSet<Fragment> fragments = labelFragments.get(label);
-                    HashMap<Integer, HashSet<Fragment>> buckets = hash(fragments);
-                    System.out.println("bucket list:" + buckets);
-                    for (int h : buckets.keySet()) {
-                        HashSet<Fragment> bucket = buckets.get(h);
-                        System.out.println("bucket list in loop:" + buckets);
-                        while (!bucket.isEmpty()) {
-                            Fragment f = null;
-                            for (Fragment fragment : bucket) {
-                                f = fragment;
-                                break;
-                            }
-                            HashSet<Fragment> group = new HashSet<>();
-                            group.add(f);
-                            System.out.println("group:" + group);
-                            bucket.remove(f);
-                            for (Fragment g : new HashSet<Fragment>(bucket)) {
-                                if (f.getVector().equals(g.getVector())) {
-                                    group.add(g);
-                                    bucket.remove(g);
-                                }
-                            }
-                            groups.add(group);
-                        }
-                        bucket.clear();
-                    }
-                    fragments.clear();
-                }
-                ArrayList<ArrayList<String>> patternInfo = new ArrayList<>();
-                for (HashSet<Fragment> g : groups) {
-                    Pattern p = new Pattern(g, g.size());
-                    p.setId();
-                    printOutResults(dir, step, p, patternInfo, true);
-                }
-                //ListOfPatterns
-                foundPatterns.put(step, patternInfo);
-                System.out.println("found patterns:" + foundPatterns);
-                labelFragments.clear();
-            }
-            lat.clear();
-        }
-        if (level == 1 && dir.exists()) {
-            DirectoryHTML d = new DirectoryHTML();
-            d.write(foundPatterns, dir);
-        }
-        compute_simililarity_for_comman_pattern((ArrayList<List>) x);
-    }
+//	static List<Integer> getSortablePath(Path path) {
+//		return Arrays.stream(path.toString().split("/"))
+//				.map(Miner::tryParseInt)
+//				.filter(Objects::nonNull)
+//				.collect(Collectors.toList());
+//	}
+//
+//	static Integer tryParseInt(String str) {
+//		try {
+//			return Integer.parseInt(str);
+//		} catch (NumberFormatException e) {
+//			return null;
+//		}
+//	}
+	}
+
+	private static class ListOfIntegerComparator implements Comparator<List<Integer>> {
+		@Override
+		public int compare(List<Integer> list1, List<Integer> list2) {
+			int size = Math.min(list1.size(), list2.size());
+			for (int i = 0; i < size; i++) {
+				int comparison = Integer.compare(list1.get(i), list2.get(i));
+				if (comparison != 0) {
+					return comparison;
+				}
+			}
+			return Integer.compare(list1.size(), list2.size());
+		}
+	}
 
 	public Object common_pattern_similarity_filteration(ArrayList<String> pattern_array){
 		ArrayList<String> conversion_list= new ArrayList<>();
@@ -594,7 +723,7 @@ public class Miner {
 		return Final_array_list;
 	}
 
-	public void compute_simililarity_for_comman_pattern(ArrayList<List> final_array_list){
+	public ArrayList<List> compute_simililarity_for_comman_pattern(ArrayList<List> final_array_list){
 		int i =0;
 		int j =0;
 		int z =0;
@@ -661,8 +790,14 @@ public class Miner {
 //
 		//	System.out.println("seenPatterns:" + seenPatterns);
 		}
-		for(int a=0;a<index_list.size()-1;a++){
-			if (!index_list.get(a).equals(index_list.get(a + 1))||(a==index_list.size()-2 && index_list.get(a-2).equals(index_list.get(a-1)))) {
+//		for(int a=0;a<index_list.size()-1;a++){
+//			if (!index_list.get(a).equals(index_list.get(a + 1))||(a==index_list.size()-2 && index_list.get(a-2).equals(index_list.get(a-1)))) {
+//				seenIndices.add(index_list.get(a));
+//			}
+//		}
+		for (int a = 0; a < index_list.size() - 1; a++) {
+			if (!index_list.get(a).equals(index_list.get(a + 1)) ||
+					(a >= 2 && a == index_list.size() - 2 && index_list.get(a - 2).equals(index_list.get(a - 1)))) {
 				seenIndices.add(index_list.get(a));
 			}
 		}
@@ -706,10 +841,19 @@ public class Miner {
 		}
 
 		System.out.println("Final_idx:" + Final_idx);
-	}
-
-
-
+		ArrayList<List> intrim = new ArrayList<>();
+		ArrayList<List> Final_list = new ArrayList<>();
+		for(int ak=0;ak<Final_idx.size();ak++){
+			List res=Final_idx.get(ak);
+			int idxx= (int) res.get(0);
+			intrim.add(Collections.singletonList(idxx));
+			System.out.println("final_array_list:" + final_array_list.get(idxx));
+		}
+        System.out.println("intrim:" + intrim);
+		Final_list.add(intrim);
+		Final_list.add(final_unique_patterns);
+		return Final_list;
+    }
 
 	public void compute_similarity(String element) {
 		ArrayList<List> compute_list = new ArrayList<>();
@@ -1084,6 +1228,20 @@ public class Miner {
 			i++;
 		}
 		group.retainAll(l);
+	}
+	static List<Integer> getSortablePath(Path path) {
+		return Arrays.stream(path.toString().split("/"))
+				.map(Miner::tryParseInt)
+				.filter(Objects::nonNull)
+				.collect(Collectors.toList());
+	}
+
+	static Integer tryParseInt(String str) {
+		try {
+			return Integer.parseInt(str);
+		} catch (NumberFormatException e) {
+			return null;
+		}
 	}
 }
 

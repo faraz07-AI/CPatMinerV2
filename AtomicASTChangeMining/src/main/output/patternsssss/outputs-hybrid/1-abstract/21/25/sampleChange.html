@@ -1,22 +1,0 @@
-<link rel="stylesheet" href="../../../../default.css">
-<script src="../../../../highlight.pack.js"></script> 
-<script>hljs.initHighlightingOnLoad();</script>
-<html><h3>d50ea841128f82ba3ae8fedbced41be4c39393af,FhirDeathRecord.Tests/DeathRecord_Should.cs,DeathRecord_Should,Get_MannerOfDeath,#,-1
-</h3><h3>Before Change</h3><pre><code class='java'>
-        [Fact]
-        public void Get_MannerOfDeath()
-        {
-            <a id="change">Assert</a>.<a id="change">Equal("(7878000, http://snomed.info/sct, Accident)"</a>, <a id="change">Convert</a>.<a id="change">ToString(</a><a id="change">((DeathRecord)</a>XMLRecords[0]).MannerOfDeath<a id="change">)</a><a id="change">)</a>;
-            Assert.Equal("(7878000, http://snomed.info/sct, Accident)", Convert.ToString(((DeathRecord)JSONRecords[0]).MannerOfDeath));
-        }
-</code></pre><h3>After Change</h3><pre><code class='java'>
-        [Fact]
-        public void Get_MannerOfDeath()
-        {
-            Dictionary&lt;string, string&gt; <a id="change">xmlDictionary</a> = <a id="change">((DeathRecord)</a>XMLRecords[0]).MannerOfDeath;
-            <a id="change">Assert</a>.<a id="change">Equal("7878000"</a>, <a id="change">xmlDictionary["code"</a><a id="change">]</a><a id="change">)</a>;
-            <a id="change">Assert</a>.<a id="change">Equal("http://snomed.info/sct"</a>, <a id="change">xmlDictionary["system"</a><a id="change">]</a><a id="change">)</a>;
-            <a id="change">Assert</a>.<a id="change">Equal("Accident"</a>, <a id="change">xmlDictionary["display"</a><a id="change">]</a><a id="change">)</a>;
-            Dictionary&lt;string, string&gt; jsonDictionary = ((DeathRecord)JSONRecords[0]).MannerOfDeath;
-            Assert.Equal("7878000", jsonDictionary["code"]);
-            Assert.Equal("http://snomed.info/sct", jsonDictionary["system"]);</code></pre>
